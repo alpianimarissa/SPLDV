@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petualangan SPLDV Interaktif - Kelas 8 SMP</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- MathJax Configuration for Perfect Rendering -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .heading-font {
+            font-family: 'Fredoka', sans-serif;
+        }
+        .math-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .slide-transition {
+            transition: all 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-[#FFFBEB] via-[#F0FDF4] to-[#EFF6FF] min-h-screen flex flex-col justify-between overflow-x-hidden select-none">
+
+    <!-- TOP HEADER -->
+    <header class="bg-white/95 backdrop-blur-md border-b-4 border-[#10B981] py-3.5 px-6 flex justify-between items-center sticky top-0 z-40 shadow-sm">
+        <div class="flex items-center gap-3">
+            <svg class="w-8 h-8 text-[#10B981] animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+            </svg>
+            <div>
+                <h1 class="heading-font text-xl md:text-2xl font-bold text-[#047857]">Detektif SPLDV</h1>
+                <p class="text-[10px] text-[#059669] font-black tracking-widest uppercase">Kurikulum Merdeka • Kelas 8 SMP Fast Track</p>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-3">
+            <!-- Points Badge -->
+            <div class="bg-[#FEF3C7] border-2 border-[#F59E0B] rounded-full px-4 py-1 flex items-center gap-1.5 shadow-sm">
+                <span class="text-base">💎</span>
+                <span id="score-display" class="font-bold text-[#92400E] text-xs md:text-sm">0 XP</span>
+            </div>
+            
+            <!-- Scratchpad Toggle -->
+            <button id="scratchpad-btn" onclick="toggleScratchpad()" class="bg-[#EEF2FF] hover:bg-[#E0E7FF] border-2 border-[#6366F1] active:scale-95 transition text-[#4F46E5] font-black rounded-full px-4 py-1 text-xs md:text-sm shadow-sm flex items-center gap-1">
+                ✏️ <span>Papan Cakar</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- SCRATCHPAD DRAWING OVERLAY -->
+    <div id="scratchpad" class="hidden fixed inset-0 z-50 bg-white/95 flex flex-col p-4">
+        <div class="flex justify-between items-center mb-2 border-b-2 border-gray-100 pb-2">
+            <h3 class="heading-font text-lg font-bold text-[#4F46E5] flex items-center gap-2">
+                ✏️ Papan Cakar Berhitung Mandiri
+            </h3>
+            <div class="flex items-center gap-2">
+                <button onclick="clearCanvas()" class="bg-red-50 hover:bg-red-100 text-red-600 font-bold px-3 py-1.5 rounded-xl text-xs">Bersihkan</button>
+                <button onclick="toggleScratchpad()" class="bg-[#4F46E5] hover:bg-[#4338CA] text-white font-bold px-4 py-1.5 rounded-xl text-xs">Kembali</button>
+            </div>
+        </div>
+        <div class="flex-1 bg-amber-50/30 border-4 border-dashed border-[#818CF8] rounded-2xl relative cursor-crosshair overflow-hidden">
+            <canvas id="scratch-canvas" class="absolute inset-0 w-full h-full"></canvas>
+        </div>
+        <p class="text-xs text-gray-400 mt-2 text-center">Gunakan jari, stylus, atau mouse untuk mencakar perhitungan SPLDV di sini!</p>
+    </div>
+
+    <!-- MAIN SLIDE WINDOW -->
+    <main class="flex-1 flex items-center justify-center p-4 relative my-4">
+        <!-- Prev Arrow -->
+        <button id="prev-btn" onclick="changeSlide(-1)" class="absolute left-2 md:left-6 z-30 bg-white hover:bg-[#ECFDF5] text-[#10B981] border-4 border-[#A7F3D0] w-12 h-12 rounded-full flex items-center justify-center text-lg shadow-md active:scale-90 transition">
+            ◀
+        </button>
+
+        <!-- Slide Body wrapper -->
+        <div id="slide-wrapper" class="w-full max-w-4xl bg-white rounded-3xl border-8 border-[#A7F3D0] shadow-xl overflow-hidden flex flex-col justify-between min-h-[520px] md:min-h-[570px] slide-transition">
+            <!-- Top Progress Bar -->
+            <div class="w-full bg-[#E8F5E9] h-3">
+                <div id="progress-bar" class="bg-[#10B981] h-full transition-all duration-300" style="width: 3.3%"></div>
+            </div>
+
+            <!-- Dynamic Content Area -->
+            <div id="slide-content" class="p-6 md:p-10 flex-1 flex flex-col justify-center overflow-y-auto max-h-[460px] md:max-h-[500px]">
+                <!-- Loaded dynamically by Javascript -->
+            </div>
+
+            <!-- Footer Badge Status -->
+            <div class="bg-[#ECFDF5] border-t-2 border-[#D1FAE5] px-6 py-3 flex justify-between items-center text-xs md:text-sm font-bold text-[#065F46]">
+                <span id="section-name">Misi Pembuka</span>
+                <span id="slide-index" class="bg-[#10B981] text-white px-3 py-1 rounded-full">Slide 1 / 30</span>
+            </div>
+        </div>
+
+        <!-- Next Arrow -->
+        <button id="next-btn" onclick="changeSlide(1)" class="absolute right-2 md:right-6 z-30 bg-white hover:bg-[#ECFDF5] text-[#10B981] border-4 border-[#A7F3D0] w-12 h-12 rounded-full flex items-center justify-center text-lg shadow-md active:scale-90 transition">
+            ▶
+        </button>
+    </main>
+
+    <!-- FLOATING TOAST NOTIFICATION -->
+    <div id="toast" class="hidden fixed bottom-12 left-1/2 transform -translate-x-1/2 z-50 bg-[#10B981] text-white font-bold px-6 py-3 rounded-2xl shadow-xl flex items-center gap-2">
+        <span id="toast-icon">✨</span> <span id="toast-text">Sempurna! Kamu hebat!</span>
+    </div>
+
+    <!-- CONFETTI CELEBRATION CANVAS -->
+    <canvas id="confetti" class="fixed inset-0 pointer-events-none z-50 w-full h-full hidden"></canvas>
+
+    <!-- SYSTEM LOGIC & SLIDE DATABASE -->
+    <script>
+        // --- 1. WEB AUDIO API SYNTHESIZER ---
+        let audioCtx;
+        function getAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        function playSound(type) {
+            try {
+                const ctx = getAudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                if (type === 'correct') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+                    osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.08); // E5
+                    osc.frequency.setValueAtTime(783.99, ctx.currentTime + 0.16); // G5
+                    osc.frequency.setValueAtTime(1046.50, ctx.currentTime + 0.24); // C6
+                    gain.gain.setValueAtTime(0.12, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.45);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.45);
+                } else if (type === 'incorrect') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(150, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 0.35);
+                    gain.gain.setValueAtTime(0.08, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.35);
+                } else if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(350, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(250, ctx.currentTime + 0.08);
+                    gain.gain.setValueAtTime(0.04, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.08);
+                }
+            } catch (e) {
+                console.log("Audio contexts require user interaction first.");
+            }
+        }
+
+        // --- 2. 30 SLIDES OF CONTENT (LaTeX Escaped with double backslashes) ---
+        const slides = [
+            // Slide 1: Cover
+            {
+                section: "Pembuka",
+                title: "Sistem Persamaan Linear Dua Variabel",
+                subtitle: "SPLDV Mastery • Kurikulum Merdeka SMP Kelas 8",
+                icon: "🚀",
+                render: () => `
+                    <div class="text-center">
+                        <div class="flex justify-center mb-4">
+                            <!-- SVG Balance scale representing systems -->
+                            <svg class="w-32 h-32 text-[#10B981] animate-pulse" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <line x1="50" y1="20" x2="50" y2="85" stroke="#10B981" stroke-width="4"/>
+                                <line x1="20" y1="85" x2="80" y2="85" stroke="#10B981" stroke-width="6"/>
+                                <line x1="20" y1="35" x2="80" y2="35" stroke="#F59E0B" stroke-width="4" stroke-linecap="round"/>
+                                <circle cx="50" cy="35" r="4" fill="#047857"/>
+                                <line x1="20" y1="35" x2="10" y2="65" stroke="#4B5563" stroke-width="1.5"/>
+                                <line x1="20" y1="35" x2="30" y2="65" stroke="#4B5563" stroke-width="1.5"/>
+                                <path d="M 5 65 Q 20 75, 35 65 Z" fill="#D1FAE5" stroke="#059669" stroke-width="2"/>
+                                <text x="16" y="61" fill="#059669" font-family="'JetBrains Mono'" font-size="8" font-weight="bold">x</text>
+                                <line x1="80" y1="35" x2="70" y2="65" stroke="#4B5563" stroke-width="1.5"/>
+                                <line x1="80" y1="35" x2="90" y2="65" stroke="#4B5563" stroke-width="1.5"/>
+                                <path d="M 65 65 Q 80 75, 95 65 Z" fill="#DBEAFE" stroke="#1D4ED8" stroke-width="2"/>
+                                <text x="76" y="61" fill="#1D4ED8" font-family="'JetBrains Mono'" font-size="8" font-weight="bold">y</text>
+                            </svg>
+                        </div>
+                        <h2 class="heading-font text-3xl md:text-5xl font-extrabold text-[#065F46] mb-2">Petualangan SPLDV</h2>
+                        <p class="text-base md:text-lg text-emerald-700 font-bold mb-6">Membongkar Misteri Hubungan Dua Variabel Berpasangan</p>
+                        <div class="inline-block bg-[#D1FAE5] border-2 border-dashed border-[#34D399] rounded-2xl p-4 max-w-lg mx-auto">
+                            <p class="text-xs md:text-sm text-emerald-800 font-semibold">Selamat datang siswa berkecepatan tinggi! Bersiaplah melompati batas pemikiran aljabar yang rumit dengan logika sistematis.</p>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 2: Rute Misi
+            {
+                section: "Pembuka",
+                title: "Peta Misi Pembelajaran",
+                subtitle: "Your Roadmap to SPLDV Domination",
+                icon: "🗺️",
+                render: () => `
+                    <div class="w-full">
+                        <p class="text-sm text-center text-gray-500 font-bold mb-6">Langkah demi langkah untuk menuntaskan misi aljabar ini:</p>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div class="bg-[#FFF9DB] p-4 rounded-2xl border-2 border-[#F59E0B] text-center">
+                                <span class="text-3xl">🧩</span>
+                                <h4 class="font-bold text-[#78350F] text-xs mt-2">1. Warm-up & Teka-teki</h4>
+                            </div>
+                            <div class="bg-[#EBF8FF] p-4 rounded-2xl border-2 border-[#3182CE] text-center">
+                                <span class="text-3xl">📐</span>
+                                <h4 class="font-bold text-[#2B6CB0] text-xs mt-2">2. Geometri & Grafik</h4>
+                            </div>
+                            <div class="bg-[#E6FFFA] p-4 rounded-2xl border-2 border-[#319795] text-center">
+                                <span class="text-3xl">✂️</span>
+                                <h4 class="font-bold text-[#2C7A7B] text-xs mt-2">3. Metode Aljabar Kilat</h4>
+                            </div>
+                            <div class="bg-[#FFF5F5] p-4 rounded-2xl border-2 border-[#E53E3E] text-center">
+                                <span class="text-3xl">🏆</span>
+                                <h4 class="font-bold text-[#9B2C2C] text-xs mt-2">4. Tantangan HOTS</h4>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 3: Tujuan
+            {
+                section: "Pembuka",
+                title: "Target Kurikulum Merdeka",
+                subtitle: "Learning Objectives (Capaian Pembelajaran Fase D)",
+                icon: "🎯",
+                render: () => `
+                    <div class="max-w-2xl mx-auto">
+                        <p class="text-sm text-gray-500 font-bold mb-4">Di akhir petualangan ini, kamu akan mampu:</p>
+                        <ul class="space-y-3">
+                            <li class="bg-[#ECFDF5] border-l-8 border-[#10B981] p-3 rounded-r-xl font-bold text-[#065F46] flex items-center gap-3">
+                                <span class="text-lg">✓</span> Membedakan PLDV tunggal dengan sistem persamaan berpasangan $a_1x + b_1y = c_1$.
+                            </li>
+                            <li class="bg-[#EFF6FF] border-l-8 border-[#3B82F6] p-3 rounded-r-xl font-bold text-[#1E40AF] flex items-center gap-3">
+                                <span class="text-lg">✓</span> Menemukan titik temu koordinat menggunakan metode Grafik, Substitusi, dan Eliminasi.
+                            </li>
+                            <li class="bg-[#FFFBEB] border-l-8 border-[#F59E0B] p-3 rounded-r-xl font-bold text-[#78350F] flex items-center gap-3">
+                                <span class="text-lg">✓</span> Memodelkan & menyelesaikan permasalahan ekonomi nyata sehari-hari secara kritis.
+                            </li>
+                        </ul>
+                    </div>
+                `
+            },
+            // Slide 4: Warm-up 1 (Interactive)
+            {
+                section: "Warm-Up",
+                title: "Teka-teki Timbangan Buah",
+                subtitle: "Sensing Simultaneous Systems Visually",
+                icon: "🍎",
+                render: () => `
+                    <div class="grid md:grid-cols-2 gap-6 items-center">
+                        <div class="flex justify-center bg-emerald-50 p-4 rounded-2xl border">
+                            <svg class="w-48 h-40" viewBox="0 0 100 80">
+                                <rect x="5" y="65" w="90" h="5" fill="#9CA3AF"/>
+                                <line x1="50" y1="20" x2="50" y2="65" stroke="#4B5563" stroke-width="3"/>
+                                <line x1="15" y1="30" x2="85" y2="30" stroke="#F59E0B" stroke-width="4"/>
+                                <circle cx="30" cy="22" r="6" fill="#EF4444"/>
+                                <circle cx="40" cy="22" r="6" fill="#EF4444"/>
+                                <circle cx="20" cy="22" r="6" fill="#F59E0B"/>
+                                <text x="18" y="25" fill="#FFF" font-size="8" font-weight="bold">🍊</text>
+                                <text x="28" y="25" fill="#FFF" font-size="8" font-weight="bold">🍎</text>
+                                <text x="38" y="25" fill="#FFF" font-size="8" font-weight="bold">🍎</text>
+                                <text x="15" y="45" fill="#1F2937" font-size="7" font-weight="bold">🍎 + 🍎 + 🍊 = 120 gram</text>
+                                <text x="15" y="55" fill="#1F2937" font-size="7" font-weight="bold">🍎 + 🍊 = 80 gram</text>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-gray-600 mb-3">Dari info timbangan di samping, berapakah massa 1 buah Apel (🍎) dalam gram?</p>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button onclick="checkSlideAnswer(this, true, 'Hebat! Karena (Apel + Jeruk) = 80, maka Apel tersisa adalah 120 - 80 = 40 gram.', 5)" class="bg-[#F3F4F6] hover:bg-gray-100 p-2.5 rounded-xl font-bold text-xs">40 gram</button>
+                                <button onclick="checkSlideAnswer(this, false, 'Salah, hitung selisih kedua persamaan.', 5)" class="bg-[#F3F4F6] hover:bg-gray-100 p-2.5 rounded-xl font-bold text-xs">50 gram</button>
+                                <button onclick="checkSlideAnswer(this, false, 'Kurang tepat.', 5)" class="bg-[#F3F4F6] hover:bg-gray-100 p-2.5 rounded-xl font-bold text-xs">60 gram</button>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 5: Warm-up 2 (Interactive)
+            {
+                section: "Warm-Up",
+                title: "Tebak Misteri Dua Angka",
+                subtitle: "Fast mental calculations",
+                icon: "🔢",
+                render: () => `
+                    <div class="text-center">
+                        <p class="text-sm font-bold text-gray-600 mb-4">Dua bilangan jika <strong>dijumlahkan menghasilkan 10</strong> dan jika <strong>dikurangkan menghasilkan 4</strong>. Berapakah angka yang paling besar?</p>
+                        <div class="grid grid-cols-3 gap-3 max-w-md mx-auto">
+                            <button onclick="checkSlideAnswer(this, false, 'Salah. Jumlahnya benar 10 tapi selisihnya bukan 4.', 5)" class="bg-[#F3F4F6] hover:bg-gray-100 p-3 rounded-xl border font-bold text-sm">6</button>
+                            <button onclick="checkSlideAnswer(this, true, 'Sempurna! Angka tersebut adalah 7 dan 3. Jumlahnya 10, selisihnya 4. Nilai terbesarnya 7.', 5)" class="bg-[#F3F4F6] hover:bg-gray-100 p-3 rounded-xl border font-bold text-sm">7</button>
+                            <button onclick="checkSlideAnswer(this, false, 'Masih salah.', 5)" class="bg-[#F3F4F6] hover:bg-gray-100 p-3 rounded-xl border font-bold text-sm">8</button>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 6: Warm-up 3 (Interactive)
+            {
+                section: "Warm-Up",
+                title: "Detektif Persamaan Linear",
+                subtitle: "Identify the correct form of PLDV",
+                icon: "🔍",
+                render: () => `
+                    <div class="text-center">
+                        <p class="text-sm font-bold text-gray-600 mb-4">Manakah di bawah ini yang merupakan Persamaan Linear Dua Variabel (PLDV)?</p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 max-w-xl mx-auto">
+                            <button onclick="checkSlideAnswer(this, false, 'Salah. Ini memiliki pangkat 2, maka disebut persamaan kuadrat.', 5)" class="bg-white hover:bg-gray-50 border-2 border-gray-200 p-3 rounded-xl text-xs font-bold font-mono">y = x² + 5</button>
+                            <button onclick="checkSlideAnswer(this, true, 'Sangat Hebat! Ini memiliki dua variabel berpangkat satu (x dan y).', 5)" class="bg-white hover:bg-gray-50 border-2 border-gray-200 p-3 rounded-xl text-xs font-bold font-mono">2x - 3y = 12</button>
+                            <button onclick="checkSlideAnswer(this, false, 'Keliru. Ini hanya memiliki satu variabel yaitu x.', 5)" class="bg-white hover:bg-gray-50 border-2 border-gray-200 p-3 rounded-xl text-xs font-bold font-mono">3x + 10 = 22</button>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 7: Real-world 1
+            {
+                section: "Koneksi Nyata",
+                title: "Paket Tiket Bioskop & Popcorn",
+                subtitle: "How theater ticketing models works",
+                icon: "🍿",
+                render: () => `
+                    <div class="grid md:grid-cols-2 gap-6 items-center">
+                        <div>
+                            <p class="text-sm text-gray-600 leading-relaxed font-semibold">
+                                Bayangkan kamu pergi ke bioskop dengan teman-temanmu:
+                                <br><br>
+                                • Paket A: <strong>2 tiket + 1 Popcorn = Rp120.000</strong>
+                                <br>
+                                • Paket B: <strong>1 tiket + 1 Popcorn = Rp70.000</strong>
+                                <br><br>
+                                Sistem komputer bioskop menggunakan SPLDV di atas untuk menghitung harga eceran satu tiket dan satu popcorn secara otomatis tanpa meleset sedikit pun!
+                            </p>
+                        </div>
+                        <div class="flex justify-center bg-blue-50 p-4 rounded-2xl border-2 border-blue-200 text-center flex-col items-center">
+                            <span class="text-5xl block animate-bounce mb-2">🎟️🍿</span>
+                            <div class="text-xs font-mono font-bold bg-white p-2 rounded border border-blue-300">
+                                $2x + y = 120.000$<br>
+                                $x + y = 70.000$
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 8: Real-world 2
+            {
+                section: "Koneksi Nyata",
+                title: "Manajemen Gizi & Kalori Atlet",
+                subtitle: "Dietary optimization",
+                icon: "🥗",
+                render: () => `
+                    <div class="grid md:grid-cols-2 gap-6 items-center">
+                        <div class="order-2 md:order-1 flex justify-center bg-[#F0FDF4] p-4 rounded-2xl border-2 border-emerald-200">
+                            <!-- Plate & Salad SVG -->
+                            <svg class="w-36 h-36" viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="40" fill="#E5E7EB" stroke="#9CA3AF" stroke-width="4"/>
+                                <path d="M 25 50 Q 50 20, 75 50" fill="#34D399"/>
+                                <path d="M 30 65 Q 50 35, 70 65" fill="#FBBF24"/>
+                            </svg>
+                        </div>
+                        <div class="order-1 md:order-2">
+                            <p class="text-sm text-gray-600 leading-relaxed font-semibold">
+                                Seorang ahli gizi harus menyusun menu makan siang atlet yang mengandung **300 gram protein** dan **450 gram karbohidrat** dari dua jenis bahan makanan utama (misal: Dada Ayam dan Nasi Merah).
+                                <br><br>
+                                Proporsi takaran porsi yang akurat dimodelkan secara instan oleh sistem persamaan linear dua variabel!
+                            </p>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 9: Real-world 3
+            {
+                section: "Koneksi Nyata",
+                title: "Navigasi Pesawat Melawan Angin",
+                subtitle: "Relative Speed & Aerodynamics",
+                icon: "✈️",
+                render: () => `
+                    <div class="text-center max-w-xl mx-auto">
+                        <p class="text-sm text-gray-600 mb-4 font-semibold">
+                            Saat pesawat terbang searah hembusan angin, kecepatannya bertambah: $v_{total} = v_{pesawat} + v_{angin}$. Ketika berbalik arah, kecepatannya berkurang: $v_{total} = v_{pesawat} - v_{angin}$.
+                            <br><br>
+                            Pilot dan menara kontrol navigasi memanfaatkan data ini sebagai SPLDV untuk mengukur kecepatan angin yang sesungguhnya demi keselamatan penerbangan!
+                        </p>
+                        <div class="bg-indigo-50 border border-indigo-200 p-2.5 rounded-xl font-mono text-xs inline-block text-indigo-700 font-bold">
+                            $v_p + v_a = 800 \\text{ km/jam}$ | $v_p - v_a = 720 \\text{ km/jam}$
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 10: Pengantar PLDV vs SPLDV
+            {
+                section: "Konsep Dasar",
+                title: "Perbedaan PLDV & SPLDV",
+                subtitle: "Single equation vs Coupled system",
+                icon: "📝",
+                render: () => `
+                    <div class="space-y-4">
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            Sebuah persamaan linear dua variabel tunggal seperti $x + y = 10$ memiliki **tak hingga banyaknya solusi** (misal: $(10,0)$, $(9,1)$, $(8,2)$, dan seterusnya).
+                            <br><br>
+                            Namun, ketika kita **menggabungkan dua buah persamaan** dengan variabel yang sama, kita membentuk sebuah <strong>SPLDV</strong>:
+                        </p>
+                        <div class="bg-emerald-50 border-2 border-emerald-300 rounded-xl p-4 text-center font-mono text-xs md:text-sm">
+                            <span class="text-emerald-800 font-bold">
+                                $$\\begin{cases} a_1x + b_1y = c_1 \\\\ a_2x + b_2y = c_2 \\end{cases}$$
+                            </span>
+                        </div>
+                        <p class="text-xs text-center text-gray-500 italic">"Sistem berpasangan ini umumnya hanya menyisakan tepat SATU solusi koordinat tunggal."</p>
+                    </div>
+                `
+            },
+            // Slide 11: Geometri SPLDV
+            {
+                section: "Metode Grafik",
+                title: "Titik Potong Dua Garis",
+                subtitle: "Graphical Interpretation of SPLDV",
+                icon: "📊",
+                render: () => `
+                    <div class="grid md:grid-cols-2 gap-4 items-center">
+                        <div class="bg-gray-50 p-4 rounded-2xl border border-gray-200 flex justify-center">
+                            <svg class="w-48 h-48 bg-white border" viewBox="0 0 100 100">
+                                <line x1="5" y1="50" x2="95" y2="50" stroke="#94A3B8" stroke-width="1"/>
+                                <line x1="50" y1="5" x2="50" y2="95" stroke="#94A3B8" stroke-width="1"/>
+                                <line x1="10" y1="80" x2="80" y2="10" stroke="#10B981" stroke-width="3"/>
+                                <line x1="10" y1="20" x2="80" y2="90" stroke="#3B82F6" stroke-width="3"/>
+                                <circle cx="45" cy="45" r="5" fill="#EF4444"/>
+                                <text x="49" y="42" fill="#EF4444" font-weight="black" font-size="6">Solusi (x, y)</text>
+                            </svg>
+                        </div>
+                        <div class="space-y-2">
+                            <h4 class="font-bold text-gray-700">Arti Geometris:</h4>
+                            <p class="text-xs text-gray-600">Setiap persamaan linear merupakan representasi dari sebuah **garis lurus** pada bidang Kartesius.</p>
+                            <p class="text-xs text-gray-600">Menyelesaikan SPLDV secara grafik berarti mencari **koordinat titik potong** di mana kedua garis tersebut saling bertemu!</p>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 12: Metode Grafik Cara Kerja
+            {
+                section: "Metode Grafik",
+                title: "Langkah Menggambar Grafik",
+                subtitle: "Finding intercepts systematically",
+                icon: "🪜",
+                render: () => `
+                    <div class="space-y-2.5 max-w-xl mx-auto text-xs md:text-sm">
+                        <p class="font-semibold text-gray-600 text-center mb-2">Tentukan titik potong dengan sumbu koordinat untuk masing-masing garis:</p>
+                        <div class="bg-[#EFF6FF] p-3 rounded-lg border border-blue-200">
+                            <strong class="text-blue-800">Langkah 1:</strong> Cari titik potong sumbu-X (set $y = 0$) $\\rightarrow (x, 0)$.
+                        </div>
+                        <div class="bg-[#EFF6FF] p-3 rounded-lg border border-blue-200">
+                            <strong class="text-blue-800">Langkah 2:</strong> Cari titik potong sumbu-Y (set $x = 0$) $\\rightarrow (0, y)$.
+                        </div>
+                        <div class="bg-[#EFF6FF] p-3 rounded-lg border border-blue-200">
+                            <strong class="text-blue-800">Langkah 3:</strong> Hubungkan kedua titik menjadi garis, lalu cari koordinat persilangan garis 1 & 2.
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 13: SIMULATOR GRAPHIC SPLDV INTERAKTIF
+            {
+                section: "Eksplorasi",
+                title: "Simulasi Grafik SPLDV Interaktif",
+                subtitle: "Interactive Linear Graph Intersection Visualizer",
+                icon: "📈",
+                render: () => `
+                    <div class="grid md:grid-cols-2 gap-4 items-center">
+                        <div class="space-y-3 bg-gray-50 p-4 rounded-xl border">
+                            <p class="text-[10px] text-gray-500 font-bold">Ubah nilai konstanta untuk menggeser garis!</p>
+                            <div>
+                                <label class="text-xs font-bold text-gray-600 block">Garis 1: $x + y = $ <span id="val-c1" class="text-emerald-600 font-extrabold">4</span></label>
+                                <input type="range" id="range-c1" min="-2" max="6" step="1" value="4" oninput="drawSPLDV()" class="w-full accent-emerald-500">
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold text-gray-600 block">Garis 2: $x - y = $ <span id="val-c2" class="text-blue-600 font-extrabold">2</span></label>
+                                <input type="range" id="range-c2" min="-4" max="4" step="1" value="2" oninput="drawSPLDV()" class="w-full accent-blue-500">
+                            </div>
+                            <div class="bg-white p-2.5 rounded border text-xs mt-2 text-center">
+                                <span class="font-bold text-gray-700">Titik Potong (Solusi):</span><br>
+                                <span id="solution-display" class="font-mono text-red-500 font-black text-sm">x = 3, y = 1</span>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <svg id="interactive-spldv-svg" class="w-44 h-44 bg-white border rounded-xl" viewBox="0 0 100 100">
+                                <line x1="5" y1="50" x2="95" y2="50" stroke="#CBD5E1" stroke-width="1.5"/>
+                                <line x1="50" y1="5" x2="50" y2="95" stroke="#CBD5E1" stroke-width="1.5"/>
+                                <line id="svg-line1" x1="10" y1="10" x2="90" y2="90" stroke="#10B981" stroke-width="2.5"/>
+                                <line id="svg-line2" x1="10" y1="90" x2="90" y2="10" stroke="#3B82F6" stroke-width="2.5"/>
+                                <circle id="svg-intersection" cx="50" cy="50" r="4" fill="#EF4444"/>
+                            </svg>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 14: Metode Substitusi Intro
+            {
+                section: "Metode Aljabar",
+                title: "Metode Substitusi",
+                subtitle: "Menyelipkan Nilai Variabel",
+                icon: "✂️",
+                render: () => `
+                    <div class="space-y-3 max-w-xl mx-auto">
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            Substitusi berarti **mengganti** salah satu variabel dengan ekspresi dari persamaan lain. Metode ini sangat hebat jika salah satu koefisien bernilai 1 atau -1.
+                        </p>
+                        <div class="bg-[#FDF2F8] border-2 border-pink-200 p-4 rounded-xl text-xs space-y-1 text-pink-900 font-semibold">
+                            <p><strong>Langkah Dasar:</strong></p>
+                            <p>1. Ubah salah satu persamaan menjadi bentuk $y = ax + b$ atau $x = cy + d$.</p>
+                            <p>2. Selipkan (substitusikan) bentuk tersebut ke persamaan lainnya.</p>
+                            <p>3. Selesaikan persamaan satu variabel baru yang terbentuk.</p>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 15: Contoh Kasus Substitusi (LaTeX FIXED with Double Backslash Escape)
+            {
+                section: "Metode Aljabar",
+                title: "Contoh Kasus Substitusi",
+                subtitle: "Substitution step-by-step math",
+                icon: "🧩",
+                render: () => `
+                    <div class="space-y-2.5 text-xs md:text-sm">
+                        <p class="font-bold text-gray-600">Selesaikan: $$\\begin{cases} x + y = 7 \\\\ 2x - y = 5 \\end{cases}$$</p>
+                        <div class="bg-[#EFF6FF] p-3 rounded-lg border border-blue-100">
+                            <strong class="text-blue-800">Langkah 1:</strong> Dari pers. 1, ubah menjadi $x = 7 - y$.
+                        </div>
+                        <div class="bg-[#EFF6FF] p-3 rounded-lg border border-blue-100">
+                            <strong class="text-blue-800">Langkah 2:</strong> Substitusikan $x$ ke pers. 2:<br>
+                            $2(7 - y) - y = 5 \\rightarrow 14 - 2y - y = 5 \\rightarrow 14 - 3y = 5$
+                        </div>
+                        <div class="bg-[#EFF6FF] p-3 rounded-lg border border-blue-100">
+                            <strong class="text-blue-800">Langkah 3:</strong> Selesaikan: $-3y = -9 \\rightarrow y = 3$.<br>
+                            Masukkan kembali: $x = 7 - 3 = 4$. Maka solusinya $(4, 3)$.
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 16: Metode Eliminasi Intro
+            {
+                section: "Metode Aljabar",
+                title: "Metode Eliminasi",
+                subtitle: "Eliminating the competition",
+                icon: "➖",
+                render: () => `
+                    <div class="space-y-3 max-w-xl mx-auto">
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            Eliminasi berarti **menghilangkan** salah satu variabel dengan cara menjumlahkan atau mengurangkan kedua persamaan. 
+                            <br><br>
+                            Sebelum dieliminasi, kita harus memastikan koefisien dari variabel yang ingin dihilangkan bernilai **sama** (abaikan tanda positif/negatifnya dulu!).
+                        </p>
+                        <div class="bg-amber-50 border border-amber-300 p-3 rounded-xl text-center text-xs font-mono">
+                            <span class="text-amber-800 font-bold">"Jumlahkan jika tanda berbeda (+ dan -), Kurangkan jika tanda sama (+ dan + atau - dan -)"</span>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 17: Contoh Kasus Eliminasi 1 (Symmetric)
+            {
+                section: "Metode Aljabar",
+                title: "Eliminasi Tanpa Penyesuaian",
+                subtitle: "Symmetric coefficients elimination",
+                icon: "📐",
+                render: () => `
+                    <div class="grid md:grid-cols-2 gap-4 items-center">
+                        <div class="bg-gray-50 border p-4 rounded-xl text-center font-mono text-xs md:text-sm">
+                            $$ \\begin{array}{rcc}
+                            2x + y &=& 10 \\\\
+                            x - y &=& 2 \\\\
+                            \\hline \\text{Dijumlahkan } (+) \\\\
+                            3x + 0 &=& 12 \\\\
+                            x &=& 4
+                            \\end{array} $$
+                        </div>
+                        <div class="space-y-2">
+                            <h4 class="font-bold text-gray-700 text-xs">Penjelasan Kasus:</h4>
+                            <p class="text-[11px] text-gray-600">Perhatikan koefisien variabel $y$ pada kedua persamaan yaitu $+1$ dan $-1$.</p>
+                            <p class="text-[11px] text-gray-600">Karena tandanya berlawanan, kita bisa langsung **menjumlahkan** kedua persamaan untuk mengeliminasi variabel $y$.</p>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 18: Contoh Kasus Eliminasi 2 (KPK multiplication)
+            {
+                section: "Metode Aljabar",
+                title: "Eliminasi Dengan Penyesuaian KPK",
+                subtitle: "Multiplying rows to match coefficients",
+                icon: "⚡",
+                render: () => `
+                    <div class="space-y-2.5 text-xs md:text-sm">
+                        <p class="font-bold text-gray-600">Selesaikan: $$\\begin{cases} 3x + 2y = 12 \\\\ 2x - y = 1 \\end{cases}$$</p>
+                        <p class="text-xs text-gray-500 leading-relaxed">Kita ingin mengeliminasi $y$. KPK dari koefisien $y$ (yaitu 2 dan 1) adalah 2.</p>
+                        <div class="bg-purple-50 p-3 rounded-lg border border-purple-100 font-mono text-[11px] md:text-xs">
+                            $$ \\begin{cases} 3x + 2y = 12 \\quad (\\times 1) \\rightarrow 3x + 2y = 12 \\\\ 2x - y = 1 \\quad (\\times 2) \\rightarrow 4x - 2y = 2 \\end{cases} $$
+                        </div>
+                        <div class="bg-[#F0FDF4] p-3 rounded-lg border border-emerald-200">
+                            Jumlahkan kedua hasil: $7x = 14 \\rightarrow x = 2$.
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 19: Metode Gabungan
+            {
+                section: "Metode Aljabar",
+                title: "Metode Gabungan (Sangat Efektif)",
+                subtitle: "Combination of elimination & substitution",
+                icon: "🔥",
+                render: () => `
+                    <div class="space-y-3 max-w-xl mx-auto">
+                        <p class="text-sm text-gray-600 leading-relaxed font-semibold">
+                            Metode Gabungan adalah cara tercepat dan paling sering digunakan oleh para master matematika untuk menghemat waktu ujian!
+                        </p>
+                        <div class="grid grid-cols-2 gap-3 mt-2">
+                            <div class="bg-sky-50 border-l-4 border-sky-500 p-3 rounded">
+                                <strong class="text-sky-950 block text-xs">Tahap 1: Eliminasi</strong>
+                                Lakukan eliminasi sekali untuk mencari satu nilai variabel (misal $x$).
+                            </div>
+                            <div class="bg-emerald-50 border-l-4 border-emerald-500 p-3 rounded">
+                                <strong class="text-emerald-950 block text-xs">Tahap 2: Substitusi</strong>
+                                Masukkan hasil $x$ tersebut ke salah satu persamaan asal untuk mendapat $y$.
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 20: Karakteristik Solusi SPLDV
+            {
+                section: "Analisis Mendalam",
+                title: "Karakteristik Solusi SPLDV",
+                subtitle: "Three possible geometric situations",
+                icon: "🔮",
+                render: () => `
+                    <div class="space-y-3">
+                        <p class="text-xs text-gray-500 font-bold text-center">Berdasarkan hubungan kemiringan (gradien) kedua garis:</p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-xl text-center text-xs">
+                                <strong class="text-emerald-800 block text-sm">Satu Solusi</strong>
+                                Garis saling berpotongan di satu titik (gradien berbeda).
+                            </div>
+                            <div class="bg-blue-50 border border-blue-200 p-3 rounded-xl text-center text-xs">
+                                <strong class="text-blue-800 block text-sm">Tak Hingga Solusi</strong>
+                                Garis saling berhimpit (persamaan kelipatan dari yang lain).
+                            </div>
+                            <div class="bg-red-50 border border-red-200 p-3 rounded-xl text-center text-xs">
+                                <strong class="text-red-800 block text-sm">Nol Solusi</strong>
+                                Garis sejajar tidak pernah bertemu (gradien sama, konstanta berbeda).
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            // --- SOAL MANDIRI PERHITUNGAN (5 SOAL) ---
+            // Slide 21: Soal Hitung 1
+            {
+                section: "Soal Perhitungan",
+                title: "Misi 1: Eliminasi Langsung",
+                subtitle: "Sederhanakan sistem persamaan",
+                icon: "🏆",
+                render: () => `
+                    <div class="text-center">
+                        <p class="text-sm font-bold text-gray-600 mb-4">Selesaikan SPLDV berikut dan temukan nilai $y$:<br><strong class="text-emerald-600 font-mono text-lg">$$ \\begin{cases} x + 2y = 8 \\\\ x - 2y = 0 \\end{cases} $$</strong></p>
+                        <div class="grid grid-cols-3 gap-2 max-w-sm mx-auto">
+                            <button onclick="checkSlideAnswer(this, true, 'Keren! Kurangkan kedua baris untuk mengeliminasi x: 4y = 8 -> y = 2.', 10)" class="bg-[#F3F4F6] hover:bg-gray-100 p-3 rounded-xl border text-xs font-bold font-mono">y = 2</button>
+                            <button onclick="checkSlideAnswer(this, false, 'Masih salah, gunakan tombol cakar di atas untuk mencoret-coret.', 10)" class="bg-[#F3F4F6] hover:bg-gray-100 p-3 rounded-xl border text-xs font-bold font-mono">y = 4</button>
+                            <button onclick="checkSlideAnswer(this, false, 'Kurang tepat.', 10)" class="bg-[#F3F4F6] hover:bg-gray-100 p-3 rounded-xl border text-xs font-bold font-mono">y = 1</button>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 22: Soal Hitung 2
+            {
+                section: "Soal Perhitungan",
+                title: "Misi 2: Substitusi Anggun",
+                subtitle: "Terapkan metode substitusi variabel tunggal",
+                icon: "🏆",
+                render: () => `
+                    <div class="text-center">
+                        <p class="text-sm font-bold text-gray-600 mb-4">Temukan nilai $x$ dari sistem persamaan berikut:<br><strong class="text-blue-600 font-mono text-lg">$$ \\begin{cases} y = 2x - 3 \\\\ 3x + y = 12 \\end{cases} $$</strong></p>
+                        <div class="grid grid-cols-3 gap-2 max-w-sm mx-auto">
+                            <button onclick="checkSlideAnswer(this, false, 'Belum tepat. Coba selipkan persamaan y ke dalam pers. kedua.', 10)" class="bg-[#F3F4F6] hover:bg-gray-100 p-3 rounded-xl border text-xs font-bold font-mono">x = 2</button>
+                            <button onclick="checkSlideAnswer(this, true, 'Sempurna! 3x + (2x - 3) = 12 -> 5x = 15 -> x = 3.', 10)" class="bg-[#F3F4F6] hover:bg-gray-100 p-3 rounded-xl border text-xs font-bold font-mono">x = 3</button>
+                            <button onclick="checkSlideAnswer(this, false, 'Hitung kembali bagian aljabar 5x = 15.', 10)" class="bg-[#F3F4F6] hover:bg-gray-100 p-3 rounded-xl border text-xs font-bold font-mono">x = 5</button>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 23: Soal Hitung 3
+            {
+                section: "Soal Perhitungan",
+                title: "Misi 3: Sistem KPK Gabungan",
+                subtitle: "Metode gabungan eliminasi dan substitusi",
+                icon: "🏆",
+                render: () => `
+                    <div class="text-center">
+                        <p class="text-sm font-bold text-gray-600 mb-4">Carilah nilai dari solusi $x$ pada sistem:<br><strong class="text-indigo-600 font-mono text-lg">$$ \\begin{cases} 2x + 3y = 12 \\\\ 3x - y = 7 \\end{cases} $$</strong></p>
+                        <div class="grid grid-cols-3 gap-2 max-w-sm mx-auto">
+                            <button onclick="checkSlideAnswer(this, true, 'Hebat! Kalikan baris kedua dengan 3, lalu jumlahkan untuk mengeliminasi y. Diperoleh x = 3.', 10)" class="bg-[#F3F4F6] hover:bg-gray-100 p-3 rounded-xl border text-xs font-bold font-mono">x = 3</button>
+                            <button onclick="checkSlideAnswer(this, false, 'Masih salah.', 10)" class="bg-[#F3F4F6] hover:bg-gray-100 p-3 rounded-xl border text-xs font-bold font-mono">x = 2</button>
+                            <button onclick="checkSlideAnswer(this, false, 'Salah.', 10)" class="bg-[#F3F4F6] hover:bg-gray-100 p-3 rounded-xl border text-xs font-bold font-mono">x = 1</button>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 24: Soal Hitung 4 (LaTeX Fraktur / Division Fixed)
+            {
+                section: "Soal Perhitungan",
+                title: "Misi 4: Persamaan Pecahan Aljabar (HOTS)",
+                subtitle: "Multiply by denominators first",
+                icon: "🏆",
+                render: () => `
+                    <div class="text-center">
+                        <p class="text-sm font-bold text-gray-600 mb-4">Selesaikan persamaan berikut untuk mendapatkan nilai $y$:<br><strong class="text-red-500 font-mono text-lg">$$ \\begin{cases} \\frac{x}{2} + \\frac{y}{3} = 4 \\\\ x - y = 3 \\end{cases} $$</strong></p>
+                        <div class="grid grid-cols-3 gap-2 max-w-md mx-auto">
+                            <button onclick="checkSlideAnswer(this, false, 'Kalikan persamaan pertama dengan 6 terlebih dahulu.', 10)" class="bg-[#F3F4F6] hover:bg-gray-100 p-3 rounded-xl border text-xs font-bold font-mono">y = 1</button>
+                            <button onclick="checkSlideAnswer(this, true, 'Luar Biasa Jenius! Persamaan 1 menjadi 3x + 2y = 24. Gunakan eliminasi dengan pers. 2 untuk memperoleh y = 3.', 15)" class="bg-[#F3F4F6] hover:bg-gray-100 p-3 rounded-xl border text-xs font-bold font-mono">y = 3</button>
+                            <button onclick="checkSlideAnswer(this, false, 'Kurang tepat.', 10)" class="bg-[#F3F4F6] hover:bg-gray-100 p-3 rounded-xl border text-xs font-bold font-mono">y = 5</button>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 25: Soal Hitung 5
+            {
+                section: "Soal Perhitungan",
+                title: "Misi 5: Menghitung Ekspresi Aljabar",
+                subtitle: "Find the value of 2x - y",
+                icon: "🏆",
+                render: () => `
+                    <div class="text-center">
+                        <p class="text-sm font-bold text-gray-600 mb-4">Jika $(x, y)$ adalah solusi dari sistem $$\\begin{cases} 3x + y = 10 \\\\ x - y = 2 \\end{cases}$$, berapakah nilai dari <strong class="text-orange-600 font-mono text-lg">2x - y</strong>?</p>
+                        <div class="grid grid-cols-3 gap-2 max-w-md mx-auto">
+                            <button onclick="checkSlideAnswer(this, true, 'Fantastis! Solusi SPLDV adalah x = 3 and y = 1. Nilai dari 2(3) - 1 = 5.', 15)" class="bg-[#F3F4F6] hover:bg-gray-100 p-3 rounded-xl border text-xs font-bold font-mono">5</button>
+                            <button onclick="checkSlideAnswer(this, false, 'Salah, hitung nilai x dan y terlebih dahulu.', 10)" class="bg-[#F3F4F6] hover:bg-gray-100 p-3 rounded-xl border text-xs font-bold font-mono">6</button>
+                            <button onclick="checkSlideAnswer(this, false, 'Masih keliru.', 10)" class="bg-[#F3F4F6] hover:bg-gray-100 p-3 rounded-xl border text-xs font-bold font-mono">7</button>
+                        </div>
+                    </div>
+                `
+            },
+            // --- SOAL MANDIRI CERITA (5 SOAL) ---
+            // Slide 26: Soal Cerita 1 & 2
+            {
+                section: "Soal Cerita",
+                title: "Museum & Perbandingan Umur",
+                subtitle: "Real world word problems (HOTS)",
+                icon: "🏛️",
+                render: () => `
+                    <div class="space-y-4">
+                        <div class="bg-blue-50 border border-blue-200 p-3 rounded-xl">
+                            <p class="text-xs font-bold text-blue-950">Soal Cerita 1: Tiket Masuk Museum Kota</p>
+                            <p class="text-[11px] text-gray-600">Harga 2 tiket dewasa dan 3 tiket anak adalah Rp70.000, sedangkan harga 1 tiket dewasa dan 4 tiket anak adalah Rp60.000. Berapakah harga 1 tiket anak?</p>
+                            <div class="flex gap-2 mt-2">
+                                <button onclick="checkSlideAnswer(this, true, 'Sangat Hebat! Dimisalkan 2d+3a = 70.000 dan d+4a = 60.000. Selesaikan untuk memperoleh harga tiket anak (a) = Rp10.000.', 15)" class="bg-white px-3 py-1.5 rounded-lg border text-[10px] font-bold">Rp10.000</button>
+                                <button onclick="checkSlideAnswer(this, false, 'Coba hitung lagi.', 15)" class="bg-white px-3 py-1.5 rounded-lg border text-[10px] font-bold">Rp12.000</button>
+                            </div>
+                        </div>
+                        <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-xl">
+                            <p class="text-xs font-bold text-emerald-950">Soal Cerita 2: Rahasia Umur Ayah & Anak</p>
+                            <p class="text-[11px] text-gray-600">Umur Ayah sekarang 3 kali umur anaknya. Selisih umur mereka adalah 26 tahun. Berapakah umur sang anak?</p>
+                            <div class="flex gap-2 mt-2">
+                                <button onclick="checkSlideAnswer(this, true, 'Tepat! Model: y = 3x dan y - x = 26. Diperoleh umur anak (x) = 13 tahun.', 15)" class="bg-white px-3 py-1.5 rounded-lg border text-[10px] font-bold">13 Tahun</button>
+                                <button onclick="checkSlideAnswer(this, false, 'Salah.', 15)" class="bg-white px-3 py-1.5 rounded-lg border text-[10px] font-bold">15 Tahun</button>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 27: Soal Cerita 3 & 4
+            {
+                section: "Soal Cerita",
+                title: "Dunia Usaha & Lahan Parkir",
+                subtitle: "Complex modeling scenarios",
+                icon: "🅿️",
+                render: () => `
+                    <div class="space-y-4">
+                        <div class="bg-purple-50 border border-purple-200 p-3 rounded-xl">
+                            <p class="text-xs font-bold text-purple-950">Soal Cerita 3: Penghitungan Roda di Lahan Parkir</p>
+                            <p class="text-[11px] text-gray-600">Ada 40 kendaraan terdiri atas mobil (roda 4) dan sepeda motor (roda 2) di lahan parkir. Jika jumlah roda seluruhnya ada 110 buah, berapa banyak mobil yang parkir?</p>
+                            <div class="flex gap-2 mt-2">
+                                <button onclick="checkSlideAnswer(this, true, 'Luar Biasa Cerdas! Model: x+y = 40 dan 4x+2y = 110. Selesaikan untuk memperoleh jumlah mobil (x) = 15 buah.', 15)" class="bg-white px-3 py-1.5 rounded-lg border text-[10px] font-bold">15 Mobil</button>
+                                <button onclick="checkSlideAnswer(this, false, 'Kurang tepat.', 15)" class="bg-white px-3 py-1.5 rounded-lg border text-[10px] font-bold">20 Mobil</button>
+                            </div>
+                        </div>
+                        <div class="bg-amber-50 border border-amber-200 p-3 rounded-xl">
+                            <p class="text-xs font-bold text-amber-950">Soal Cerita 4: Meracik Kopi Spesial Cafe</p>
+                            <p class="text-[11px] text-gray-600">Seorang barista ingin meracik kopi campuran sebanyak 10 kg seharga Rp92.000/kg dari biji kopi arabika (Rp100.000/kg) dan biji kopi robusta (Rp80.000/kg). Berapa kg kopi robusta yang digunakan?</p>
+                            <div class="flex gap-2 mt-2">
+                                <button onclick="checkSlideAnswer(this, false, 'Hitung kembali perbandingan harganya.', 15)" class="bg-white px-3 py-1.5 rounded-lg border text-[10px] font-bold">2 kg</button>
+                                <button onclick="checkSlideAnswer(this, true, 'Sempurna! Model: x+y = 10 dan 100.000x + 80.000y = 920.000. Diperoleh kopi robusta (y) = 4 kg.', 15)" class="bg-white px-3 py-1.5 rounded-lg border text-[10px] font-bold">4 kg</button>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 28: Soal Cerita 5 (HOTS)
+            {
+                section: "Soal Cerita",
+                title: "Misi 10: Arus Sungai Kalimantan",
+                subtitle: "Advanced relative speed system (HOTS)",
+                icon: "🚣",
+                render: () => `
+                    <div class="grid md:grid-cols-2 gap-4 items-center">
+                        <div>
+                            <p class="text-xs text-gray-600 leading-relaxed font-semibold">
+                                Sebuah perahu motor menempuh jarak 30 km searah arus sungai dalam waktu 2 jam. Saat kembali melawan arus sungai, perahu membutuhkan waktu 3 jam untuk menempuh jarak yang sama. 
+                                <br><br>
+                                Tentukan kecepatan perahu motor di air tenang!
+                            </p>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-xl border border-blue-200 text-center">
+                            <p class="text-xs font-bold text-blue-900 mb-2">Pilih Kecepatan Perahu ($v_p$)</p>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="checkSlideAnswer(this, true, 'SANGAT JENIUS! Model: vp + va = 15 (searah) dan vp - va = 10 (melawan). Eliminasi untuk memperoleh vp = 12,5 km/jam.', 20)" class="bg-white py-2 rounded border text-xs font-bold">12,5 km/jam</button>
+                                <button onclick="checkSlideAnswer(this, false, 'Masih salah.', 20)" class="bg-white py-2 rounded border text-xs font-bold">10 km/jam</button>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 29: Refleksi
+            {
+                section: "Refleksi",
+                title: "Bagaimana Perasaan Belajarmu?",
+                subtitle: "Kurikulum Merdeka Self-Evaluation",
+                icon: "🌿",
+                render: () => `
+                    <div class="text-center max-w-xl mx-auto">
+                        <p class="text-sm font-bold text-gray-600 mb-6">Pilih emotikon yang mewakili tingkat pemahamanmu hari ini:</p>
+                        <div class="grid grid-cols-3 gap-3">
+                            <button onclick="handleEmotionSelect(this, 'sangat-paham')" class="bg-white hover:bg-emerald-50 border-2 border-emerald-200 p-4 rounded-2xl flex flex-col items-center transition active:scale-95">
+                                <span class="text-4xl mb-2">😎</span>
+                                <span class="text-xs font-bold text-gray-600">Sangat Paham</span>
+                            </button>
+                            <button onclick="handleEmotionSelect(this, 'butuh-latihan')" class="bg-white hover:bg-amber-50 border-2 border-amber-200 p-4 rounded-2xl flex flex-col items-center transition active:scale-95">
+                                <span class="text-4xl mb-2">🤔</span>
+                                <span class="text-xs font-bold text-gray-600">Butuh Latihan</span>
+                            </button>
+                            <button onclick="handleEmotionSelect(this, 'siap-tantangan')" class="bg-white hover:bg-indigo-50 border-2 border-indigo-200 p-4 rounded-2xl flex flex-col items-center transition active:scale-95">
+                                <span class="text-4xl mb-2">🚀</span>
+                                <span class="text-xs font-bold text-gray-600">Siap Naik Level</span>
+                            </button>
+                        </div>
+                        <p id="emotion-feedback" class="text-xs font-bold text-[#059669] mt-6 min-h-[16px]"></p>
+                    </div>
+                `
+            },
+            // Slide 30: Kesimpulan
+            {
+                section: "Kesimpulan",
+                title: "Misi SPLDV Selesai!",
+                subtitle: "You are officially an Algebra Master!",
+                icon: "🏆",
+                render: () => `
+                    <div class="text-center">
+                        <span class="text-7xl block mb-3 animate-bounce">👑🏆</span>
+                        <h2 class="heading-font text-3xl font-extrabold text-[#065F46] mb-1">Misi Selesai dengan Gemilang!</h2>
+                        <p class="text-xs md:text-sm text-gray-600 max-w-md mx-auto mb-6">Luar biasa! Kamu telah melintasi dan menuntaskan 30 slide tantangan interaktif SPLDV Kurikulum Merdeka. Pertahankan terus ketajaman analisismu!</p>
+                        <div onclick="resetAdventure()" class="inline-block bg-gradient-to-r from-[#10B981] to-emerald-600 text-white font-black px-8 py-3 rounded-2xl shadow-lg hover:scale-105 transition duration-300 cursor-pointer text-xs md:text-sm">
+                            🔄 ULANGI PETUALANGAN
+                        </div>
+                    </div>
+                `
+            }
+        ];
+
+        // --- STREAMING_CHUNK:Initializing state variables... ---
+        // --- 3. STATE ENGINE ---
+        let currentSlide = 0;
+        let score = 0;
+
+        // Canvas Drawing Setup
+        const canvas = document.getElementById('scratch-canvas');
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+
+        // Confetti Canvas Setup
+        const confettiCanvas = document.getElementById('confetti');
+        const confettiCtx = confettiCanvas.getContext('2d');
+        let confettiActive = false;
+        let particles = [];
+
+        // --- 4. ENGINE INITIALIZATION ---
+        window.onload = function() {
+            loadSlide(0);
+            initCanvas();
+            setupTouchGestures();
+        };
+
+        // --- STREAMING_CHUNK:Constructing slide transition system... ---
+        // --- 5. SLIDE RENDERING CONTROLLER ---
+        function loadSlide(index) {
+            if (index < 0 || index >= slides.length) return;
+            currentSlide = index;
+
+            const slide = slides[currentSlide];
+            
+            const headerHtml = `
+                <div class="mb-5 border-b-2 border-gray-100 pb-3">
+                    <span class="text-xs font-black text-[#10B981] uppercase tracking-widest">${slide.section}</span>
+                    <h1 class="heading-font text-2xl md:text-3xl font-extrabold text-slate-800 flex items-center gap-2 mt-1">
+                        <span>${slide.icon}</span> ${slide.title}
+                    </h1>
+                    <p class="text-xs text-gray-400 font-semibold italic">${slide.subtitle}</p>
+                </div>
+            `;
+            
+            document.getElementById('slide-content').innerHTML = headerHtml + slide.render();
+
+            // Progress bar
+            const percent = ((currentSlide + 1) / slides.length) * 100;
+            document.getElementById('progress-bar').style.width = `${percent}%`;
+
+            // Footer metadata
+            document.getElementById('slide-index').innerText = `Slide ${currentSlide + 1} / ${slides.length}`;
+            document.getElementById('section-name').innerText = `Misi: ${slide.section}`;
+
+            // Button opacity states
+            document.getElementById('prev-btn').style.opacity = currentSlide === 0 ? "0.3" : "1";
+            document.getElementById('next-btn').style.opacity = currentSlide === slides.length - 1 ? "0.3" : "1";
+
+            // Special interactive slide trigger
+            if (currentSlide === 12) { 
+                setTimeout(drawSPLDV, 100);
+            }
+
+            // Force MathJax to scan and render formulas in the newly injected slide
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function changeSlide(direction) {
+            const nextIdx = currentSlide + direction;
+            if (nextIdx >= 0 && nextIdx < slides.length) {
+                playSound('click');
+                loadSlide(nextIdx);
+            }
+        }
+
+        // --- STREAMING_CHUNK:Configuring answer evaluation... ---
+        // --- 6. INTERACTIVE SLIDE FEEDBACKS ---
+        function checkSlideAnswer(element, isCorrect, feedback, points = 10) {
+            const parent = element.parentNode;
+            Array.from(parent.children).forEach(btn => {
+                btn.classList.remove('border-emerald-500', 'bg-emerald-50', 'border-red-400', 'bg-red-50');
+            });
+
+            if (isCorrect) {
+                element.classList.add('border-emerald-500', 'bg-emerald-50');
+                playSound('correct');
+                showToast("✨ " + feedback, "bg-[#10B981]");
+                score += points;
+                document.getElementById('score-display').innerText = `${score} XP`;
+                triggerConfetti();
+            } else {
+                element.classList.add('border-red-400', 'bg-red-50');
+                playSound('incorrect');
+                showToast("❌ " + feedback, "bg-red-500");
+            }
+        }
+
+        function handleEmotionSelect(element, emotion) {
+            const parent = element.parentNode;
+            Array.from(parent.children).forEach(btn => {
+                btn.classList.remove('ring-4', 'ring-[#10B981]', 'scale-105');
+            });
+            element.classList.add('ring-4', 'ring-[#10B981]', 'scale-105');
+            
+            const feedbackText = document.getElementById('emotion-feedback');
+            if (emotion === 'sangat-paham') {
+                feedbackText.innerText = "Luar biasa! Konsep dasar hingga tingkat tinggi sudah kamu kuasai dengan sangat baik! 😎";
+                playSound('correct');
+                triggerConfetti();
+            } else if (emotion === 'butuh-latihan') {
+                feedbackText.innerText = "Santai saja, kerjakan ulang soal perhitungan di atas dengan memanfaatkan papan cakar! 🧠";
+                playSound('click');
+            } else {
+                feedbackText.innerText = "Dahsyat! Jiwa petualangmu siap menghadapi soal-soal olimpiade berikutnya! 🚀";
+                playSound('correct');
+                triggerConfetti();
+            }
+        }
+
+        function showToast(text, bgClass) {
+            const toast = document.getElementById('toast');
+            const toastText = document.getElementById('toast-text');
+            toast.className = `fixed bottom-12 left-1/2 transform -translate-x-1/2 z-50 text-white font-black px-6 py-3 rounded-2xl shadow-xl flex items-center gap-2 animate-bounce ${bgClass}`;
+            toastText.innerText = text;
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
+        function resetAdventure() {
+            score = 0;
+            document.getElementById('score-display').innerText = `0 XP`;
+            loadSlide(0);
+        }
+
+        // --- STREAMING_CHUNK:Plotting interactive graph... ---
+        // --- 7. DYNAMIC SPLDV GRAPH PLOTTER ---
+        function drawSPLDV() {
+            const c1 = parseFloat(document.getElementById('range-c1').value);
+            const c2 = parseFloat(document.getElementById('range-c2').value);
+
+            // Update Label texts
+            document.getElementById('val-c1').innerText = c1;
+            document.getElementById('val-c2').innerText = c2;
+
+            // Solve system: x + y = c1 AND x - y = c2
+            const x = (c1 + c2) / 2;
+            const y = (c1 - c2) / 2;
+
+            document.getElementById('solution-display').innerText = `x = ${x.toFixed(1)}, y = ${y.toFixed(1)}`;
+
+            // Grid mapping function (domain [-5, 5] mapped to viewport [10, 90])
+            const mapX = (val) => 50 + val * 8;
+            const mapY = (val) => 50 - val * 8; // Invert Y coordinate for SVG space
+
+            // Update line coordinates
+            // Line 1: y = -x + c1 (For x=-5, y=5+c1 | For x=5, y=-5+c1)
+            document.getElementById('svg-line1').setAttribute('x1', mapX(-5));
+            document.getElementById('svg-line1').setAttribute('y1', mapY(5 + c1));
+            document.getElementById('svg-line1').setAttribute('x2', mapX(5));
+            document.getElementById('svg-line1').setAttribute('y2', mapY(-5 + c1));
+
+            // Line 2: y = x - c2 (For x=-5, y=-5-c2 | For x=5, y=5-c2)
+            document.getElementById('svg-line2').setAttribute('x1', mapX(-5));
+            document.getElementById('svg-line2').setAttribute('y1', mapY(-5 - c2));
+            document.getElementById('svg-line2').setAttribute('x2', mapX(5));
+            document.getElementById('svg-line2').setAttribute('y2', mapY(5 - c2));
+
+            // Place intersection dot
+            const cx = mapX(x);
+            const cy = mapY(y);
+            const dot = document.getElementById('svg-intersection');
+            
+            // Boundary safety guard
+            if (cx >= 5 && cx <= 95 && cy >= 5 && cy <= 95) {
+                dot.setAttribute('cx', cx);
+                dot.setAttribute('cy', cy);
+                dot.style.display = 'block';
+            } else {
+                dot.style.display = 'none';
+            }
+        }
+
+        // --- STREAMING_CHUNK:Activating drawing canvas... ---
+        // --- 8. DOODLE CANVAS SYSTEM ---
+        function toggleScratchpad() {
+            const pad = document.getElementById('scratchpad');
+            pad.classList.toggle('hidden');
+            if (!pad.classList.contains('hidden')) {
+                resizeCanvas();
+            }
+        }
+
+        function initCanvas() {
+            canvas.addEventListener('mousedown', (e) => {
+                isDrawing = true;
+                ctx.beginPath();
+                const r = canvas.getBoundingClientRect();
+                ctx.moveTo(e.clientX - r.left, e.clientY - r.top);
+            });
+            canvas.addEventListener('mousemove', (e) => {
+                if (!isDrawing) return;
+                const r = canvas.getBoundingClientRect();
+                ctx.lineTo(e.clientX - r.left, e.clientY - r.top);
+                ctx.stroke();
+            });
+            canvas.addEventListener('mouseup', () => isDrawing = false);
+
+            // Responsive Touch Screen controls
+            canvas.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                isDrawing = true;
+                ctx.beginPath();
+                const t = e.touches[0];
+                const r = canvas.getBoundingClientRect();
+                ctx.moveTo(t.clientX - r.left, t.clientY - r.top);
+            });
+            canvas.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                if (!isDrawing) return;
+                const t = e.touches[0];
+                const r = canvas.getBoundingClientRect();
+                ctx.lineTo(t.clientX - r.left, t.clientY - r.top);
+                ctx.stroke();
+            });
+            canvas.addEventListener('touchend', () => isDrawing = false);
+        }
+
+        function resizeCanvas() {
+            const parent = canvas.parentNode;
+            canvas.width = parent.clientWidth;
+            canvas.height = parent.clientHeight;
+            ctx.lineCap = 'round';
+            ctx.lineWidth = 3.5;
+            ctx.strokeStyle = '#4F46E5'; 
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // --- 9. SWIPE GESTURES ---
+        let startX = 0;
+        function setupTouchGestures() {
+            const wrapper = document.getElementById('slide-wrapper');
+            wrapper.addEventListener('touchstart', (e) => {
+                startX = e.changedTouches[0].screenX;
+            }, false);
+
+            wrapper.addEventListener('touchend', (e) => {
+                const endX = e.changedTouches[0].screenX;
+                const threshold = 65;
+                if (startX - endX > threshold) {
+                    changeSlide(1); // Next slide
+                } else if (endX - startX > threshold) {
+                    changeSlide(-1); // Prev slide
+                }
+            }, false);
+        }
+
+        // --- STREAMING_CHUNK:Configuring confetti celebratory effects... ---
+        // --- 10. CONFETTI CELEBRATION SYSTEM ---
+        function triggerConfetti() {
+            confettiActive = true;
+            confettiCanvas.classList.remove('hidden');
+            confettiCanvas.width = window.innerWidth;
+            confettiCanvas.height = window.innerHeight;
+            
+            particles = [];
+            for (let i = 0; i < 70; i++) {
+                particles.push({
+                    x: Math.random() * confettiCanvas.width,
+                    y: Math.random() * confettiCanvas.height - confettiCanvas.height,
+                    r: Math.random() * 5 + 4,
+                    d: Math.random() * confettiCanvas.height,
+                    color: `hsl(${Math.random() * 360}, 100%, 70%)`,
+                    tilt: Math.random() * 10 - 5,
+                    tiltAngleIncremental: Math.random() * 0.07 + 0.02,
+                    tiltAngle: 0
+                });
+            }
+
+            animateConfetti();
+            setTimeout(() => {
+                confettiActive = false;
+                confettiCanvas.classList.add('hidden');
+            }, 2500);
+        }
+
+        function animateConfetti() {
+            if (!confettiActive) return;
+            confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            
+            particles.forEach((p, idx) => {
+                p.tiltAngle += p.tiltAngleIncremental;
+                p.y += (Math.cos(p.d) + 3 + p.r / 2) / 2;
+                p.x += Math.sin(p.tiltAngle);
+                p.tilt = Math.sin(p.tiltAngle - idx / 3) * 15;
+
+                confettiCtx.beginPath();
+                confettiCtx.lineWidth = p.r;
+                confettiCtx.strokeStyle = p.color;
+                confettiCtx.moveTo(p.x + p.tilt + p.r / 2, p.y);
+                confettiCtx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 2);
+                confettiCtx.stroke();
+            });
+
+            requestAnimationFrame(animateConfetti);
+        }
+    </script>
+</body>
+</html>
