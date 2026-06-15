@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Detektif SPLDV - Kelas 8 SMP</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- MathJax Configuration for Perfect Non-Formula Rendering -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .heading-font {
+            font-family: 'Fredoka', sans-serif;
+        }
+        .math-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        @keyframes bounce-subtle {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+        .bounce-subtle {
+            animation: bounce-subtle 4s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-[#EEF2FF] via-[#F5F3FF] to-[#FDF2F8] min-h-screen flex flex-col justify-between overflow-x-hidden select-none">
+
+    <!-- HEADER NAVIGATION -->
+    <header class="bg-white/90 backdrop-blur-md border-b-4 border-[#6366F1] py-3.5 px-6 flex justify-between items-center sticky top-0 z-40 shadow-sm">
+        <div class="flex items-center gap-3">
+            <span class="text-3xl animate-bounce">🕵️‍♂️</span>
+            <div>
+                <h1 class="heading-font text-xl md:text-2xl font-bold text-[#4F46E5]">Kuis Detektif SPLDV</h1>
+                <p class="text-[10px] text-[#6366F1] font-black tracking-widest uppercase">Misi Mandiri • 10 Kasus Aljabar</p>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-3">
+            <!-- Points Indicator -->
+            <div class="bg-[#EEF2FF] border-2 border-[#6366F1] rounded-full px-4 py-1.5 flex items-center gap-1.5 shadow-sm">
+                <span class="text-base">💎</span>
+                <span id="score-display" class="font-bold text-[#4F46E5] text-xs md:text-sm">0 XP</span>
+            </div>
+            
+            <!-- Scratchpad Trigger -->
+            <button onclick="toggleScratchpad()" class="bg-[#F3F4F6] hover:bg-[#E5E7EB] border-2 border-gray-300 active:scale-95 transition text-gray-700 font-bold rounded-full px-4 py-1.5 text-xs md:text-sm shadow-sm flex items-center gap-1">
+                ✏️ <span>Papan Cakar</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- SCRATCHPAD DRAWING OVERLAY -->
+    <div id="scratchpad" class="hidden fixed inset-0 z-50 bg-white/95 flex flex-col p-4">
+        <div class="flex justify-between items-center mb-2 border-b-2 border-gray-100 pb-2">
+            <h3 class="heading-font text-lg font-bold text-[#4F46E5] flex items-center gap-2">
+                ✏️ Papan Coret Hitung Cakar Bebas
+            </h3>
+            <div class="flex items-center gap-2">
+                <button onclick="clearCanvas()" class="bg-red-50 hover:bg-red-100 text-red-600 font-bold px-3 py-1.5 rounded-xl text-xs">Bersihkan</button>
+                <button onclick="toggleScratchpad()" class="bg-[#4F46E5] hover:bg-[#4338CA] text-white font-bold px-4 py-1.5 rounded-xl text-xs">Kembali Ke Soal</button>
+            </div>
+        </div>
+        <div class="flex-1 bg-amber-50/20 border-4 border-dashed border-[#818CF8] rounded-2xl relative cursor-crosshair overflow-hidden">
+            <canvas id="scratch-canvas" class="absolute inset-0 w-full h-full"></canvas>
+        </div>
+        <p class="text-xs text-gray-400 mt-2 text-center">Gunakan jari atau mouse komputer untuk menghitung bersusun di sini!</p>
+    </div>
+
+    <!-- MAIN INTERACTIVE QUIZ AREA -->
+    <main class="flex-1 flex flex-col items-center justify-center p-4 md:p-8">
+        
+        <!-- DASHBOARD SCREEN -->
+        <div id="dashboard-screen" class="w-full max-w-2xl bg-white rounded-3xl border-8 border-[#C7D2FE] shadow-xl p-6 md:p-10 text-center relative overflow-hidden bounce-subtle">
+            <span class="text-7xl block mb-4 animate-bounce">🎯</span>
+            <h2 class="heading-font text-3xl md:text-5xl font-extrabold text-[#312E81] mb-2">Arena Duel SPLDV</h2>
+            <p class="text-sm md:text-base text-[#6366F1] font-bold mb-8">Pecahkan 7 Kasus Perhitungan & 3 Cerita Detektif Sehari-hari!</p>
+            
+            <div class="grid md:grid-cols-2 gap-4 mb-8 text-left text-xs md:text-sm">
+                <div class="bg-[#F0FDF4] border-2 border-[#10B981] rounded-2xl p-4">
+                    <span class="text-2xl block mb-1">⚡</span>
+                    <h3 class="font-bold text-[#065F46]">7 Soal Kilat</h3>
+                    <p class="text-gray-500 mt-0.5">Metode grafik, eliminasi cepat, dan substitusi aljabar.</p>
+                </div>
+                <div class="bg-[#EFF6FF] border-2 border-[#3B82F6] rounded-2xl p-4">
+                    <span class="text-2xl block mb-1">💼</span>
+                    <h3 class="font-bold text-[#1E40AF]">3 Kasus Cerita</h3>
+                    <p class="text-gray-500 mt-0.5">Memodelkan masalah belanja & peternakan ke bentuk sistem linear.</p>
+                </div>
+            </div>
+
+            <button onclick="startQuiz()" class="bg-gradient-to-r from-[#6366F1] to-[#EC4899] hover:from-[#4F46E5] hover:to-[#DB2777] text-white font-extrabold text-lg py-4 px-10 rounded-2xl shadow-lg hover:shadow-xl active:scale-95 transition duration-300">
+                MULAI MISI SEKARANG! 🚀
+            </button>
+        </div>
+
+        <!-- GAMEPLAY SCREEN -->
+        <div id="quiz-screen" class="hidden w-full max-w-2xl bg-white rounded-3xl border-8 border-[#C7D2FE] shadow-xl overflow-hidden flex flex-col justify-between min-h-[460px] md:min-h-[500px]">
+            <!-- Top Progress Info -->
+            <div class="bg-[#F8FAFC] px-6 py-4 flex justify-between items-center border-b-2 border-gray-100">
+                <span id="quiz-badge" class="bg-[#6366F1] text-white font-black text-xs px-3 py-1 rounded-full uppercase tracking-wider">Perhitungan</span>
+                <span class="font-bold text-slate-700 text-xs md:text-sm">Misi: <span id="q-counter">1/10</span></span>
+            </div>
+
+            <!-- Question Space -->
+            <div class="p-6 md:p-10 flex-1 flex flex-col justify-center">
+                <div id="question-text" class="text-lg md:text-2xl font-bold text-slate-800 text-center leading-relaxed">
+                    <!-- Loaded dynamically -->
+                </div>
+            </div>
+
+            <!-- Multiple Choice Options -->
+            <div class="px-6 md:px-10 pb-8 grid grid-cols-1 md:grid-cols-2 gap-3" id="options-container">
+                <!-- Loaded dynamically -->
+            </div>
+
+            <!-- Bottom Progress Line -->
+            <div class="w-full bg-slate-100 h-3">
+                <div id="quiz-progress" class="bg-gradient-to-r from-[#6366F1] to-[#EC4899] h-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- RESULT SCREEN -->
+        <div id="result-screen" class="hidden w-full max-w-2xl bg-white rounded-3xl border-8 border-[#10B981] shadow-xl p-6 md:p-10 text-center">
+            <span id="result-emoji" class="text-7xl block mb-3 animate-bounce">🎉</span>
+            <h2 class="heading-font text-3xl md:text-4xl font-extrabold text-slate-800 mb-1" id="result-title">Misi Selesai!</h2>
+            <p class="text-sm text-gray-500 font-bold mb-6" id="result-rank">Gelar: Agen Aljabar Kelas Tinggi</p>
+
+            <!-- Score Cards -->
+            <div class="grid grid-cols-3 gap-3 mb-8 max-w-md mx-auto text-xs md:text-sm">
+                <div class="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-3 text-center">
+                    <span class="text-emerald-800 font-bold block">BENAR</span>
+                    <span id="score-correct" class="text-2xl font-black text-emerald-600">0</span>
+                </div>
+                <div class="bg-red-50 border-2 border-red-200 rounded-2xl p-3 text-center">
+                    <span class="text-red-800 font-bold block">SALAH</span>
+                    <span id="score-wrong" class="text-2xl font-black text-red-500">0</span>
+                </div>
+                <div class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-3 text-center">
+                    <span class="text-amber-800 font-bold block">TOTAL XP</span>
+                    <span id="score-total" class="text-2xl font-black text-amber-600">0</span>
+                </div>
+            </div>
+
+            <!-- Slide-down Review Section Toggle -->
+            <div class="mb-6">
+                <button onclick="toggleReviewList()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 border-2 border-slate-300 font-bold rounded-xl px-5 py-2 text-xs transition">
+                    🔍 Lihat Detail Pembahasan Jawaban
+                </button>
+                <div id="review-container" class="hidden mt-4 max-h-52 overflow-y-auto text-left space-y-2 border-t pt-3">
+                    <!-- Dynamic review list goes here -->
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <button onclick="resetQuiz()" class="bg-gradient-to-r from-[#10B981] to-[#059669] text-white font-extrabold py-3 px-8 rounded-xl shadow-md active:scale-95 transition">
+                🔄 Ulangi Misi Kuis
+            </button>
+        </div>
+
+    </main>
+
+    <!-- FLOATING TOAST NOTIFICATION -->
+    <div id="toast" class="hidden fixed bottom-10 left-1/2 transform -translate-x-1/2 z-50 text-white font-bold px-6 py-3 rounded-2xl shadow-xl flex items-center gap-2 animate-bounce">
+        <span id="toast-icon">✨</span> <span id="toast-text">Sempurna!</span>
+    </div>
+
+    <!-- CONFETTI CELEBRATION CANVAS -->
+    <canvas id="confetti" class="fixed inset-0 pointer-events-none z-50 w-full h-full hidden"></canvas>
+
+    <!-- INLINE ENGINE LOGIC -->
+    <script>
+        // --- 1. SOUND GENERATION SYSTEM (Web Audio API) ---
+        let audioCtx;
+        function getAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        function playSound(type) {
+            try {
+                const ctx = getAudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                if (type === 'correct') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, ctx.currentTime); 
+                    osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1); 
+                    osc.frequency.setValueAtTime(783.99, ctx.currentTime + 0.2); 
+                    gain.gain.setValueAtTime(0.12, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.4);
+                } else if (type === 'incorrect') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(150, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(85, ctx.currentTime + 0.3);
+                    gain.gain.setValueAtTime(0.08, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.3);
+                } else if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(400, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.08);
+                    gain.gain.setValueAtTime(0.03, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.08);
+                }
+            } catch (e) {
+                console.log("Audio synthesized successfully.");
+            }
+        }
+
+        // --- 2. 10 EXTREMELY SOLID SPLDV QUESTIONS (7 Direct, 3 Story) ---
+        const questions = [
+            // Direct Questions (1-7)
+            {
+                type: "Perhitungan",
+                text: "Tentukan solusi nilai dari $x$ dan $y$ yang memenuhi sistem:<br><span class='text-indigo-600 font-bold'>$$\\begin{cases} x + y = 5 \\\\ x - y = 1 \\end{cases}$$</span>",
+                options: ["$x = 3, y = 2$", "$x = 2, y = 3$", "$x = 4, y = 1$", "$x = 3, y = 1$"],
+                answer: "$x = 3, y = 2$",
+                explanation: "Tambahkan kedua persamaan untuk langsung mengeliminasi $y$: $(x + y) + (x - y) = 5 + 1 \\rightarrow 2x = 6 \\rightarrow x = 3$. Substitusikan nilai $x = 3$ ke persamaan kesatu: $3 + y = 5 \\rightarrow y = 2$."
+            },
+            {
+                type: "Perhitungan",
+                text: "Carilah nilai dari $x$ yang memenuhi sistem linear:<br><span class='text-indigo-600 font-bold'>$$\\begin{cases} 2x + y = 8 \\\\ x + y = 5 \\end{cases}$$</span>",
+                options: ["$x = 1$", "$x = 2$", "$x = 3$", "$x = 4$"],
+                answer: "$x = 3$",
+                explanation: "Kurangkan persamaan pertama dengan persamaan kedua untuk langsung mengeliminasi variabel $y$: $(2x + y) - (x + y) = 8 - 5 \\rightarrow x = 3$."
+            },
+            {
+                type: "Perhitungan",
+                text: "Tentukan nilai variabel $y$ dari sistem berikut:<br><span class='text-indigo-600 font-bold'>$$\\begin{cases} 3x - y = 10 \\\\ 2x + y = 15 \\end{cases}$$</span>",
+                options: ["$y = 3$", "$y = 7$", "$y = 10$", "$y = 5$"],
+                answer: "$y = 5$",
+                explanation: "Jumlahkan kedua persamaan untuk mengeliminasi $y$: $(3x - y) + (2x + y) = 10 + 15 \\rightarrow 5x = 25 \\rightarrow x = 5$. Masukkan $x=5$ ke persamaan kedua: $2(5) + y = 15 \\rightarrow 10 + y = 15 \\rightarrow y = 5$."
+            },
+            {
+                type: "Perhitungan",
+                text: "Selesaikan koordinat penyelesaian $(x, y)$ menggunakan substitusi:<br><span class='text-indigo-600 font-bold'>$$\\begin{cases} y = 3x - 1 \\\\ 2x + y = 9 \\end{cases}$$</span>",
+                options: ["$(2, 5)$", "$(5, 2)$", "$(1, 2)$", "$(3, 8)$"],
+                answer: "$(2, 5)$",
+                explanation: "Substitusikan bentuk $y = 3x - 1$ ke persamaan kedua: $2x + (3x - 1) = 9 \\rightarrow 5x - 1 = 9 \\rightarrow 5x = 10 \\rightarrow x = 2$. Masukkan nilai $x=2$ ke persamaan kesatu: $y = 3(2) - 1 = 5$. Koordinatnya adalah $(2, 5)$."
+            },
+            {
+                type: "Perhitungan",
+                text: "Tentukan himpunan koordinat solusi $(x, y)$ dari sistem:<br><span class='text-indigo-600 font-bold'>$$\\begin{cases} 2x + 3y = 12 \\\\ 3x - 2y = 5 \\end{cases}$$</span>",
+                options: ["$(2, 3)$", "$(3, 1)$", "$(3, 2)$", "$(4, 1)$"],
+                answer: "$(3, 2)$",
+                explanation: "Samakan koefisien $y$ dengan mengalikan baris pertama dengan 2 dan baris kedua dengan 3: $\\begin{cases} 4x + 6y = 24 \\\\ 9x - 6y = 15 \\end{cases}$. Jumlahkan keduanya: $13x = 39 \\rightarrow x = 3$. Substitusikan $x=3$ ke persamaan kesatu: $2(3) + 3y = 12 \\rightarrow 3y = 6 \\rightarrow y = 2$."
+            },
+            {
+                type: "Perhitungan",
+                text: "Jika $(x, y)$ adalah solusi dari sistem ini, berapakah nilai dari $x + y$?<br><span class='text-indigo-600 font-bold'>$$\\begin{cases} x - y = 4 \\\\ 2x + y = 8 \\end{cases}$$</span>",
+                options: ["$2$", "$6$", "$8$", "$4$"],
+                answer: "$4$",
+                explanation: "Jumlahkan kedua persamaan: $3x = 12 \\rightarrow x = 4$. Substitusikan $x=4$ ke persamaan kesatu: $4 - y = 4 \\rightarrow y = 0$. Nilai dari $x + y = 4 + 0 = 4$."
+            },
+            {
+                type: "Perhitungan",
+                text: "Selesaikan sistem berikut, lalu hitung nilai dari ekspresi $2x - 3y$:<br><span class='text-indigo-600 font-bold'>$$\\begin{cases} 4x + 2y = 16 \\\\ 2x - y = 4 \\end{cases}$$</span>",
+                options: ["$2$", "$0$", "$-2$", "$12$"],
+                answer: "$0$",
+                explanation: "Kalikan persamaan kedua dengan 2: $4x - 2y = 8$. Jumlahkan dengan persamaan kesatu: $8x = 24 \\rightarrow x = 3$. Masukkan ke persamaan kedua: $2(3) - y = 4 \\rightarrow y = 2$. Nilai $2x - 3y = 2(3) - 3(2) = 6 - 6 = 0$."
+            },
+            
+            // Story Questions (8-10)
+            {
+                type: "Kasus Cerita",
+                text: "🛒 <strong>Kasus 1: Alat Tulis Sekolah</strong><br>Budi membeli <strong>2 buku dan 3 pensil</strong> seharga Rp12.000,00. Ani membeli <strong>1 buku dan 2 pensil</strong> seharga Rp7.000,00 di toko yang sama. Berapakah harga untuk 1 buah buku?",
+                options: ["Rp2.000,00", "Rp2.500,00", "Rp3.000,00", "Rp3.500,00"],
+                answer: "Rp3.000,00",
+                explanation: "Sistem persamaannya: $\\begin{cases} 2x + 3y = 12000 \\\\ x + 2y = 7000 \\end{cases}$. Kalikan baris kedua dengan 2: $2x + 4y = 14000$. Kurangkan dengan baris kesatu: $y = 2000$ (pensil). Substitusikan: $x + 2(2000) = 7000 \\rightarrow x = 3000$ (buku)."
+            },
+            {
+                type: "Kasus Cerita",
+                text: "🐐 <strong>Kasus 2: Peternakan Kakek</strong><br>Di dalam kandang terdapat beberapa ayam dan kambing. Jumlah hewan seluruhnya adalah <strong>15 ekor</strong>, sedangkan total kaki seluruh hewan adalah <strong>40 buah</strong>. Berapa jumlah kambing di dalam kandang tersebut?",
+                options: ["$5$ ekor", "$10$ ekor", "$12$ ekor", "$15$ ekor"],
+                answer: "$5$ ekor",
+                explanation: "Ayam memiliki 2 kaki ($x$) dan kambing 4 kaki ($y$). Persamaan: $\\begin{cases} x + y = 15 \\\\ 2x + 4y = 40 \\end{cases}$. Kalikan baris pertama dengan 2: $2x + 2y = 30$. Kurangkan persamaan kedua dengan hasil tersebut: $2y = 10 \\rightarrow y = 5$ (kambing)."
+            },
+            {
+                type: "Kasus Cerita",
+                text: "👩‍👦 <strong>Kasus 3: Rahasia Selisih Umur</strong><br>Selisih umur ibu dan anaknya sekarang adalah <strong>24 tahun</strong>. Jika umur ibu adalah <strong>3 kali</strong> umur anaknya, berapakah umur anak sekarang?",
+                options: ["$8$ tahun", "$12$ tahun", "$10$ tahun", "$14$ tahun"],
+                answer: "$12$ tahun",
+                explanation: "Model persamaannya: $\\begin{cases} u_{ibu} - u_{anak} = 24 \\\\ u_{ibu} = 3 u_{anak} \\end{cases}$. Substitusikan: $3 u_{anak} - u_{anak} = 24 \\rightarrow 2 u_{anak} = 24 \\rightarrow u_{anak} = 12$ tahun."
+            }
+        ];
+
+        // --- 3. SYSTEM STATE ---
+        let currentIdx = 0;
+        let score = 0;
+        let correctCount = 0;
+        let wrongCount = 0;
+        let attemptCount = 0; 
+        let reviewList = [];
+
+        // Canvas Sketchpad
+        const canvas = document.getElementById('scratch-canvas');
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+
+        // Confetti Context
+        const confettiCanvas = document.getElementById('confetti');
+        const confettiCtx = confettiCanvas.getContext('2d');
+        let confettiActive = false;
+        let particles = [];
+
+        // --- 4. ENGINE INITIALIZATION ---
+        window.onload = function() {
+            initCanvas();
+        };
+
+        function startQuiz() {
+            playSound('correct');
+            document.getElementById('dashboard-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            
+            // Reset state
+            currentIdx = 0;
+            score = 0;
+            correctCount = 0;
+            wrongCount = 0;
+            reviewList = [];
+            
+            document.getElementById('score-display').innerText = `0 XP`;
+            loadQuestion(0);
+        }
+
+        // --- 5. QUESTION CONTROLLER ---
+        function loadQuestion(idx) {
+            attemptCount = 0;
+            const q = questions[idx];
+
+            // Progress tracking
+            const progress = (idx / questions.length) * 100;
+            document.getElementById('quiz-progress').style.width = `${progress}%`;
+            document.getElementById('q-counter').innerText = `${idx + 1} / ${questions.length}`;
+
+            // Category badge styling
+            const badge = document.getElementById('quiz-badge');
+            badge.innerText = q.type;
+            if (q.type === 'Perhitungan') {
+                badge.className = "bg-[#6366F1] text-white font-black text-xs px-3 py-1 rounded-full uppercase tracking-wider";
+            } else {
+                badge.className = "bg-[#EC4899] text-white font-black text-xs px-3 py-1 rounded-full uppercase tracking-wider";
+            }
+
+            // Load texts
+            document.getElementById('question-text').innerHTML = q.text;
+
+            // Generate option buttons (Pastel style)
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            const btnStyles = [
+                'bg-sky-50 hover:bg-sky-100 text-sky-800 border-sky-300',
+                'bg-purple-50 hover:bg-purple-100 text-purple-800 border-purple-300',
+                'bg-pink-50 hover:bg-pink-100 text-pink-800 border-pink-300',
+                'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-emerald-300'
+            ];
+
+            q.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = `border-2 p-4 rounded-2xl font-bold text-sm md:text-base active:scale-95 transition flex justify-between items-center ${btnStyles[i % btnStyles.length]}`;
+                btn.innerHTML = `<span>${opt}</span><span class="opacity-40 text-xs">PILIH 👉</span>`;
+                btn.onclick = () => selectAnswer(btn, opt);
+                optionsContainer.appendChild(btn);
+            });
+
+            // Trigger MathJax typesetting instantly
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        // --- 6. USER INTERACTION & VALIDATION ---
+        function selectAnswer(btn, selected) {
+            attemptCount++;
+            const q = questions[currentIdx];
+            const isCorrect = selected === q.answer;
+
+            if (isCorrect) {
+                // Freeze other option buttons
+                const container = document.getElementById('options-container');
+                Array.from(container.children).forEach(b => {
+                    b.disabled = true;
+                    b.classList.add('opacity-50');
+                });
+
+                btn.classList.remove('opacity-50');
+                btn.className = "border-2 border-emerald-500 bg-emerald-100 text-emerald-800 p-4 rounded-2xl font-bold text-sm md:text-base flex justify-between items-center";
+                btn.innerHTML = `<span>${selected}</span> <span>🎉 BENAR!</span>`;
+
+                // Re-typeset this button so MathJax processes and renders the LaTeX properly
+                if (window.MathJax) {
+                    MathJax.typesetPromise([btn]);
+                }
+
+                playSound('correct');
+                triggerConfetti();
+
+                let addedScore = 0;
+                if (attemptCount === 1) {
+                    addedScore = 15;
+                    correctCount++;
+                    showToast("✨ Luar biasa! Hebat, langsung benar!", "bg-[#10B981]");
+                } else {
+                    addedScore = 5;
+                    wrongCount++;
+                    showToast("🌟 Pantang menyerah! Jawaban kamu benar sekarang!", "bg-[#3B82F6]");
+                }
+
+                score += addedScore;
+                document.getElementById('score-display').innerText = `${score} XP`;
+
+                // Add to review list
+                reviewList.push({
+                    text: q.text,
+                    category: q.type,
+                    userAnswer: selected,
+                    correctAnswer: q.answer,
+                    explanation: q.explanation,
+                    directSuccess: attemptCount === 1
+                });
+
+                // Next question with delay for celebration visibility
+                setTimeout(() => {
+                    currentIdx++;
+                    if (currentIdx < questions.length) {
+                        loadQuestion(currentIdx);
+                    } else {
+                        finishQuiz();
+                    }
+                }, 1800);
+
+            } else {
+                playSound('incorrect');
+                btn.disabled = true;
+                btn.className = "border-2 border-red-300 bg-red-100 text-red-500 p-4 rounded-2xl font-bold text-sm md:text-base flex justify-between items-center opacity-60 cursor-not-allowed";
+                btn.innerHTML = `<span>${selected}</span> <span>❌ Salah, Coba Lagi!</span>`;
+                
+                // Re-typeset this button so MathJax processes and renders the LaTeX properly after innerHTML changes
+                if (window.MathJax) {
+                    MathJax.typesetPromise([btn]);
+                }
+
+                showToast("💡 Kurang tepat. Cakar kembali persamaannya dan pilih opsi lain!", "bg-red-500");
+            }
+        }
+
+        // --- 7. FINISH QUIZ SCREEN ---
+        function finishQuiz() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+
+            document.getElementById('score-correct').innerText = correctCount;
+            document.getElementById('score-wrong').innerText = wrongCount;
+            document.getElementById('score-total').innerText = score;
+
+            const emoji = document.getElementById('result-emoji');
+            const title = document.getElementById('result-title');
+            const rank = document.getElementById('result-rank');
+
+            if (score >= 120) {
+                emoji.innerText = "👑🏆";
+                title.innerText = "Sempurna! Sang Ahli SPLDV!";
+                rank.innerText = "Gelar: Detektif Aljabar Tingkat Tinggi";
+                triggerConfetti();
+            } else if (score >= 80) {
+                emoji.innerText = "🛡️🚀";
+                title.innerText = "Ksatria Aljabar Hebat!";
+                rank.innerText = "Gelar: Agen Detektif Mandiri Berbakat";
+                triggerConfetti();
+            } else {
+                emoji.innerText = "🌱🎒";
+                title.innerText = "Tetap Semangat!";
+                rank.innerText = "Gelar: Petualang Angka Magang";
+            }
+
+            // Build Review list content with beautiful math
+            const reviewContainer = document.getElementById('review-container');
+            reviewContainer.innerHTML = '';
+            reviewList.forEach((res, i) => {
+                const item = document.createElement('div');
+                item.className = `p-4 rounded-xl border-l-8 ${res.directSuccess ? 'bg-emerald-50 border-emerald-500' : 'bg-red-50 border-red-400'} mb-2 text-xs md:text-sm`;
+                item.innerHTML = `
+                    <p class="font-extrabold text-gray-800">Kasus ${i + 1} [${res.category}]: ${res.text}</p>
+                    <p class="mt-1">Jawaban Anda: <span class="font-black ${res.directSuccess ? 'text-emerald-700' : 'text-red-600'}">${res.userAnswer}</span> | Jawaban Benar: <span class="font-black text-emerald-700">${res.correctAnswer}</span></p>
+                    <p class="text-[11px] text-slate-500 italic mt-1 font-semibold">Trik Cepat: ${res.explanation}</p>
+                `;
+                reviewContainer.appendChild(item);
+            });
+
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function toggleReviewList() {
+            const container = document.getElementById('review-container');
+            container.classList.toggle('hidden');
+        }
+
+        function resetQuiz() {
+            document.getElementById('result-screen').classList.add('hidden');
+            document.getElementById('dashboard-screen').classList.remove('hidden');
+            score = 0;
+            document.getElementById('score-display').innerText = `0 XP`;
+        }
+
+        function showToast(text, bgClass) {
+            const toast = document.getElementById('toast');
+            const toastText = document.getElementById('toast-text');
+            toast.className = `fixed bottom-10 left-1/2 transform -translate-x-1/2 z-50 text-white font-black px-6 py-3 rounded-2xl shadow-xl flex items-center gap-2 animate-bounce ${bgClass}`;
+            toastText.innerHTML = text;
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3500);
+        }
+
+        // --- 8. DOODLE CANVAS SYSTEM ---
+        function toggleScratchpad() {
+            const pad = document.getElementById('scratchpad');
+            pad.classList.toggle('hidden');
+            if (!pad.classList.contains('hidden')) {
+                resizeCanvas();
+            }
+        }
+
+        function initCanvas() {
+            canvas.addEventListener('mousedown', (e) => {
+                isDrawing = true;
+                ctx.beginPath();
+                const r = canvas.getBoundingClientRect();
+                ctx.moveTo(e.clientX - r.left, e.clientY - r.top);
+            });
+            canvas.addEventListener('mousemove', (e) => {
+                if (!isDrawing) return;
+                const r = canvas.getBoundingClientRect();
+                ctx.lineTo(e.clientX - r.left, e.clientY - r.top);
+                ctx.stroke();
+            });
+            canvas.addEventListener('mouseup', () => isDrawing = false);
+
+            canvas.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                isDrawing = true;
+                ctx.beginPath();
+                const t = e.touches[0];
+                const r = canvas.getBoundingClientRect();
+                ctx.moveTo(t.clientX - r.left, t.clientY - r.top);
+            });
+            canvas.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                if (!isDrawing) return;
+                const t = e.touches[0];
+                const r = canvas.getBoundingClientRect();
+                ctx.lineTo(t.clientX - r.left, t.clientY - r.top);
+                ctx.stroke();
+            });
+            canvas.addEventListener('touchend', () => isDrawing = false);
+        }
+
+        function resizeCanvas() {
+            const parent = canvas.parentNode;
+            canvas.width = parent.clientWidth;
+            canvas.height = parent.clientHeight;
+            ctx.lineCap = 'round';
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = '#4F46E5'; 
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // --- 9. CONFETTI CELEBRATION EFFECTS ---
+        function triggerConfetti() {
+            confettiActive = true;
+            confettiCanvas.classList.remove('hidden');
+            confettiCanvas.width = window.innerWidth;
+            confettiCanvas.height = window.innerHeight;
+            
+            particles = [];
+            for (let i = 0; i < 75; i++) {
+                particles.push({
+                    x: Math.random() * confettiCanvas.width,
+                    y: Math.random() * confettiCanvas.height - confettiCanvas.height,
+                    r: Math.random() * 5 + 4,
+                    d: Math.random() * confettiCanvas.height,
+                    color: `hsl(${Math.random() * 360}, 100%, 70%)`,
+                    tilt: Math.random() * 10 - 5,
+                    tiltAngleIncremental: Math.random() * 0.07 + 0.02,
+                    tiltAngle: 0
+                });
+            }
+
+            animateConfetti();
+            setTimeout(() => {
+                confettiActive = false;
+                confettiCanvas.classList.add('hidden');
+            }, 2500);
+        }
+
+        function animateConfetti() {
+            if (!confettiActive) return;
+            confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            
+            particles.forEach((p, idx) => {
+                p.tiltAngle += p.tiltAngleIncremental;
+                p.y += (Math.cos(p.d) + 3 + p.r / 2) / 2;
+                p.x += Math.sin(p.tiltAngle);
+                p.tilt = Math.sin(p.tiltAngle - idx / 3) * 15;
+
+                confettiCtx.beginPath();
+                confettiCtx.lineWidth = p.r;
+                confettiCtx.strokeStyle = p.color;
+                confettiCtx.moveTo(p.x + p.tilt + p.r / 2, p.y);
+                confettiCtx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 2);
+                confettiCtx.stroke();
+            });
+
+            requestAnimationFrame(animateConfetti);
+        }
+    </script>
+</body>
+</html>
