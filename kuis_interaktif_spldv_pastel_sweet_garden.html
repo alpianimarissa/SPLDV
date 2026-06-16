@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SPLDV Pastel Sweet Garden: 20 Level Quest</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts - Fredoka & Quicksand -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Quicksand:wght@400..700&display=swap" rel="stylesheet">
+  <!-- MathJax 3 Setup -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background-color: #FFF5F7; /* Pastel soft blush pink background */
+      color: #3F3F46;
+    }
+    h1, h2, h3, h4, .title-font {
+      font-family: 'Fredoka', sans-serif;
+    }
+    /* Smooth scaling effects */
+    .bounce-hover:hover {
+      transform: scale(1.02);
+      transition: all 0.2s ease-in-out;
+    }
+    /* Rainbow background decoration elements */
+    .floating-bubble {
+      animation: bounceFloat 5s ease-in-out infinite;
+    }
+    @keyframes bounceFloat {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(2deg); }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between overflow-x-hidden">
+
+  <!-- BRANDING HEADER -->
+  <header class="bg-white/90 backdrop-blur-md border-b-4 border-pink-100 py-3.5 px-6 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="floating-bubble bg-gradient-to-tr from-pink-400 via-purple-400 to-indigo-400 p-2.5 rounded-2xl shadow-md">
+          <svg class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-xl font-black bg-clip-text text-transparent bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500">SPLDV Sweet Garden</h1>
+          <p class="text-[10px] text-purple-400 font-bold tracking-wider uppercase">Kurikulum Merdeka • Kelas 8 SMP Colorful Edition</p>
+        </div>
+      </div>
+
+      <!-- Live Progression & Stars -->
+      <div class="flex items-center gap-3 w-full sm:w-auto justify-end">
+        <div class="text-right">
+          <span class="text-[9px] text-slate-400 font-black uppercase tracking-wider block">Level Petualangan</span>
+          <span id="level-indicator-text" class="text-xs font-black text-purple-600">Soal 1 dari 20</span>
+        </div>
+        <div class="w-24 sm:w-32 bg-purple-50 h-2.5 rounded-full overflow-hidden border border-purple-100">
+          <div id="level-progress-bar" class="bg-gradient-to-r from-pink-400 via-purple-400 to-teal-400 h-full rounded-full transition-all duration-300" style="width: 5%"></div>
+        </div>
+        <div class="bg-amber-50 border-b-4 border-amber-300 text-amber-600 px-3 py-1.5 rounded-full font-black flex items-center gap-1.5 text-xs shadow-sm">
+          <span>🍭 XP</span>
+          <span id="score-text">0</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- INTERACTIVE PLAYGROUND -->
+  <main class="max-w-7xl w-full mx-auto p-4 sm:p-6 flex-grow grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+    
+    <!-- LEFT PANEL: THE QUEST ZONE (8 COLS) -->
+    <div class="lg:col-span-8 flex flex-col gap-4">
+      
+      <!-- Interactive Question Board -->
+      <div class="bg-white border-4 border-pink-100 rounded-[32px] p-6 sm:p-8 shadow-sm min-h-[500px] flex flex-col justify-between relative transition-all duration-300">
+        
+        <div>
+          <!-- Concept Badge & Sound Assistance -->
+          <div class="flex justify-between items-center mb-6 border-b-2 border-pink-50 pb-4">
+            <div>
+              <span id="question-category" class="bg-purple-100 border border-purple-200 text-purple-600 text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full">Sandi Persamaan</span>
+              <span id="question-type" class="bg-pink-100 border border-pink-200 text-pink-600 text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full ml-1">Edisi Aljabar</span>
+            </div>
+            <button onclick="speakQuestionText()" class="text-purple-500 hover:text-purple-600 p-2 rounded-full bg-purple-50 hover:bg-purple-100 transition-all flex items-center justify-center shadow-sm" title="Dengarkan Soal">
+              🔊 Baca Soal
+            </button>
+          </div>
+
+          <!-- Question Text -->
+          <h2 id="question-text" class="text-base sm:text-lg font-extrabold text-slate-700 leading-relaxed mb-6">
+            Memuat teka-teki manis untukmu...
+          </h2>
+        </div>
+
+        <!-- Choice Options Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 animate-fadeIn" id="options-container">
+          <!-- Colorful option buttons injected here -->
+        </div>
+
+        <!-- Correct/Wrong Interactive Answer Feedback -->
+        <div id="instant-feedback" class="hidden rounded-2xl p-4 mt-6 flex items-start gap-3.5 border transition-all duration-300">
+          <!-- Text and explanation are injected here -->
+        </div>
+
+        <!-- FOOTER NAVIGATION INSIDE SCREEN -->
+        <div class="flex items-center justify-between mt-8 border-t-2 border-pink-50/60 pt-4">
+          <button id="btn-prev" onclick="prevLevel()" class="bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold px-4 py-2.5 rounded-2xl transition-all flex items-center gap-2 text-xs disabled:opacity-30 disabled:cursor-not-allowed">
+            ⬅️ Mundur
+          </button>
+
+          <!-- Rapid level jumper -->
+          <div class="hidden md:flex items-center gap-1.5">
+            <span class="text-[10px] text-slate-400 font-black uppercase tracking-wider">Lompat Soal:</span>
+            <select id="level-selector" onchange="jumpToLevel(this.value)" class="bg-pink-50 border border-pink-100 rounded-xl px-2.5 py-1.5 text-xs font-bold text-pink-600 focus:outline-none">
+              <!-- JS-populated selector -->
+            </select>
+          </div>
+
+          <button id="btn-next" onclick="nextLevel()" class="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 hover:opacity-95 text-white font-extrabold px-5 py-2.5 rounded-2xl shadow-md flex items-center gap-2 transition-all text-xs">
+            Lanjut ➡️
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- RIGHT PANEL: DOODLE BOARD (4 COLS) -->
+    <div class="lg:col-span-4 flex flex-col gap-6">
+      
+      <!-- Smart Art Canvas (Draw-on-screen scratchpad) -->
+      <div class="bg-white border-4 border-emerald-100 rounded-[32px] p-6 shadow-sm flex flex-col gap-4">
+        <div class="flex justify-between items-center">
+          <h3 class="text-sm font-black text-emerald-600 flex items-center gap-1.5 uppercase tracking-wider">
+            🎨 Buku Cakar Estetik
+          </h3>
+          <button onclick="clearScratchpad()" class="text-[10px] bg-rose-50 hover:bg-rose-100 text-rose-500 font-extrabold px-3 py-1.5 rounded-xl border border-rose-100 transition-all">
+            Hapus
+          </button>
+        </div>
+        <p class="text-xs text-slate-400 leading-relaxed">Cakar jalan eliminasi atau sketsa idemu dengan warna kuas neon manis:</p>
+        
+        <!-- Drawing Board Canvas (Height increased for more drawing space) -->
+        <div class="relative w-full bg-slate-50 rounded-2xl border border-slate-100 overflow-hidden" style="height: 340px;">
+          <canvas id="scratchpad" class="absolute inset-0 w-full h-full cursor-crosshair touch-none"></canvas>
+        </div>
+
+        <!-- Color Brushes selection for artistic girl design -->
+        <div class="flex justify-between items-center mt-2">
+          <div class="flex gap-2">
+            <button onclick="changePenColor('#FF6B8B')" class="w-6 h-6 rounded-full bg-pink-500 border-2 border-white ring-2 ring-pink-100 focus:outline-none" title="Strawberry Pink"></button>
+            <button onclick="changePenColor('#54A0FF')" class="w-6 h-6 rounded-full bg-blue-400 border-2 border-white hover:ring-2 hover:ring-blue-100 focus:outline-none" title="Sky Blue"></button>
+            <button onclick="changePenColor('#A29BFE')" class="w-6 h-6 rounded-full bg-purple-400 border-2 border-white hover:ring-2 hover:ring-purple-100 focus:outline-none" title="Grape Violet"></button>
+            <button onclick="changePenColor('#55E6C1')" class="w-6 h-6 rounded-full bg-emerald-400 border-2 border-white hover:ring-2 hover:ring-emerald-100 focus:outline-none" title="Matcha Green"></button>
+            <button onclick="changePenColor('#FFD2C4')" class="w-6 h-6 rounded-full bg-amber-200 border-2 border-white hover:ring-2 hover:ring-amber-100 focus:outline-none" title="Lemon Peach"></button>
+          </div>
+          <span class="text-[10px] text-pink-500 font-bold bg-pink-50 px-2.5 py-0.5 rounded-full">Art Brush</span>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- OVERLAY SCOREBOARD MODAL -->
+  <div id="results-modal" class="fixed inset-0 bg-purple-950/40 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white border-4 border-pink-100 rounded-[36px] w-full max-w-xl p-8 text-center shadow-2xl flex flex-col items-center gap-5 animate-scaleIn">
+      <div class="text-6xl animate-bounce">🏆⭐🎀</div>
+      <div>
+        <h2 class="text-3xl font-black text-purple-600 mb-1">Kuis Kebun SPLDV Selesai!</h2>
+        <p class="text-slate-500 font-semibold text-sm">Selamat! Kamu sukses memecahkan seluruh rahasia persamaan linear dengan luar biasa!</p>
+      </div>
+
+      <!-- Stats -->
+      <div class="grid grid-cols-2 gap-4 w-full">
+        <div class="bg-pink-50/50 p-4 rounded-2xl border border-pink-100">
+          <span class="block text-[10px] text-pink-500 font-bold uppercase tracking-wider">Benar Pembahasan</span>
+          <span id="final-correct" class="text-2xl font-black text-pink-600">0 / 20 Soal</span>
+        </div>
+        <div class="bg-purple-50/50 p-4 rounded-2xl border border-purple-100">
+          <span class="block text-[10px] text-purple-500 font-bold uppercase tracking-wider">Bintang Kemenangan</span>
+          <span id="final-score" class="text-2xl font-black text-purple-600">0 XP</span>
+        </div>
+      </div>
+
+      <div class="bg-purple-50 p-4 rounded-2xl border border-purple-100 text-left w-full">
+        <h4 class="font-extrabold text-purple-700 text-xs uppercase tracking-wider mb-1">🍭 Profil Reflektif Kurikulum Merdeka:</h4>
+        <p id="reflection-comment" class="text-xs text-purple-950 leading-relaxed"></p>
+      </div>
+
+      <div class="flex gap-4 w-full">
+        <button onclick="restartQuiz()" class="flex-1 bg-gradient-to-r from-pink-500 to-purple-500 text-white font-extrabold py-3.5 rounded-2xl shadow-md hover:shadow-lg transition-all text-xs">
+          🔄 Jalankan Ulang Kuis
+        </button>
+        <button onclick="closeModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold py-3.5 rounded-2xl transition-all text-xs">
+          Tutup Rapor
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-white border-t border-slate-100 py-3.5 text-center text-xs text-slate-400 font-semibold">
+    Sweet Garden SPLDV Game • Didesain Khusus dengan Cinta & Palet Pastel Ceria
+  </footer>
+
+  <!-- TONE SYNTHESISER -->
+  <script>
+    let audioCtx = null;
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function playSoundEffect(type) {
+      try {
+        initAudio();
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (type === 'correct') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+          setTimeout(() => osc.frequency.setValueAtTime(659.25, audioCtx.currentTime), 80); // E5
+          setTimeout(() => osc.frequency.setValueAtTime(783.99, audioCtx.currentTime), 160); // G5
+          gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
+          osc.start(audioCtx.currentTime);
+          osc.stop(audioCtx.currentTime + 0.35);
+        } else if (type === 'wrong') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(220, audioCtx.currentTime); // A3
+          setTimeout(() => osc.frequency.setValueAtTime(147, audioCtx.currentTime), 100); // D3
+          gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+          osc.start(audioCtx.currentTime);
+          osc.stop(audioCtx.currentTime + 0.4);
+        } else if (type === 'draw') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(880, audioCtx.currentTime); // A5
+          gain.gain.setValueAtTime(0.01, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+          osc.start(audioCtx.currentTime);
+          osc.stop(audioCtx.currentTime + 0.05);
+        }
+      } catch (e) {
+        console.warn("Audio Context is blocked or not supported.");
+      }
+    }
+  </script>
+
+  <!-- 20 SOAL BANK DATA -->
+  <script>
+    let currentLevel = 0;
+    const totalLevels = 20;
+    let quizAnswers = {};
+    let globalXP = 0;
+
+    // CATATAN PERBAIKAN: Semua rumusan Math/LaTeX wajib di-double escape (\\) agar aman dimuat di JS strings
+    // Seluruh posisi opsi jawaban benar juga sudah diacak secara acak (Randomized)
+    const quizData = [
+      // SOAL 1: Persamaan Langsung (Easy)
+      {
+        category: "Persamaan Langsung",
+        type: "Level 1: Elemen Simetris",
+        question: "Tentukan nilai $x$ dan $y$ yang memenuhi sistem persamaan linear berikut:\n$$\\begin{cases} x + y = 6 \\\\ x - y = 2 \\end{cases}$$",
+        options: ["$x = 5$ dan $y = 1$", "$x = 4$ dan $y = 2$", "$x = 3$ dan $y = 3$", "$x = 4$ dan $y = 1$"],
+        correct: 1,
+        rationale: "Dengan menjumlahkan kedua persamaan: $(x+y) + (x-y) = 6 + 2 \\Rightarrow 2x = 8 \\Rightarrow x = 4$. Masukkan $x=4$ ke persamaan pertama: $4 + y = 6 \\Rightarrow y = 2$."
+      },
+      // SOAL 2: Soal Cerita (Easy)
+      {
+        category: "Soal Cerita Boba",
+        type: "Level 2: Kafe Manis",
+        question: "Sofi membeli paket minuman di Kafe Manis. Harga 2 gelas Boba Brown Sugar ($x$) dan 1 potong Red Velvet Cake ($y$) adalah Rp 16.000. Harga 1 gelas Boba dan 1 potong Cake adalah Rp 11.000. Berapa harga masing-masing?",
+        options: ["Boba = Rp 6.000, Cake = Rp 5.000", "Boba = Rp 4.000, Cake = Rp 7.000", "Boba = Rp 5.000, Cake = Rp 6.000", "Boba = Rp 7.000, Cake = Rp 4.000"],
+        correct: 2,
+        rationale: "Persamaannya: $2x + y = 16.000$ dan $x + y = 11.000$. Kurangkan kedua baris: $x = 5.000$ (Boba). Masukkan nilai $x$: $5.000 + y = 11.000 \\Rightarrow y = 6.000$ (Cake)."
+      },
+      // SOAL 3: Persamaan Langsung (Easy)
+      {
+        category: "Persamaan Langsung",
+        type: "Level 3: Substitusi Cepat",
+        question: "Temukan nilai $x$ dan $y$ yang memenuhi sistem persamaan berikut:\n$$\\begin{cases} 2x + y = 7 \\\\ x - y = 2 \\end{cases}$$",
+        options: ["$x = 2$ dan $y = 3$", "$x = 3$ dan $y = 1$", "$x = 4$ dan $y = 1$", "$x = 3$ dan $y = 2$"],
+        correct: 1,
+        rationale: "Tambahkan kedua persamaan: $3x = 9 \\Rightarrow x = 3$. Masukkan nilai $x=3$ ke persamaan kedua: $3 - y = 2 \\Rightarrow y = 1$."
+      },
+      // SOAL 4: Soal Cerita (Medium)
+      {
+        category: "Soal Cerita Alat Tulis",
+        type: "Level 4: Washi Tape & Pen",
+        question: "Di Butik Jurnal, harga 3 buah gulung Washi Tape ($x$) dan 2 buah Glitter Pen ($y$) adalah Rp 18.000. Harga 1 gulung Washi Tape dan 2 buah Glitter Pen sejenis adalah Rp 10.000. Berapakah harga 1 gulung Washi Tape?",
+        options: ["Rp 3.000", "Rp 5.000", "Rp 2.000", "Rp 4.000"],
+        correct: 3,
+        rationale: "Model: $3x + 2y = 18.000$ dan $x + 2y = 10.000$. Kurangkan kedua persamaan: $2x = 8.000 \\Rightarrow x = 4.000$ (Washi Tape)."
+      },
+      // SOAL 5: Persamaan Langsung (Medium)
+      {
+        category: "Persamaan Langsung",
+        type: "Level 5: Koefisien Berlawanan",
+        question: "Selesaikan sistem persamaan berikut untuk mencari nilai $x$ dan $y$:\n$$\\begin{cases} x + 2y = 8 \\\\ 3x - 2y = 8 \\end{cases}$$",
+        options: ["$x = 3$ dan $y = 2$", "$x = 4$ dan $y = 1$", "$x = 4$ dan $y = 2$", "$x = 2$ dan $y = 3$"],
+        correct: 2,
+        rationale: "Karena koefisien $y$ berlawanan (+2 dan -2), langsung tambahkan keduanya: $4x = 16 \\Rightarrow x = 4$. Masukkan $x=4$ ke baris pertama: $4 + 2y = 8 \\Rightarrow 2y = 4 \\Rightarrow y = 2$."
+      },
+      // SOAL 6: Soal Cerita (Easy)
+      {
+        category: "Soal Cerita Kebun",
+        type: "Level 6: Pot Tanaman Hias",
+        question: "Sofi menata pot Tanaman Sukulen ($x$) dan pot Bunga Aster ($y$). Total pot di rak adalah 10 pot. Jumlah pot Sukulen adalah 4 pot lebih banyak dari pot Bunga Aster. Berapa banyak pot Sukulen dan pot Bunga Aster?",
+        options: ["Sukulen = 6, Aster = 4", "Sukulen = 7, Aster = 3", "Sukulen = 8, Aster = 2", "Sukulen = 5, Aster = 5"],
+        correct: 1,
+        rationale: "Model: $x + y = 10$ dan $x - y = 4$. Tambahkan: $2x = 14 \\Rightarrow x = 7$ (Sukulen). Maka Aster $y = 10 - 7 = 3$."
+      },
+      // SOAL 7: Persamaan Langsung (Medium)
+      {
+        category: "Persamaan Langsung",
+        type: "Level 7: Eliminasi Cepat",
+        question: "Selesaikan sistem persamaan berikut dengan cepat:\n$$\\begin{cases} 3x - y = 5 \\\\ x + y = 3 \\end{cases}$$",
+        options: ["$x = 2$ dan $y = 1$", "$x = 1$ dan $y = 2$", "$x = 3$ dan $y = 0$", "$x = 2$ dan $y = 2$"],
+        correct: 0,
+        rationale: "Tambahkan kedua baris persamaan: $4x = 8 \\Rightarrow x = 2$. Substitusikan $x=2$ ke persamaan kedua: $2 + y = 3 \\Rightarrow y = 1$."
+      },
+      // SOAL 8: Soal Cerita (Medium)
+      {
+        category: "Soal Cerita Pita",
+        type: "Level 8: Pita Hias Kado",
+        question: "Susi memotong Pita Merah Muda ($x$ meter) dan Pita Ungu ($y$ meter). Panjang total kedua pita adalah 12 meter. Pita Merah Muda panjangnya dua kali lipat dari panjang Pita Ungu. Berapakah panjang masing-masing pita?",
+        options: ["Merah Muda = 9m, Ungu = 3m", "Merah Muda = 6m, Ungu = 6m", "Merah Muda = 8m, Ungu = 4m", "Merah Muda = 10m, Ungu = 2m"],
+        correct: 2,
+        rationale: "Model: $x + y = 12$ dan $x = 2y \\Rightarrow x - 2y = 0$. Substitusikan $x=2y$ ke persamaan pertama: $2y + y = 12 \\Rightarrow 3y = 12 \\Rightarrow y = 4$ (Ungu). Maka Merah Muda $x = 2(4) = 8\\text{ meter}$."
+      },
+      // SOAL 9: Persamaan Langsung (Medium)
+      {
+        category: "Persamaan Langsung",
+        type: "Level 9: Eliminasi x",
+        question: "Selesaikan persamaan ganda berikut untuk mencari nilai $x$ dan $y$:\n$$\\begin{cases} 2x + 3y = 12 \\\\ 2x - y = 4 \\end{cases}$$",
+        options: ["$x = 2$ dan $y = 3$", "$x = 3$ dan $y = 2$", "$x = 4$ dan $y = 1$", "$x = 3$ dan $y = 1$"],
+        correct: 1,
+        rationale: "Kurangkan persamaan pertama dengan persamaan kedua: $4y = 8 \\Rightarrow y = 2$. Masukkan $y=2$ ke persamaan kedua: $2x - 2 = 4 \\Rightarrow 2x = 6 \\Rightarrow x = 3$."
+      },
+      // SOAL 10: Soal Cerita (Medium)
+      {
+        category: "Soal Cerita Macaron",
+        type: "Level 10: Pesta Kue Manis",
+        question: "Sofi menyajikan 4 buah Macaron manis ($x$) dan 1 buah Cupcake stroberi ($y$) dengan total harga Rp 14.000. Untuk sajian kedua, ia mengambil 2 Macaron dan 1 Cupcake sejenis seharga Rp 8.000. Tentukan harga satuan Macaron!",
+        options: ["Rp 2.000", "Rp 2.500", "Rp 3.000", "Rp 3.500"],
+        correct: 2,
+        rationale: "Model: $4x + y = 14.000$ dan $2x + y = 8.000$. Kurangkan persamaan tersebut: $2x = 6.000 \\Rightarrow x = 3.000$ (Macaron)."
+      },
+      // SOAL 11: Persamaan Langsung (Hard)
+      {
+        category: "Persamaan Langsung",
+        type: "Level 11: Penyetaraan Taktis",
+        question: "Selesaikan sistem persamaan linear berikut untuk mencari nilai $x$ dan $y$:\n$$\\begin{cases} x + 3y = 9 \\\\ 2x - y = 4 \\end{cases}$$",
+        options: ["$x = 2$ dan $y = 3$", "$x = 4$ dan $y = 1$", "$x = 3$ dan $y = 1$", "$x = 3$ dan $y = 2$"],
+        correct: 3,
+        rationale: "Kalikan persamaan kedua dengan $3$ sehingga diperoleh $6x - 3y = 12$. Tambahkan dengan persamaan pertama: $7x = 21 \\Rightarrow x = 3$. Maka $3 + 3y = 9 \\Rightarrow 3y = 6 \\Rightarrow y = 2$."
+      },
+      // SOAL 12: Soal Cerita (Hard)
+      {
+        category: "Soal Cerita Bingkai",
+        type: "Level 12: Cetakan Foto Polaroid",
+        question: "Tinggi tumpukan 2 buah Bingkai Polaroid Besar ($x$) dan 3 buah Polaroid Kecil ($y$) adalah $19\\text{ cm}$. Sedangkan tinggi 1 Polaroid Besar dan 1 Polaroid Kecil adalah $8\\text{ cm}$. Berapakah tinggi masing-masing bingkai?",
+        options: ["Besar = 6cm, Kecil = 2cm", "Besar = 5cm, Kecil = 3cm", "Besar = 4.5cm, Kecil = 3.5cm", "Besar = 5.5cm, Kecil = 2.5cm"],
+        correct: 1,
+        rationale: "Model: $2x + 3y = 19$ dan $x + y = 8$. Kalikan baris kedua dengan 2: $2x + 2y = 16$. Kurangkan: $y = 3\\text{ cm}$ (Kecil). Maka $x = 8 - 3 = 5\\text{ cm}$ (Besar)."
+      },
+      // SOAL 13: Persamaan Langsung (Hard)
+      {
+        category: "Persamaan Langsung",
+        type: "Level 13: Variabel Bebas",
+        question: "Cari nilai $x$ dan $y$ dari sistem persamaan linear dua variabel berikut:\n$$\\begin{cases} 3x + 2y = 13 \\\\ 2x - y = 4 \\end{cases}$$",
+        options: ["$x = 4$ dan $y = 1$", "$x = 2$ dan $y = 3$", "$x = 3$ dan $y = 2$", "$x = 3$ dan $y = 1$"],
+        correct: 2,
+        rationale: "Kalikan baris kedua dengan 2 menjadi $4x - 2y = 8$. Tambahkan ke baris pertama: $7x = 21 \\Rightarrow x = 3$. Masukkan nilai $x$: $2(3) - y = 4 \\Rightarrow y = 2$."
+      },
+      // SOAL 14: Soal Cerita (Hard)
+      {
+        category: "Soal Cerita Sticker",
+        type: "Level 14: Sticker Glitter & Deco Tape",
+        question: "Andi membeli 1 lembar Sticker Glitter ($x$) dan 2 roll Deco Tape ($y$) seharga Rp 11.000. Di saat yang sama, ia membeli 3 lembar Sticker Glitter dan 1 roll Deco Tape sejenis seharga Rp 13.000. Berapa harga masing-masing?",
+        options: ["Sticker = Rp 4.000, Tape = Rp 3.000", "Sticker = Rp 3.000, Tape = Rp 4.000", "Sticker = Rp 2.500, Tape = Rp 4.500", "Sticker = Rp 3.000, Tape = Rp 3.000"],
+        correct: 1,
+        rationale: "Model: $x + 2y = 11.000$ dan $3x + y = 13.000$. Kalikan baris pertama dengan 3: $3x + 6y = 33.000$. Kurangkan: $5y = 20.000 \\Rightarrow y = 4.000$ (Tape). Maka $x = 11.000 - 8.000 = 3.000$ (Sticker)."
+      },
+      // SOAL 15: Persamaan Langsung (Hard)
+      {
+        category: "Persamaan Langsung",
+        type: "Level 15: Koefisien Campuran",
+        question: "Selesaikan sistem persamaan linear berikut dengan cermat:\n$$\\begin{cases} 4x - 3y = 5 \\\\ 2x + y = 5 \\end{cases}$$",
+        options: ["$x = 3$ dan $y = 2$", "$x = 1$ dan $y = 2$", "$x = 2$ dan $y = 1$", "$x = 2$ dan $y = 2$"],
+        correct: 2,
+        rationale: "Kalikan persamaan kedua dengan 3 sehingga diperoleh $6x + 3y = 15$. Tambahkan ke persamaan pertama: $10x = 20 \\Rightarrow x = 2$. Maka $2(2) + y = 5 \\Rightarrow y = 1$."
+      },
+      // SOAL 16: Soal Cerita (Hard)
+      {
+        category: "Soal Cerita Kafe",
+        type: "Level 16: Matcha Latte & Strawberry Ice",
+        question: "Di Kafe Pastel, harga 2 gelas Matcha Latte ($x$) dan 2 cup Strawberry Ice ($y$) adalah Rp 24.000. Sedangkan harga 3 Matcha Latte dan 1 Strawberry Ice adalah Rp 28.000. Berapakah harga satu gelas Matcha Latte?",
+        options: ["Rp 7.000", "Rp 8.000", "Rp 9.000", "Rp 6.000"],
+        correct: 1,
+        rationale: "Model: $2x + 2y = 24.000 \\Rightarrow x + y = 12.000$, dan $3x + y = 28.000$. Kurangkan: $2x = 16.000 \\Rightarrow x = 8.000$ (Matcha Latte)."
+      },
+      // SOAL 17: Persamaan Langsung (Expert)
+      {
+        category: "Persamaan Langsung",
+        type: "Level 17: Eliminasi Variabel Bebas",
+        question: "Cari solusi dari sistem persamaan linear dua variabel berikut:\n$$\\begin{cases} 5x + 2y = 16 \\\\ 3x - y = 3 \\end{cases}$$",
+        options: ["$x = 3$ dan $y = 2$", "$x = 2$ dan $y = 3$", "$x = 2$ dan $y = 2$", "$x = 1$ dan $y = 5$"],
+        correct: 1,
+        rationale: "Kalikan persamaan kedua dengan 2 sehingga diperoleh $6x - 2y = 6$. Tambahkan ke persamaan pertama: $11x = 22 \\Rightarrow x = 2$. Maka $3(2) - y = 3 \\Rightarrow y = 3$."
+      },
+      // SOAL 18: Soal Cerita (Hard)
+      {
+        category: "Soal Cerita Souvenir",
+        type: "Level 18: Custom Totebag & Scrunchie",
+        question: "Sofi merangkai paket aksesoris. Paket A berisi 1 Custom Totebag ($x$) dan 3 Pastel Scrunchie ($y$) seharga Rp 17.000. Paket B berisi 2 Totebag dan 1 Scrunchie seharga Rp 19.000. Berapakah harga masing-masing aksesoris tersebut?",
+        options: ["Totebag = Rp 8.000, Scrunchie = Rp 3.000", "Totebag = Rp 7.000, Scrunchie = Rp 4.000", "Totebag = Rp 9.000, Scrunchie = Rp 2.000", "Totebag = Rp 8.000, Scrunchie = Rp 2.500"],
+        correct: 0,
+        rationale: "Model: $x + 3y = 17.000$ dan $2x + y = 19.000$. Kalikan persamaan pertama dengan 2: $2x + 6y = 34.000$. Kurangkan: $5y = 15.000 \\Rightarrow y = 3.000$ (Scrunchie). Maka $x = 17.000 - 9.000 = 8.000$ (Totebag)."
+      },
+      // SOAL 19: Persamaan Langsung (Expert)
+      {
+        category: "Persamaan Langsung",
+        type: "Level 19: Konstanta Negatif",
+        question: "Tentukan nilai $x$ dan $y$ yang memenuhi sistem persamaan berikut:\n$$\\begin{cases} x - 2y = -3 \\\\ 2x + 3y = 8 \\end{cases}$$",
+        options: ["$x = 2$ dan $y = 1$", "$x = 2$ dan $y = 2$", "$x = 1$ dan $y = 2$", "$x = 3$ dan $y = 3$"],
+        correct: 2,
+        rationale: "Kalikan persamaan pertama dengan 2 sehingga diperoleh $2x - 4y = -6$. Kurangkan dengan persamaan kedua: $(2x - 4y) - (2x + 3y) = -6 - 8 \\Rightarrow -7y = -14 \\Rightarrow y = 2$. Maka $x - 2(2) = -3 \\Rightarrow x = 1$."
+      },
+      // SOAL 20: Soal Cerita (Expert)
+      {
+        category: "Soal Cerita Bunga",
+        type: "Level 20: Pupuk Kebun Hias",
+        question: "Di Kebun Pastel, 3 pot Bunga Aster ($x$) dan 2 pot Bunga Lavender ($y$) membutuhkan total 13 gram pupuk hias. Sedangkan 1 pot Aster dan 4 pot Lavender membutuhkan 11 gram pupuk hias. Berapa banyak pupuk hias yang dibutuhkan masing-masing pot Bunga?",
+        options: ["Aster = 2g, Lavender = 3g", "Aster = 4g, Lavender = 1g", "Aster = 3g, Lavender = 1g", "Aster = 3g, Lavender = 2g"],
+        correct: 3,
+        rationale: "Model: $3x + 2y = 13$ dan $x + 4y = 11$. Kalikan persamaan pertama dengan 2: $6x + 4y = 26$. Kurangkan dengan persamaan kedua: $5x = 15 \\Rightarrow x = 3$ (Aster). Maka $3 + 4y = 11 \\Rightarrow 4y = 8 \\Rightarrow y = 2$ (Lavender)."
+      }
+    ];
+
+    // INITIALIZATION RUNTIME
+    window.onload = function() {
+      initLevelJumper();
+      loadLevel(currentLevel);
+      initScratchpad();
+    };
+
+    // LEVEL LOADER ENGINE
+    function loadLevel(idx) {
+      const q = quizData[idx];
+
+      // Reset DOM State
+      document.getElementById("instant-feedback").classList.add("hidden");
+      document.getElementById("level-indicator-text").textContent = `Soal ${idx + 1} dari ${totalLevels}`;
+      document.getElementById("level-progress-bar").style.width = `${((idx + 1) / totalLevels) * 100}%`;
+      document.getElementById("level-selector").value = idx;
+
+      // Inject Content
+      document.getElementById("question-category").textContent = q.category;
+      document.getElementById("question-type").textContent = q.type;
+      document.getElementById("question-text").textContent = q.question;
+
+      // Options Rendering
+      const isAnswered = quizAnswers[idx] !== undefined;
+      const selectedIndex = quizAnswers[idx];
+      const container = document.getElementById("options-container");
+      container.innerHTML = "";
+
+      q.options.forEach((opt, oIdx) => {
+        const btn = document.createElement("button");
+        btn.className = "p-4 rounded-2xl text-left text-xs font-bold transition-all duration-200 border-2 flex items-center justify-between bounce-hover ";
+        
+        if (!isAnswered) {
+          btn.className += "bg-white border-pink-50 hover:border-pink-300 hover:bg-pink-50/20 text-slate-700 shadow-sm";
+          btn.onclick = () => selectOption(oIdx);
+        } else {
+          if (oIdx === q.correct) {
+            btn.className += "bg-emerald-50 border-emerald-300 text-emerald-800 shadow-md cursor-not-allowed";
+          } else if (oIdx === selectedIndex) {
+            btn.className += "bg-rose-50 border-rose-300 text-rose-800 shadow-sm cursor-not-allowed";
+          } else {
+            btn.className += "bg-slate-50/50 border-slate-100 text-slate-400 opacity-50 cursor-not-allowed";
+          }
+        }
+
+        btn.innerHTML = `<span>${opt}</span>`;
+        container.appendChild(btn);
+      });
+
+      // Display feedback if already answered
+      if (isAnswered) {
+        showLevelFeedback(selectedIndex === q.correct);
+      }
+
+      // Trigger MathJax render
+      if (window.MathJax) {
+        MathJax.typesetPromise();
+      }
+    }
+
+    // SPEECH SYNTHESIZER
+    function speakQuestionText() {
+      const q = quizData[currentLevel];
+      // strip LaTeX syntax clean for a beautiful human speech synthesis
+      let cleanText = q.question.replace(/\$\$[\s\S]*?\$\$/g, ' ');
+      cleanText = cleanText.replace(/\$/g, '');
+      cleanText = cleanText.replace(/\\begin{cases}/g, '');
+      cleanText = cleanText.replace(/\\end{cases}/g, '');
+      cleanText = cleanText.replace(/\\\\/g, ' dan ');
+      cleanText = cleanText.replace(/\\Rightarrow/g, ' maka ');
+      
+      const utterance = new SpeechSynthesisUtterance(cleanText);
+      utterance.lang = "id-ID";
+      utterance.rate = 1.0;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // ANSWER OPTION CLICK CONTROLLER
+    function selectOption(idx) {
+      if (quizAnswers[currentLevel] !== undefined) return;
+      quizAnswers[currentLevel] = idx;
+
+      const q = quizData[currentLevel];
+      const isCorrect = idx === q.correct;
+
+      if (isCorrect) {
+        globalXP += 200;
+        document.getElementById("score-text").innerText = globalXP;
+        playSoundEffect('correct');
+      } else {
+        playSoundEffect('wrong');
+      }
+
+      loadLevel(currentLevel);
+    }
+
+    // SHOW CORRECTION DESCRIPTION
+    function showLevelFeedback(isCorrect) {
+      const q = quizData[currentLevel];
+      const fb = document.getElementById("instant-feedback");
+      if (!fb) return;
+
+      fb.classList.remove("hidden");
+      if (isCorrect) {
+        fb.className = "rounded-2xl p-4 mt-5 flex items-start gap-3.5 bg-emerald-50 border-emerald-200 text-emerald-900 text-xs transition-all duration-300 shadow-sm";
+        fb.innerHTML = `
+          <span class="text-2xl">🍬</span>
+          <div>
+            <h4 class="font-extrabold text-emerald-800 text-sm mb-0.5">Yey! Jawabanmu Tepat! (+200 XP)</h4>
+            <p>${q.rationale}</p>
+          </div>
+        `;
+      } else {
+        fb.className = "rounded-2xl p-4 mt-5 flex items-start gap-3.5 bg-rose-50 border-rose-200 text-rose-900 text-xs transition-all duration-300 shadow-sm";
+        fb.innerHTML = `
+          <span class="text-2xl">💡</span>
+          <div>
+            <h4 class="font-extrabold text-rose-800 text-sm mb-0.5">Ayo, Kita Pelajari Caranya:</h4>
+            <p>${q.rationale}</p>
+          </div>
+        `;
+      }
+
+      if (window.MathJax) {
+        MathJax.typesetPromise([fb]);
+      }
+    }
+
+    // LEVEL JUMP CONTROLLERS
+    function initLevelJumper() {
+      const select = document.getElementById("level-selector");
+      select.innerHTML = "";
+      quizData.forEach((item, idx) => {
+        const opt = document.createElement("option");
+        opt.value = idx;
+        opt.text = `${idx + 1}. [${item.category}] ${item.type}`;
+        select.appendChild(opt);
+      });
+    }
+
+    function jumpToLevel(idx) {
+      currentLevel = parseInt(idx);
+      loadLevel(currentLevel);
+    }
+
+    function nextLevel() {
+      if (currentLevel < totalLevels - 1) {
+        currentLevel++;
+        loadLevel(currentLevel);
+      } else {
+        triggerFinalRapor();
+      }
+    }
+
+    function prevLevel() {
+      if (currentLevel > 0) {
+        currentLevel--;
+        loadLevel(currentLevel);
+      }
+    }
+
+    // TRIGGER SCOREBOARD OVERLAY
+    function triggerFinalRapor() {
+      let correctQuizCount = 0;
+      quizData.forEach((level, idx) => {
+        if (quizAnswers[idx] === level.correct) {
+          correctQuizCount++;
+        }
+      });
+
+      document.getElementById("final-correct").innerText = `${correctQuizCount} / ${totalLevels} Soal`;
+      document.getElementById("final-score").innerText = `${globalXP} XP`;
+
+      const comment = document.getElementById("reflection-comment");
+      if (correctQuizCount >= 17) {
+        comment.innerText = "Sangat Memukau! Kemampuan BERNALAR KRITIS-mu setara dengan ahli matematika sejati. Kamu sukses memecahkan sandi aljabar rumit dengan taktis dan mandiri!";
+      } else if (correctQuizCount >= 12) {
+        comment.innerText = "Luar biasa! Pemahamanmu terhadap metode eliminasi dan gabungan sudah matang. Tingkatkan ketelitian pada tanda negatif saat mengurangkan variabel!";
+      } else {
+        comment.innerText = "Awal yang bagus! Belajar matematika butuh pembiasaan. Gunakan coretan buku cakar untuk melatih logikamu!";
+      }
+
+      document.getElementById("results-modal").classList.remove("hidden");
+    }
+
+    function restartQuiz() {
+      currentLevel = 0;
+      quizAnswers = {};
+      globalXP = 0;
+      document.getElementById("score-text").innerText = "0";
+      document.getElementById("results-modal").classList.add("hidden");
+      loadLevel(0);
+    }
+
+    function closeModal() {
+      document.getElementById("results-modal").classList.add("hidden");
+    }
+
+    // ------------------- ART DOODLE CANVAS BOARD -------------------
+    let canvas, ctx;
+    let drawing = false;
+    let penColor = '#FF6B8B'; // default pastel strawberry pink
+
+    function initScratchpad() {
+      canvas = document.getElementById("scratchpad");
+      ctx = canvas.getContext("2d");
+      
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+
+      // Desktop events
+      canvas.addEventListener("mousedown", (e) => {
+        drawing = true;
+        draw(e);
+      });
+      canvas.addEventListener("mouseup", () => {
+        drawing = false;
+        ctx.beginPath();
+      });
+      canvas.addEventListener("mousemove", draw);
+
+      // Touch / Mobile events
+      canvas.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+        drawing = true;
+        const touch = e.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
+      });
+      canvas.addEventListener("touchmove", (e) => {
+        e.preventDefault();
+        if (!drawing) return;
+        const touch = e.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        ctx.strokeStyle = penColor;
+        ctx.lineWidth = 3.5;
+        ctx.lineCap = "round";
+        ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
+        ctx.stroke();
+        playSoundEffect('draw');
+      });
+      canvas.addEventListener("touchend", () => {
+        drawing = false;
+        ctx.beginPath();
+      });
+    }
+
+    function resizeCanvas() {
+      if (!canvas) return;
+      const tempImg = ctx ? canvas.toDataURL() : null;
+
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = 340 * dpr;
+      canvas.style.width = rect.width + 'px';
+      canvas.style.height = '340px';
+
+      ctx.scale(dpr, dpr);
+      ctx.strokeStyle = penColor;
+      ctx.lineWidth = 3.5;
+      ctx.lineCap = "round";
+
+      if (tempImg) {
+        const img = new Image();
+        img.onload = function() {
+          ctx.drawImage(img, 0, 0, rect.width, 340);
+        };
+        img.src = tempImg;
+      }
+    }
+
+    function draw(e) {
+      if (!drawing) return;
+      const rect = canvas.getBoundingClientRect();
+      ctx.strokeStyle = penColor;
+      ctx.lineWidth = 3.5;
+      ctx.lineCap = "round";
+      ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+      playSoundEffect('draw');
+    }
+
+    function changePenColor(color) {
+      penColor = color;
+    }
+
+    function clearScratchpad() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.beginPath();
+    }
+  </script>
+</body>
+</html>

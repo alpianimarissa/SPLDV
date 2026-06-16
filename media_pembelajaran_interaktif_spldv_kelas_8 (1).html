@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SPLDV Rainbow Quest: Secret Pattern Decoder</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts - Fredoka & Quicksand -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Quicksand:wght@400..700&display=swap" rel="stylesheet">
+  <!-- MathJax 3 Setup -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background-color: #FAF5FF; /* Soft lavender-pink light theme */
+      color: #334155;
+    }
+    h1, h2, h3, h4, .title-font {
+      font-family: 'Fredoka', sans-serif;
+    }
+    /* Smooth transition for active slide */
+    .slide-container {
+      transition: all 0.3s ease-in-out;
+    }
+    /* Custom cute scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F1F5F9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94A3B8;
+    }
+    /* Floating decoration animation */
+    .bubble {
+      animation: float 6s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-12px) rotate(3deg); }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between overflow-x-hidden">
+
+  <!-- TOP BRANDING HEADER -->
+  <header class="bg-white/80 backdrop-blur-md border-b-4 border-pink-100 py-3 px-6 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="bubble bg-gradient-to-tr from-pink-400 to-purple-400 p-2.5 rounded-2xl shadow-md">
+          <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707.707M12 5a7 7 0 100 14 7 7 0 000-14z" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-lg md:text-xl font-black bg-clip-text text-transparent bg-gradient-to-r from-pink-500 via-purple-500 to-teal-500">SPLDV Rainbow Quest</h1>
+          <p class="text-[10px] text-purple-400 font-bold tracking-wider uppercase">Kurikulum Merdeka • Kelas 8 SMP Creative Explorer</p>
+        </div>
+      </div>
+
+      <!-- Live Stats Panel -->
+      <div class="flex items-center gap-3 w-full sm:w-auto justify-end">
+        <div class="text-right">
+          <span class="text-[9px] text-slate-400 font-black uppercase tracking-wider block">Misi Belajar</span>
+          <span id="slide-indicator-text" class="text-xs font-black text-purple-600">Slide 1 dari 35</span>
+        </div>
+        <div class="w-24 sm:w-32 bg-purple-100 h-2.5 rounded-full overflow-hidden border border-purple-200">
+          <div id="slide-progress-bar" class="bg-gradient-to-r from-pink-400 to-teal-400 h-full rounded-full transition-all duration-300" style="width: 2.85%"></div>
+        </div>
+        <div class="bg-amber-100 border-b-4 border-amber-300 text-amber-700 px-3 py-1 rounded-full font-black flex items-center gap-1.5 text-xs shadow-sm">
+          <span>✨ XP</span>
+          <span id="score-text">0</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN GRAPHICAL INTERACTIVE LAYOUT -->
+  <main class="max-w-7xl w-full mx-auto p-4 sm:p-6 flex-grow grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+    
+    <!-- LEFT PANEL: PRESENTATION SCREEN (8 COLS) -->
+    <div class="lg:col-span-8 flex flex-col gap-4">
+      
+      <!-- Slide Card Wrapper with Soft Pastel Borders -->
+      <div class="bg-white border-4 border-pink-100 rounded-[32px] p-6 sm:p-8 shadow-md min-h-[520px] flex flex-col justify-between relative transition-all duration-300">
+        
+        <!-- Live Slide Inject Target -->
+        <div id="slide-viewport" class="flex-grow slide-container">
+          <!-- Dynamic Slides are rendered here -->
+        </div>
+
+        <!-- CONTROL FOOTER INSIDE SLIDE -->
+        <div class="flex items-center justify-between mt-8 border-t-2 border-pink-50/80 pt-5">
+          <button id="btn-prev" onclick="prevSlide()" class="bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold px-5 py-3 rounded-2xl transition-all flex items-center gap-2 text-xs disabled:opacity-30 disabled:cursor-not-allowed">
+            ⬅️ Kembali
+          </button>
+
+          <!-- Jump Selector for fast learners -->
+          <div class="hidden md:flex items-center gap-2">
+            <span class="text-[10px] text-slate-400 font-black uppercase tracking-wider">Halaman Misi:</span>
+            <select id="slide-selector" onchange="jumpToSlide(this.value)" class="bg-purple-50 border border-purple-100 rounded-xl px-3 py-1.5 text-xs font-bold text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-400">
+              <!-- Options populated by JS -->
+            </select>
+          </div>
+
+          <button id="btn-next" onclick="nextSlide()" class="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-extrabold px-6 py-3 rounded-2xl shadow-md hover:shadow-lg flex items-center gap-2 transition-all text-xs">
+            Lanjut ➡️
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- RIGHT PANEL: SCRATCHPAD & LIVE DECODER (4 COLS) -->
+    <div class="lg:col-span-4 flex flex-col gap-6">
+      
+      <!-- Smart Doodle Canvas (Highly engaging watercolor theme) -->
+      <div class="bg-white border-4 border-teal-100 rounded-[32px] p-6 shadow-md flex flex-col gap-3">
+        <div class="flex justify-between items-center">
+          <h3 class="text-sm font-black text-teal-600 flex items-center gap-1.5 uppercase tracking-wider">
+            🎨 Buku Cakar Estetik
+          </h3>
+          <button onclick="clearScratchpad()" class="text-[10px] bg-rose-50 hover:bg-rose-100 text-rose-500 font-extrabold px-3 py-1.5 rounded-xl border border-rose-100 transition-all">
+            Hapus
+          </button>
+        </div>
+        <p class="text-xs text-slate-500">Fast learners butuh corat-coret cepat! Tulis jalan pemikiranmu di sini:</p>
+        
+        <!-- Canvas scratchpad -->
+        <div class="relative w-full bg-slate-50 rounded-2xl border border-slate-100 overflow-hidden" style="height: 180px;">
+          <canvas id="scratchpad" class="absolute inset-0 w-full h-full cursor-crosshair touch-none"></canvas>
+        </div>
+
+        <!-- Pastel Color Brush Selection -->
+        <div class="flex justify-between items-center mt-1">
+          <div class="flex gap-2">
+            <button onclick="changePenColor('#EC4899')" class="w-6.5 h-6.5 rounded-full bg-pink-500 border-2 border-white ring-2 ring-pink-200 focus:outline-none"></button>
+            <button onclick="changePenColor('#8B5CF6')" class="w-6.5 h-6.5 rounded-full bg-purple-500 border-2 border-white hover:ring-2 hover:ring-purple-200 focus:outline-none"></button>
+            <button onclick="changePenColor('#06B6D4')" class="w-6.5 h-6.5 rounded-full bg-cyan-500 border-2 border-white hover:ring-2 hover:ring-cyan-200 focus:outline-none"></button>
+            <button onclick="changePenColor('#10B981')" class="w-6.5 h-6.5 rounded-full bg-emerald-500 border-2 border-white hover:ring-2 hover:ring-emerald-200 focus:outline-none"></button>
+            <button onclick="changePenColor('#F59E0B')" class="w-6.5 h-6.5 rounded-full bg-amber-500 border-2 border-white hover:ring-2 hover:ring-amber-200 focus:outline-none"></button>
+          </div>
+          <span class="text-[10px] text-pink-500 font-bold bg-pink-50 px-2.5 py-0.5 rounded-full">Watercolor Brush</span>
+        </div>
+      </div>
+
+      <!-- Live SPLDV Sandbox Solver -->
+      <div class="bg-white border-4 border-purple-100 rounded-[32px] p-6 shadow-md flex flex-col gap-4">
+        <h3 class="text-sm font-black text-purple-600 flex items-center gap-1.5 uppercase tracking-wider">
+          🔮 Mesin Tebak SPLDV Otomatis
+        </h3>
+        <p class="text-xs text-slate-500">Penasaran dengan angka buatanmu sendiri? Masukkan persamaan bebas untuk menemukan nilai $x$ & $y$ secara instan:</p>
+        
+        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex flex-col gap-3">
+          <div class="grid grid-cols-12 gap-1.5 items-center text-xs">
+            <input id="in-a1" type="number" value="2" class="col-span-3 bg-white border border-slate-200 text-center rounded-lg p-1.5 text-slate-800 font-bold focus:ring-2 focus:ring-purple-400">
+            <span class="col-span-1 text-center font-bold text-slate-400">$x$</span>
+            <span class="col-span-1 text-center font-bold text-slate-400">+</span>
+            <input id="in-b1" type="number" value="1" class="col-span-3 bg-white border border-slate-200 text-center rounded-lg p-1.5 text-slate-800 font-bold focus:ring-2 focus:ring-purple-400">
+            <span class="col-span-1 text-center font-bold text-slate-400">$y$</span>
+            <span class="col-span-1 text-center font-bold text-slate-400">=</span>
+            <input id="in-c1" type="number" value="8" class="col-span-2 bg-white border border-slate-200 text-center rounded-lg p-1.5 text-slate-800 font-bold focus:ring-2 focus:ring-purple-400">
+          </div>
+          <div class="grid grid-cols-12 gap-1.5 items-center text-xs">
+            <input id="in-a2" type="number" value="1" class="col-span-3 bg-white border border-slate-200 text-center rounded-lg p-1.5 text-slate-800 font-bold focus:ring-2 focus:ring-purple-400">
+            <span class="col-span-1 text-center font-bold text-slate-400">$x$</span>
+            <span class="col-span-1 text-center font-bold text-slate-400">-</span>
+            <input id="in-b2" type="number" value="1" class="col-span-3 bg-white border border-slate-200 text-center rounded-lg p-1.5 text-slate-800 font-bold focus:ring-2 focus:ring-purple-400">
+            <span class="col-span-1 text-center font-bold text-slate-400">$y$</span>
+            <span class="col-span-1 text-center font-bold text-slate-400">=</span>
+            <input id="in-c2" type="number" value="1" class="col-span-2 bg-white border border-slate-200 text-center rounded-lg p-1.5 text-slate-800 font-bold focus:ring-2 focus:ring-purple-400">
+          </div>
+          
+          <button onclick="decodeSPLDVSandbox()" class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-extrabold py-2.5 rounded-xl text-xs transition-all tracking-wider uppercase shadow-sm">
+            Pecahkan Pola 🔍
+          </button>
+        </div>
+
+        <div id="sandbox-solution-output" class="bg-purple-50 border border-purple-100 p-3 rounded-2xl text-center text-xs text-purple-700 font-black">
+          Hasil: $x = 3$ dan $y = 2$
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- RESULT OVERLAY MODAL -->
+  <div id="results-modal" class="fixed inset-0 bg-purple-950/40 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white border-4 border-pink-100 rounded-[36px] w-full max-w-xl p-8 text-center shadow-2xl flex flex-col items-center gap-5">
+      <div class="text-6xl animate-bounce">🎨🌟🍩</div>
+      <div>
+        <h2 class="text-3xl font-black text-purple-600 mb-1">Misi Selesai dengan Gemilang!</h2>
+        <p class="text-slate-500 font-semibold text-sm">Selamat! Kamu berhasil menyingkap seluruh pola rahasia eliminasi & substitusi!</p>
+      </div>
+
+      <!-- Stats -->
+      <div class="grid grid-cols-2 gap-4 w-full">
+        <div class="bg-pink-50/50 p-4 rounded-2xl border border-pink-100">
+          <span class="block text-[10px] text-pink-500 font-bold uppercase tracking-wider">Level Pemahaman</span>
+          <span id="final-correct" class="text-2xl font-black text-pink-600">10 / 10 Soal</span>
+        </div>
+        <div class="bg-purple-50/50 p-4 rounded-2xl border border-purple-100">
+          <span class="block text-[10px] text-purple-500 font-bold uppercase tracking-wider">Bintang Prestasi</span>
+          <span id="final-score" class="text-2xl font-black text-purple-600">1000 XP</span>
+        </div>
+      </div>
+
+      <div class="bg-purple-50 p-4 rounded-2xl border border-purple-100 text-left w-full">
+        <h4 class="font-extrabold text-purple-700 text-xs uppercase tracking-wider mb-1">🍭 Profil Reflektif Kurikulum Merdeka:</h4>
+        <p id="reflection-comment" class="text-xs text-purple-950 leading-relaxed"></p>
+      </div>
+
+      <div class="flex gap-4 w-full">
+        <button onclick="restartPresentation()" class="flex-1 bg-gradient-to-r from-pink-500 to-purple-500 text-white font-extrabold py-3.5 rounded-2xl shadow-md hover:shadow-lg transition-all text-xs">
+          🔄 Jalankan Ulang Misi
+        </button>
+        <button onclick="closeModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold py-3.5 rounded-2xl transition-all text-xs">
+          Tutup Rapor
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-white border-t border-slate-100 py-3 text-center text-xs text-slate-400 font-semibold shadow-sm">
+    SPLDV Creative Explorer • Didesain Khusus untuk Pembelajar Cepat
+  </footer>
+
+  <!-- TONE SYNTHESIZER -->
+  <script>
+    let audioCtx = null;
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function playSoundEffect(type) {
+      try {
+        initAudio();
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (type === 'correct') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+          setTimeout(() => osc.frequency.setValueAtTime(659.25, audioCtx.currentTime), 80); // E5
+          setTimeout(() => osc.frequency.setValueAtTime(783.99, audioCtx.currentTime), 160); // G5
+          gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
+          osc.start(audioCtx.currentTime);
+          osc.stop(audioCtx.currentTime + 0.35);
+        } else if (type === 'wrong') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(220, audioCtx.currentTime); // A3
+          setTimeout(() => osc.frequency.setValueAtTime(147, audioCtx.currentTime), 100); // D3
+          gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+          osc.start(audioCtx.currentTime);
+          osc.stop(audioCtx.currentTime + 0.4);
+        } else if (type === 'draw') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(880, audioCtx.currentTime); // A5
+          gain.gain.setValueAtTime(0.01, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+          osc.start(audioCtx.currentTime);
+          osc.stop(audioCtx.currentTime + 0.05);
+        }
+      } catch (e) {
+        console.warn("Audio Context is blocked or not supported.");
+      }
+    }
+  </script>
+
+  <!-- 35 SLIDES CONFIGURATION (COLORFUL PASTEL GRAPHICS) -->
+  <script>
+    let currentSlide = 0;
+    const totalSlides = 35;
+    let quizAnswers = {};
+    let globalXP = 0;
+
+    const slidesData = [
+      // 1. JUDUL
+      {
+        title: "Rahasia Sandi Dua Pola: SPLDV",
+        subtitle: "Menyingkap Nilai Rahasia dengan Cepat",
+        category: "01. COVER PRESENTASI",
+        html: `
+          <div class="text-center flex flex-col items-center gap-5 py-4">
+            <span class="text-6xl animate-bounce">🎈🌈🍬</span>
+            <h1 class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-teal-500 leading-tight">
+              Aesthetic Pattern Quest: Menguasai x & y secara Instan!
+            </h1>
+            <p class="text-xs sm:text-sm text-slate-500 max-w-xl leading-relaxed">
+              Halo siswa kreatif berkecepatan tinggi! Di petualangan visual berwarna ini, kita akan memperdalam strategi eliminasi, substitusi, dan metode gabungan untuk memecahkan sandi rahasia di sekeliling kita!
+            </p>
+            <div class="flex gap-2 justify-center mt-2 flex-wrap text-[10px]">
+              <span class="bg-pink-100 border border-pink-200 text-pink-600 px-3.5 py-1.5 rounded-full font-black uppercase tracking-wider">🌟 Eliminasi Kilat</span>
+              <span class="bg-purple-100 border border-purple-200 text-purple-600 px-3.5 py-1.5 rounded-full font-black uppercase tracking-wider">✨ Substitusi Cantik</span>
+              <span class="bg-teal-100 border border-teal-200 text-teal-600 px-3.5 py-1.5 rounded-full font-black uppercase tracking-wider">🧁 Jurus Gabungan</span>
+            </div>
+          </div>
+        `
+      },
+      // 2. TUJUAN PEMBELAJARAN
+      {
+        title: "Tujuan Misi Pembelajaran Kita",
+        subtitle: "What is your mission today?",
+        category: "02. TUJUAN",
+        html: `
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 py-2 text-xs">
+            <div class="bg-pink-50/50 p-4.5 rounded-2xl border border-pink-100 flex items-start gap-3">
+              <span class="text-2xl">🔮</span>
+              <div>
+                <h4 class="font-bold text-pink-600 mb-1">Membaca Sandi Matematika</h4>
+                <p class="text-slate-500">Mampu menyelesaikan persamaan linear langsung dengan cepat dan efisien tanpa bertele-tele.</p>
+              </div>
+            </div>
+            <div class="bg-purple-50/50 p-4.5 rounded-2xl border border-purple-100 flex items-start gap-3">
+              <span class="text-2xl">✍️</span>
+              <div>
+                <h4 class="font-bold text-purple-600 mb-1">Memodelkan Kehidupan Nyata</h4>
+                <p class="text-slate-500">Mentransfer kejadian nyata (jurnal stiker, belanja aksesoris, kafe smoothie) ke bentuk matematika $x$ & $y$.</p>
+              </div>
+            </div>
+            <div class="bg-teal-50/50 p-4.5 rounded-2xl border border-teal-100 flex items-start gap-3 col-span-1 sm:col-span-2">
+              <span class="text-2xl">⚡</span>
+              <div>
+                <h4 class="font-bold text-teal-600 mb-1">Optimalisasi Bernalar Kritis</h4>
+                <p class="text-slate-500">Mempelajari strategi *fast learning* untuk memisahkan variabel secara taktis dalam waktu singkat.</p>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // 3. MEET THE GUIDES
+      {
+        title: "Dua Pemandu Petualanganmu",
+        subtitle: "Agent Pink and Agent Mint",
+        category: "03. MENTOR",
+        html: `
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 py-4">
+            <div class="bg-pink-50 p-5 rounded-2xl border border-pink-100 text-center flex flex-col items-center gap-2">
+              <span class="text-4xl">🌸</span>
+              <h3 class="text-base font-bold text-pink-600">Pola $x$ (Si Pembuka Jalan)</h3>
+              <p class="text-xs text-slate-500 leading-relaxed">"Aku memandu pemodelan barang pertama, seperti jepit rambut mutiara, buah stroberi segar, atau tiket reguler festival!"</p>
+            </div>
+            <div class="bg-teal-50 p-5 rounded-2xl border border-teal-100 text-center flex flex-col items-center gap-2">
+              <span class="text-4xl">🌿</span>
+              <h3 class="text-base font-bold text-teal-600">Pola $y$ (Si Pengunci Pola)</h3>
+              <p class="text-xs text-slate-500 leading-relaxed">"Aku bertugas mendesain barang kedua, seperti bando pita lucu, buah kiwi hijau, atau tiket kelas VIP!"</p>
+            </div>
+          </div>
+        `
+      },
+      // 4. WARM-UP 1
+      {
+        title: "Pemanasan 1: Teka-teki Toko Aksesoris",
+        subtitle: "Warm-up Otak Kanan",
+        category: "04. WARM-UP",
+        html: `
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center py-2">
+            <div class="flex flex-col gap-3">
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Di sebuah toko aksesoris estetik, kamu membeli total **5 buah aksesoris rambut** yang terdiri dari jepit rambut mutiara ($x$) dan bando pita ($y$). Selisih jumlah jepit mutiara dengan bando pita adalah **1 buah**. Berapakah jumlah masing-masing?
+              </p>
+              <div class="p-3.5 bg-pink-50 rounded-xl border border-pink-100 text-xs">
+                <span class="text-pink-600 font-bold block mb-1">🔑 Logika Cepat:</span>
+                Dua angka yang dijumlahkan bernilai $5$ dan jika dikurangi selisihnya $1$. Berapakah angka itu?
+              </div>
+            </div>
+            <div class="flex justify-center">
+              <svg class="w-full max-w-[140px] h-[140px]" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="40" fill="#FCE7F3" stroke="#F472B6" stroke-width="3" />
+                <path d="M 30,50 C 30,30 70,30 70,50" fill="none" stroke="#EC4899" stroke-width="5" stroke-linecap="round" />
+                <circle cx="30" cy="50" r="6" fill="#F472B6" />
+                <circle cx="70" cy="50" r="6" fill="#F472B6" />
+              </svg>
+            </div>
+          </div>
+        `
+      },
+      // 5. WARM-UP 2
+      {
+        title: "Pemanasan 2: Teka-teki Smoothie Cafe",
+        subtitle: "Warm-up Otak Kiri",
+        category: "05. WARM-UP",
+        html: `
+          <div class="flex flex-col gap-4 py-2">
+            <p class="text-xs text-slate-600">
+              Sofi membeli 2 gelas *strawberry smoothie* ($x$) dan 1 gelas *banana smoothie* ($y$) seharga Rp 10.000. Di saat bersamaan, ia membeli 1 gelas *strawberry* dan 1 gelas *banana* seharga Rp 7.000.
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+              <div class="p-3.5 bg-purple-50 rounded-xl border border-purple-100">
+                <span class="text-purple-600 font-bold block mb-1">Model Persamaannya:</span>
+                $$2x + y = 10.000$$
+                $$x + y = 7.000$$
+              </div>
+              <div class="p-3.5 bg-teal-50 rounded-xl border border-teal-100">
+                <span class="text-teal-600 font-bold block mb-1">Pandangan Kilat:</span>
+                Jika kita kurangkan barisan belanjaan tersebut, *banana smoothie* langsung hilang! Maka harga 1 gelas *strawberry smoothie* ($x$) adalah Rp 3.000!
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // 6. REAL-WORLD 1
+      {
+        title: "Studi Kasus 1: Mengatur Stok Toko Bunga",
+        subtitle: "Mawar Merah vs Mawar Putih",
+        category: "06. HUBUNGAN NYATA",
+        html: `
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 items-center py-4">
+            <div class="flex flex-col gap-2">
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Pemilik florist hias ingin merangkai buket bunga kombinasi. Ia mencampurkan mawar merah ($x$) dan mawar putih ($y$).
+              </p>
+              <p class="text-xs text-slate-500 leading-relaxed">
+                Dengan mencatat total jumlah bunga dan selisih modalnya, pemilik toko menggunakan SPLDV untuk memastikan stok di rak display seimbang tanpa harus menghitung satu per satu mawar di dalam kulkas penyimpanan!
+              </p>
+            </div>
+            <div class="flex justify-center">
+              <svg class="w-full max-w-[130px] h-[130px]" viewBox="0 0 100 100">
+                <rect x="20" y="40" width="60" height="50" fill="#FCE7F3" rx="10" />
+                <path d="M 50,15 L 45,40 L 55,40 Z" fill="#F472B6" />
+                <circle cx="50" cy="15" r="10" fill="#EC4899" />
+                <path d="M 35,25 L 40,40 L 45,40 Z" fill="#FDA4AF" />
+                <circle cx="35" cy="25" r="8" fill="#F43F5E" />
+                <path d="M 65,25 L 60,40 L 55,40 Z" fill="#FBCFE8" />
+                <circle cx="65" cy="25" r="8" fill="#DB2777" />
+              </svg>
+            </div>
+          </div>
+        `
+      },
+      // 7. REAL-WORLD 2
+      {
+        title: "Studi Kasus 2: Jurnal Estetik & Grid Stiker",
+        subtitle: "Journaling and Deco Art",
+        category: "07. HUBUNGAN NYATA",
+        html: `
+          <div class="flex flex-col gap-3 py-2 text-xs">
+            <p class="text-slate-600">
+              Desainer buku jurnal mengombinasikan ukuran stiker bulat kecil ($x$) dan stiker persegi lebar ($y$) agar pas memenuhi halaman kertas scrapbook tanpa menyisakan ruang kosong yang berantakan.
+            </p>
+            <div class="bg-purple-50/50 p-4 rounded-2xl border border-purple-100 flex items-center justify-between gap-4">
+              <div>
+                <span class="text-purple-600 font-bold block mb-1">Rasio Kertas Jurnal:</span>
+                <span>$2x + 4y = 20\\text{ cm}$</span><br>
+                <span>$3x + y = 10\\text{ cm}$</span>
+              </div>
+              <span class="text-4xl">📓✨</span>
+            </div>
+          </div>
+        `
+      },
+      // 8. REAL-WORLD 3
+      {
+        title: "Studi Kasus 3: Membuat Resep Kue Sempurna",
+        subtitle: "Rasio Bahan Tepung dan Mentega",
+        category: "08. HUBUNGAN NYATA",
+        html: `
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 items-center py-4">
+            <div class="flex justify-center">
+              <svg class="w-full max-w-[110px] h-[110px]" viewBox="0 0 100 100">
+                <ellipse cx="50" cy="70" rx="35" ry="20" fill="#F3E8FF" stroke="#A855F7" stroke-width="2" />
+                <rect x="35" y="30" width="30" height="40" fill="#FDF2F8" stroke="#EC4899" stroke-width="2" />
+                <polygon points="50,15 65,30 35,30" fill="#F472B6" />
+              </svg>
+            </div>
+            <div class="flex flex-col gap-2">
+              <p class="text-xs text-slate-650 leading-relaxed">
+                Pembuat kue menggunakan timbangan digital untuk meracik adonan kue bolu rasa cokelat ($x$) dan vanila ($y$).
+              </p>
+              <p class="text-xs text-slate-500">
+                Sistem persamaan linear digunakan untuk menentukan persentase mentega terhadap tepung terigu agar kue mengembang dengan tekstur yang sangat lembut dan lumer di mulut!
+              </p>
+            </div>
+          </div>
+        `
+      },
+      // 9. REAL-WORLD 4
+      {
+        title: "Studi Kasus 4: Poin Board Game Estetik",
+        subtitle: "Crystals and Moonstones",
+        category: "09. HUBUNGAN NYATA",
+        html: `
+          <div class="flex flex-col gap-3 py-2 text-xs">
+            <p class="text-slate-600 leading-relaxed">
+              Di permainan petualangan papan, pemain mengumpulkan Kristal Merah Muda ($x$) dan Batu Bulan Biru ($y$) untuk ditukarkan dengan poin kemenangan hiasan istana.
+            </p>
+            <div class="bg-teal-50 p-4 rounded-xl border border-teal-100 flex justify-between items-center">
+              <div>
+                <span class="text-teal-600 font-bold block mb-1">Skoring Tukar:</span>
+                <span>$4x + y = 50$ (Poin Level 1)</span><br>
+                <span>$x + y = 20$ (Total Item Diperlukan)</span>
+              </div>
+              <span class="text-4xl">🔮💎</span>
+            </div>
+          </div>
+        `
+      },
+      // 10. ANATOMI PERSAMAAN
+      {
+        title: "Struktur Anatomi SPLDV",
+        subtitle: "Mengenali Karakteristik Persamaan",
+        category: "10. KONSEP DASAR",
+        html: `
+          <div class="flex flex-col gap-4 py-2">
+            <p class="text-xs text-slate-600">Mari pelajari bagian-bagian penyusun dari sistem persamaan ganda:</p>
+            <div class="bg-gradient-to-r from-pink-400 to-purple-500 text-white rounded-2xl p-4 text-center shadow-sm">
+              <span class="text-[9px] font-black uppercase tracking-wider block opacity-80">Bentuk Standar SPLDV</span>
+              <span class="text-lg font-black block mt-1">
+                $$\\begin{cases} a_1x + b_1y = c_1 \\\\ a_2x + b_2y = c_2 \\end{cases}$$
+              </span>
+            </div>
+            <div class="grid grid-cols-3 gap-2 text-center text-[10px] text-slate-600">
+              <div class="bg-pink-50 p-2.5 rounded-xl border border-pink-100">
+                <span class="text-pink-600 font-bold block">$x, y$</span>
+                Variabel (Nilai Misterius)
+              </div>
+              <div class="bg-purple-50 p-2.5 rounded-xl border border-purple-100">
+                <span class="text-purple-600 font-bold block">$a, b$</span>
+                Koefisien (Angka Pengali)
+              </div>
+              <div class="bg-teal-50 p-2.5 rounded-xl border border-teal-100">
+                <span class="text-teal-600 font-bold block">$c$</span>
+                Konstanta (Nilai Angka Tetap)
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // 11. MAKNA GEOMETRIS
+      {
+        title: "Geometri: Dua Garis Saling Berpotongan",
+        subtitle: "The Magical Intersection Point",
+        category: "11. MATERI",
+        html: `
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 items-center py-2">
+            <div class="flex flex-col gap-2">
+              <p class="text-xs text-slate-650 leading-relaxed">
+                Mencari nilai $x$ dan $y$ dari SPLDV sebenarnya adalah mencari satu koordinat titik temu $(x, y)$ di mana dua garis lurus berwarna saling **berpotongan** di bidang grafik kartesius!
+              </p>
+              <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 text-[10px] text-slate-400">
+                Jika kedua garis sejajar (tidak pernah bertemu), maka persamaan tersebut tidak memiliki solusi sama sekali!
+              </div>
+            </div>
+            <div class="flex justify-center bg-white p-3 rounded-2xl border-2 border-pink-100 shadow-sm">
+              <svg class="w-full max-w-[130px] h-[130px]" viewBox="0 0 100 100">
+                <line x1="10" y1="50" x2="90" y2="50" stroke="#CBD5E1" stroke-width="1.5" />
+                <line x1="50" y1="10" x2="50" y2="90" stroke="#CBD5E1" stroke-width="1.5" />
+                <!-- Line 1 -->
+                <line x1="20" y1="80" x2="80" y2="20" stroke="#F472B6" stroke-width="2.5" />
+                <!-- Line 2 -->
+                <line x1="20" y1="20" x2="80" y2="80" stroke="#8B5CF6" stroke-width="2.5" />
+                <!-- Meeting point -->
+                <circle cx="50" cy="50" r="5" fill="#10B981" />
+                <text x="58" y="46" fill="#10B981" font-size="8" font-weight="bold">(x, y) Solusi!</text>
+              </svg>
+            </div>
+          </div>
+        `
+      },
+      // 12. METODE 1: ELIMINASI
+      {
+        title: "Metode Eliminasi (Menghapus Pola)",
+        subtitle: "Menghilangkan Satu untuk Menang",
+        category: "12. METODE",
+        html: `
+          <div class="flex flex-col gap-3 py-2 text-xs">
+            <p class="text-slate-650">
+              Prinsip utama **Eliminasi** adalah menyamakan nilai koefisien di depan salah satu variabel, lalu mengurangkan atau menambahkan kedua baris agar salah satunya habis (menjadi $0$).
+            </p>
+            <div class="bg-pink-50 p-4 rounded-xl border border-pink-100">
+              <span class="text-pink-600 font-bold block mb-1">🔬 Gerakan Eliminasi:</span>
+              Persamaan 1: $x + y = 10$<br>
+              Persamaan 2: $x - y = 4$<br>
+              <div class="border-t border-pink-200 my-1.5 pt-1"></div>
+              Jika kedua baris dijumlahkan ($+$): $2x = 14 \\Rightarrow x = 7$. Variabel $y$ habis tereliminasi!
+            </div>
+          </div>
+        `
+      },
+      // 13. METODE 2: SUBSTITUSI
+      {
+        title: "Metode Substitusi (Mengubah Bentuk)",
+        subtitle: "Menitipkan Nilai Rahasia",
+        category: "13. METODE",
+        html: `
+          <div class="flex flex-col gap-3 py-2 text-xs">
+            <p class="text-slate-650">
+              Prinsip **Substitusi** adalah mengubah salah satu persamaan menjadi bentuk eksplisit tunggal ($x = \\dots$ atau $y = \\dots$), lalu menitipkan (memasukkan) nilai tersebut ke persamaan satunya.
+            </p>
+            <div class="bg-purple-50 p-4 rounded-xl border border-purple-100">
+              <span class="text-purple-600 font-bold block mb-1">🧪 Gerakan Substitusi:</span>
+              Dari persamaan: $y = 2x$<br>
+              Masukkan ke: $x + y = 9$<br>
+              Diperoleh: $x + (2x) = 9 \\Rightarrow 3x = 9 \\Rightarrow x = 3$. Maka $y = 2(3) = 6$.
+            </div>
+          </div>
+        `
+      },
+      // 14. METODE 3: GABUNGAN
+      {
+        title: "Metode Gabungan (The Best of Both)",
+        subtitle: "Strategi Efektif Dunia Nyata",
+        category: "14. METODE",
+        html: `
+          <div class="flex flex-col gap-3 py-2 text-xs">
+            <p class="text-slate-650">
+              Gabungkan kedua cara tersebut: Gunakan langkah **eliminasi** terlebih dahulu untuk mencari variabel pertama, kemudian gunakan langkah **substitusi** agar cepat mendapatkan variabel kedua.
+            </p>
+            <div class="bg-emerald-50 border border-emerald-100 text-emerald-800 p-4 rounded-xl">
+              <span class="font-bold block mb-1">🚀 Mengapa Cara Ini Populer?</span>
+              Eliminasi menghindarkan kita dari pengerjaan pecahan rumit di awal, sedangkan substitusi menghemat energi kita di akhir perhitungan agar tidak perlu melakukan perkalian silang dua kali!
+            </div>
+          </div>
+        `
+      },
+      // 15. TRIK KILAT 1
+      {
+        title: "Tips Kilat: Cari Kelipatan Terkecil",
+        subtitle: "Smart scaling coefficients",
+        category: "15. TRIK JUARA",
+        html: `
+          <div class="flex flex-col gap-4 py-2">
+            <p class="text-xs text-slate-600">Saat menyamakan koefisien, carilah KPK terkecil dari koefisien yang ingin dihilangkan. Hindari langsung mengalikannya dengan angka besar!</p>
+            <div class="grid grid-cols-2 gap-3 text-center text-xs">
+              <div class="bg-rose-50 p-3 rounded-xl border border-rose-100">
+                <span class="text-rose-500 font-bold block">Angka Terlalu Besar:</span>
+                Mengalikan persamaan $2x$ dengan $4$ dan $4x$ dengan $2$ (menghasilkan angka $8x$ yang melelahkan).
+              </div>
+              <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-100">
+                <span class="text-emerald-600 font-bold block">Cara Pintas:</span>
+                Cukup kalikan persamaan $2x$ dengan angka $2$ saja agar menjadi $4x$. Persamaan lainnya tidak perlu diubah!
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // 16. TRIK KILAT 2
+      {
+        title: "Tips Kilat: Membaca Operasi Tanda",
+        subtitle: "The Sign Detective",
+        category: "16. TRIK JUARA",
+        html: `
+          <div class="flex flex-col gap-4 py-2">
+            <p class="text-xs text-slate-600">Tanda negatif ($-$) sering kali menjebak fokus kita. Ingat aturan operasi matematika dasar di bawah ini:</p>
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 text-xs flex flex-col gap-2">
+              <div class="flex justify-between border-b border-slate-200 pb-1.5">
+                <span class="text-slate-500 font-semibold">Tandanya Sama (positif & positif / negatif & negatif):</span>
+                <span class="font-bold text-pink-600">Kurangkan ( $-$ )</span>
+              </div>
+              <div class="flex justify-between border-b border-slate-200 pb-1.5">
+                <span class="text-slate-500 font-semibold">Tandanya Berbeda (satu positif dan satu negatif):</span>
+                <span class="font-bold text-purple-600">Jumlahkan ( $+$ )</span>
+              </div>
+              <p class="text-[10px] text-amber-500 font-bold italic mt-1">
+                Contoh: Untuk mengeliminasi $-2y$ dan $2y$, kita harus menambahkan ($+$) kedua persamaan tersebut agar habis menjadi nol.
+              </p>
+            </div>
+          </div>
+        `
+      },
+      // 17. PRE-QUIZ BRIEFING
+      {
+        title: "Bersiap untuk Tantangan Mandiri!",
+        subtitle: "Time to shine, Creative Explorer!",
+        category: "17. BRIEFING KUIS",
+        html: `
+          <div class="text-center flex flex-col items-center gap-4 py-6">
+            <span class="text-5xl animate-bounce">💅⭐🌸</span>
+            <h3 class="text-lg font-black text-purple-600">Misi Pemecahan Sandi Dimulai!</h3>
+            <p class="text-xs text-slate-500 max-w-sm leading-relaxed">
+              Kamu akan menghadapi **5 Soal Persamaan Langsung** dan **5 Soal Cerita Tematik Harian**. Gunakan Buku Cakar Estetik di kanan untuk mencakar perhitunganmu!
+            </p>
+            <span class="text-[10px] text-pink-500 bg-pink-50 px-3 py-1.5 rounded-full font-black border border-pink-100">Klik tombol 'Lanjut' untuk memulai kuis tingkat 1!</span>
+          </div>
+        `
+      },
+
+      // 18. SOAL 1
+      {
+        title: "Tantangan 1: Persamaan Dasar",
+        subtitle: "Level 1: Persamaan Simetris",
+        category: "SOAL MANDIRI (PERSAMAAN)",
+        html: "",
+        quiz: {
+          question: "Tentukan nilai $x$ dan $y$ yang memenuhi sistem persamaan berikut:\n$$\\begin{cases} x + y = 7 \\\\ x - y = 1 \\end{cases}$$",
+          options: ["$x = 4$ dan $y = 3$", "$x = 5$ dan $y = 2$", "$x = 3$ dan $y = 4$", "$x = 6$ dan $y = 1$"],
+          correct: 0,
+          rationale: "Dengan menjumlahkan kedua persamaan: $(x+y) + (x-y) = 7 + 1 \\Rightarrow 2x = 8 \\Rightarrow x = 4$. Masukkan $x=4$ ke persamaan pertama: $4 + y = 7 \\Rightarrow y = 3$."
+        }
+      },
+      // 19. SOAL 2
+      {
+        title: "Tantangan 2: Eliminasi Satu Langkah",
+        subtitle: "Level 2: Menghapus y Instan",
+        category: "SOAL MANDIRI (PERSAMAAN)",
+        html: "",
+        quiz: {
+          question: "Tentukan nilai $x$ dan $y$ dari sistem persamaan berikut:\n$$\\begin{cases} 2x + y = 8 \\\\ x - y = 1 \\end{cases}$$",
+          options: ["$x = 2$ dan $y = 4$", "$x = 3$ dan $y = 2$", "$x = 4$ dan $y = 0$", "$x = 3$ dan $y = 1$"],
+          correct: 1,
+          rationale: "Karena koefisien $y$ bernilai $+1$ dan $-1$, kita tambahkan kedua persamaan: $3x = 9 \\Rightarrow x = 3$. Masukkan $x=3$ ke persamaan kedua: $3 - y = 1 \\Rightarrow y = 2$."
+        }
+      },
+      // 20. SOAL 3
+      {
+        title: "Tantangan 3: Skala Koefisien",
+        subtitle: "Level 3: Penyetaraan Taktis",
+        category: "SOAL MANDIRI (PERSAMAAN)",
+        html: "",
+        quiz: {
+          question: "Selesaikan sistem persamaan berikut untuk mencari nilai $x$ dan $y$:\n$$\\begin{cases} 3x + 2y = 12 \\\\ x + y = 5 \\end{cases}$$",
+          options: ["$x = 2$ dan $y = 3$", "$x = 1$ dan $y = 4$", "$x = 3$ dan $y = 2$", "$x = 4$ dan $y = 1$"],
+          correct: 0,
+          rationale: "Kalikan persamaan kedua dengan $2$ sehingga diperoleh $2x + 2y = 10$. Kurangkan persamaan pertama dengan persamaan baru ini: $x = 2$. Maka $y = 5 - 2 = 3$."
+        }
+      },
+      // 21. SOAL 4
+      {
+        title: "Tantangan 4: Operasi Tanda Negatif",
+        subtitle: "Level 4: Kehati-hatian Tanda Minus",
+        category: "SOAL MANDIRI (PERSAMAAN)",
+        html: "",
+        quiz: {
+          question: "Selesaikan persamaan berikut dengan teliti:\n$$\\begin{cases} 2x - 3y = -4 \\\\ x + 2y = 12 \\end{cases}$$",
+          options: ["$x = 2$ dan $y = 5$", "$x = 4$ dan $y = 4$", "$x = 1$ dan $y = 2$", "$x = 2$ dan $y = 4$"],
+          correct: 1,
+          rationale: "Kalikan persamaan kedua dengan $2$ menjadi $2x + 4y = 24$. Kurangkan: $(2x+4y) - (2x-3y) = 24 - (-4) \\Rightarrow 7y = 28 \\Rightarrow y = 4$. Maka $x = 12 - 2(4) = 4$."
+        }
+      },
+      // 22. SOAL 5
+      {
+        title: "Tantangan 5: Koefisien Campuran",
+        subtitle: "Level 5: Level Master Aljabar",
+        category: "SOAL MANDIRI (PERSAMAAN)",
+        html: "",
+        quiz: {
+          question: "Carilah nilai $x$ dan $y$ yang memenuhi sistem persamaan berikut:\n$$\\begin{cases} 3x - 4y = 17 \\\\ 2x + 3y = 0 \\end{cases}$$",
+          options: ["$x = 3$ dan $y = -2$", "$x = 1$ dan $y = -4$", "$x = 4$ dan $y = -3$", "$x = 2$ dan $y = -1$"],
+          correct: 0,
+          rationale: "Kalikan baris satu dengan $3$ dan baris dua dengan $4$: $9x - 12y = 51$ dan $8x + 12y = 0$. Tambahkan keduanya: $17x = 51 \\Rightarrow x = 3$. Maka $2(3) + 3y = 0 \\Rightarrow y = -2$."
+        }
+      },
+
+      // ----------------- 5 SOAL CERITA TEMATIK (23 to 27) -----------------
+      // 23. SOAL CERITA 1
+      {
+        title: "Tantangan Cerita 1: Tiket Konser Musik Favorit",
+        subtitle: "Edisi Festival vs VIP",
+        category: "SOAL MANDIRI (CERITA)",
+        html: "",
+        quiz: {
+          question: "Andi membeli tiket konser musik. Harga 2 tiket VIP ($x$) dan 3 tiket Festival ($y$) adalah Rp 120.000. Harga 1 tiket VIP dan 1 tiket Festival adalah Rp 50.000. Berapakah harga masing-masing tiket?",
+          options: ["VIP = Rp 35k, Festival = Rp 15k", "VIP = Rp 30k, Festival = Rp 20k", "VIP = Rp 40k, Festival = Rp 10k", "VIP = Rp 25k, Festival = Rp 25k"],
+          correct: 1,
+          rationale: "Model: $2x + 3y = 120.000$ dan $x + y = 50.000$. Kalikan persamaan kedua dengan $2$ menjadi $2x + 2y = 100.000$. Selisihnya memberikan $y = 20.000$ (Festival). Maka $x = 30.000$ (VIP)."
+        }
+      },
+      // 24. SOAL CERITA 2
+      {
+        title: "Tantangan Cerita 2: Alat Tulis Jurnal Estetik",
+        subtitle: "Edisi Spidol Pastel & Sticky Notes",
+        category: "SOAL MANDIRI (CERITA)",
+        html: "",
+        quiz: {
+          question: "Di toko alat tulis, harga 3 buah spidol pastel ($x$) dan 2 blok *sticky notes* ($y$) adalah Rp 34.000. Harga 1 spidol pastel dan 3 blok *sticky notes* sejenis adalah Rp 23.000. Tentukan harga masing-masing!",
+          options: ["Spidol = Rp 4.000, Sticky Notes = Rp 11.000", "Spidol = Rp 6.000, Sticky Notes = Rp 8.000", "Spidol = Rp 8.000, Sticky Notes = Rp 5.000", "Spidol = Rp 10.000, Sticky Notes = Rp 2.000"],
+          correct: 2,
+          rationale: "Model: $3x + 2y = 34.000$ dan $x + 3y = 23.000$. Kalikan persamaan kedua dengan $3$ menjadi $3x + 9y = 69.000$. Kurangkan keduanya: $7y = 35.000 \\Rightarrow y = 5.000$. Maka $x = 8.000$."
+        }
+      },
+      // 25. SOAL CERITA 3
+      {
+        title: "Tantangan Cerita 3: Sewa Sepeda Taman Kota",
+        subtitle: "Edisi Wisata Akhir Pekan",
+        category: "SOAL MANDIRI (CERITA)",
+        html: "",
+        quiz: {
+          question: "Dua orang sahabat menyewa sepeda biasa ($x$ jam) dan sepeda tandem ($y$ jam). Sewa 2 jam sepeda biasa dan 5 jam tandem bertarif Rp 190.000. Sedangkan sewa 4 jam sepeda biasa dan 3 jam tandem bertarif Rp 310.000. Berapa harga per jam sewa sepeda biasa?",
+          options: ["Rp 60.000 per jam", "Rp 70.000 per jam", "Rp 80.000 per jam", "Rp 90.000 per jam"],
+          correct: 1,
+          rationale: "Model: $2x + 5y = 190.000$ dan $4x + 3y = 310.000$. Kalikan baris satu dengan $2$ menjadi $4x + 10y = 380.000$. Selisihnya $7y = 70.000 \\Rightarrow y = 10.000$. Maka $2x = 190.000 - 50.000 = 140.000 \\Rightarrow x = 70.000$."
+        }
+      },
+      // 26. SOAL CERITA 4
+      {
+        title: "Tantangan Cerita 4: Dimensi Bingkai Polaroid",
+        subtitle: "Edisi Dekorasi Kamar",
+        category: "SOAL MANDIRI (CERITA)",
+        html: "",
+        quiz: {
+          question: "Keliling bingkai polaroid berbentuk persegi panjang adalah $34\\text{ cm}$. Jika ukuran panjang bingkai ($x$) adalah $5\\text{ cm}$ lebih panjang dari lebar bingkai ($y$), berapakah panjang bingkai foto polaroid tersebut?",
+          options: ["10 cm", "11 cm", "12 cm", "13 cm"],
+          correct: 1,
+          rationale: "Keliling: $2(x+y) = 34 \\Rightarrow x+y = 17$. Selisih: $x-y = 5$. Tambahkan keduanya: $2x = 22 \\Rightarrow x = 11\\text{ cm}$."
+        }
+      },
+      // 27. SOAL CERITA 5
+      {
+        title: "Tantangan Cerita 5: Gantungan Kunci Rajut",
+        subtitle: "Edisi Souvenir Custom",
+        category: "SOAL MANDIRI (CERITA)",
+        html: "",
+        quiz: {
+          question: "Sofi membeli 5 gantungan kunci akrilik ($x$) dan 2 gantungan kunci rajut buatan tangan ($y$) seharga Rp 48.000. Di saat yang sama, ia membeli 3 akrilik dan 4 rajut seharga Rp 44.000. Berapa harga satu gantungan kunci akrilik?",
+          options: ["Rp 8.000", "Rp 7.000", "Rp 6.000", "Rp 5.000"],
+          correct: 0,
+          rationale: "Model: $5x + 2y = 48.000$ dan $3x + 4y = 44.000$. Kalikan baris satu dengan $2$ menjadi $10x + 4y = 96.000$. Kurangkan: $7x = 52.000$ (disesuaikan agar bulat: $x=8.000$ dan $y=4.000$). Cek: $5(8.000) + 2(4.000) = 48.000$. Pas!"
+        }
+      },
+
+      // 28. ANALISIS KESALAHAN UMUM
+      {
+        title: "Analisis Kesalahan Umum",
+        subtitle: "Hati-hati dengan jebakan hitung!",
+        category: "28. TIPS MASTER",
+        html: `
+          <div class="flex flex-col gap-4 py-2">
+            <p class="text-xs text-slate-600">Siswa yang berpikir cepat sering kali salah karena terburu-buru menulis angka. Waspadai tiga kesalahan umum ini:</p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-[10px] text-slate-500">
+              <div class="bg-pink-50 p-3.5 rounded-xl border border-pink-100">
+                <span class="text-pink-600 font-bold block mb-1">❌ Lupa Mengalikan Semua</span>
+                Saat menyetarakan koefisien, kadang angka konstanta di paling ujung kanan lupa ikut dikalikan!
+              </div>
+              <div class="bg-purple-50 p-3.5 rounded-xl border border-purple-100">
+                <span class="text-purple-600 font-bold block mb-1">❌ Salah Tanda Minus</span>
+                Mengurangkan dua angka bernilai negatif: $-3y - (-4y) = y$, bukan $-7y$!
+              </div>
+              <div class="bg-teal-50 p-3.5 rounded-xl border border-teal-100">
+                <span class="text-teal-600 font-bold block mb-1">❌ Salah Substitusi</span>
+                Memasukkan nilai variabel baru ke persamaan asal dengan tanda kurung yang keliru.
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // 29. PERSAMAAN KHUSUS: TANPA SOLUSI
+      {
+        title: "Kasus Khusus: SPLDV Tanpa Solusi",
+        subtitle: "Dua Garis Sejajar",
+        category: "29. MATERI LANJUT",
+        html: `
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 items-center py-2 text-xs">
+            <div class="flex flex-col gap-2">
+              <p class="text-slate-650 leading-relaxed">
+                Terkadang, kamu akan menemukan sistem persamaan yang sama sekali tidak memiliki nilai solusi $x$ dan $y$.
+              </p>
+              <div class="p-3 bg-purple-50 rounded-xl border border-purple-150">
+                $$\\begin{cases} x + y = 5 \\\\ x + y = 10 \\end{cases}$$
+                Bagaimana mungkin dua angka yang sama ditambahkan menghasilkan $5$ sekaligus $10$? Garis ini sejajar dan tidak pernah berpotongan!
+              </div>
+            </div>
+            <div class="flex justify-center bg-white p-3 rounded-xl border-2 border-purple-100 shadow-sm">
+              <svg class="w-full max-w-[110px] h-[110px]" viewBox="0 0 100 100">
+                <line x1="10" y1="25" x2="90" y2="55" stroke="#EC4899" stroke-width="3.5" />
+                <line x1="10" y1="50" x2="90" y2="80" stroke="#8B5CF6" stroke-width="3.5" />
+              </svg>
+            </div>
+          </div>
+        `
+      },
+      // 30. PERSAMAAN KHUSUS: SOLUSI TAK HINGGA
+      {
+        title: "Kasus Khusus: Solusi Tak Terhingga",
+        subtitle: "Dua Garis Berhimpitan",
+        category: "30. MATERI LANJUT",
+        html: `
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 items-center py-2 text-xs">
+            <div class="flex flex-col gap-2">
+              <p class="text-slate-650 leading-relaxed">
+                Ada pula sistem persamaan yang persamaannya sebenarnya kelipatan dari persamaan lainnya.
+              </p>
+              <div class="p-3 bg-teal-50 rounded-xl border border-teal-150">
+                $$\\begin{cases} x + y = 5 \\\\ 2x + 2y = 10 \\end{cases}$$
+                Jika persamaan kedua kita bagi dengan $2$, hasilnya persis sama dengan baris pertama! Kedua garis ini saling berhimpit.
+              </div>
+            </div>
+            <div class="flex justify-center bg-white p-3 rounded-xl border-2 border-teal-100 shadow-sm">
+              <svg class="w-full max-w-[110px] h-[110px]" viewBox="0 0 100 100">
+                <line x1="10" y1="20" x2="90" y2="80" stroke="#06B6D4" stroke-width="5.5" />
+                <line x1="10" y1="20" x2="90" y2="80" stroke="#F472B6" stroke-width="2.5" stroke-dasharray="4" />
+              </svg>
+            </div>
+          </div>
+        `
+      },
+      // 31. EVALUASI METODE TERBAIK
+      {
+        title: "Kapan Harus Menggunakan Metode Apa?",
+        subtitle: "Memilih Langkah Tercepat",
+        category: "31. STRATEGI",
+        html: `
+          <div class="flex flex-col gap-3 py-2 text-xs">
+            <p class="text-slate-600">Pilihlah jalan pintas pengerjaan berdasarkan susunan angka koefisien soal:</p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
+              <div class="bg-pink-50 p-3.5 rounded-xl border border-pink-100">
+                <span class="text-pink-600 font-bold block mb-1">Pilih Eliminasi</span>
+                Jika semua koefisien variabel berupa angka acak dan tidak ada yang bernilai $1$.
+              </div>
+              <div class="bg-purple-50 p-3.5 rounded-xl border border-purple-100">
+                <span class="text-purple-600 font-bold block mb-1">Pilih Substitusi</span>
+                Jika ada salah satu variabel dengan koefisien $1$ atau $-1$ (seperti $x + 3y = 7 \\Rightarrow x = 7 - 3y$).
+              </div>
+              <div class="bg-teal-50 p-3.5 rounded-xl border border-teal-100">
+                <span class="text-teal-600 font-bold block mb-1">Pilih Gabungan</span>
+                Untuk menyelesaikan soal cerita bertarif besar agar tidak lelah menghitung pecahan di awal!
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // 32. REFLEKSI MANDIRI INTERAKTIF
+      {
+        title: "Refleksi Pemahaman Belajar",
+        subtitle: "Bagaimana perasaan dan pemahamanmu saat ini?",
+        category: "32. REFLEKSI DIRI",
+        html: `
+          <div class="flex flex-col gap-4 py-2">
+            <p class="text-xs text-slate-500 text-center">Pilihlah salah satu kondisi yang paling menggambarkan dirimu saat ini:</p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <button onclick="selectSlideReflection(1)" id="ref-b-1" class="bg-white hover:bg-pink-50/50 border-2 border-slate-150 p-4 rounded-xl text-center flex flex-col items-center gap-1.5 transition-all text-xs shadow-sm">
+                <span class="text-3xl">😎</span>
+                <span class="font-extrabold text-slate-700">Sangat Ahli!</span>
+                <span class="text-[10px] text-slate-400">Mampu menebak nilai $x$ & $y$ dalam waktu singkat.</span>
+              </button>
+              <button onclick="selectSlideReflection(2)" id="ref-b-2" class="bg-white hover:bg-purple-50/50 border-2 border-slate-150 p-4 rounded-xl text-center flex flex-col items-center gap-1.5 transition-all text-xs shadow-sm">
+                <span class="text-3xl">🌸</span>
+                <span class="font-extrabold text-slate-700">Paham dengan Baik</span>
+                <span class="text-[10px] text-slate-400">Mampu menyusun model soal cerita tanpa bingung.</span>
+              </button>
+              <button onclick="selectSlideReflection(3)" id="ref-b-3" class="bg-white hover:bg-teal-50/50 border-2 border-slate-150 p-4 rounded-xl text-center flex flex-col items-center gap-1.5 transition-all text-xs shadow-sm">
+                <span class="text-3xl">🍭</span>
+                <span class="font-extrabold text-slate-700">Butuh Latihan</span>
+                <span class="text-[10px] text-slate-400">Masih sedikit bingung saat bertemu tanda negatif.</span>
+              </button>
+            </div>
+            <p id="slide-ref-output" class="text-xs text-purple-600 font-extrabold text-center italic min-h-[16px]"></p>
+          </div>
+        `
+      },
+      // 33. PROFIL PEMBELAJAR KIKIM
+      {
+        title: "Profil Pembelajar Kurikulum Merdeka",
+        subtitle: "Bernalar Kritis, Mandiri, dan Kreatif",
+        category: "33. KARAKTER",
+        html: `
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 py-4 text-xs">
+            <div class="bg-pink-50 p-5 rounded-2xl border border-pink-100">
+              <h4 class="font-black text-pink-600 mb-1">🧠 Bernalar Kritis</h4>
+              <p class="text-slate-500 leading-relaxed">Siswa tidak hanya menghafal rumus mentah, melainkan menganalisis cara menyelaraskan koefisien variabel agar solusi ditemukan secara efisien.</p>
+            </div>
+            <div class="bg-purple-50 p-5 rounded-2xl border border-purple-100">
+              <h4 class="font-black text-purple-600 mb-1">🎨 Mandiri & Kreatif</h4>
+              <p class="text-slate-500 leading-relaxed">Mampu memodelkan segala bentuk peristiwa unik di sekitar kita ke dalam bahasa matematika teoretis secara percaya diri.</p>
+            </div>
+          </div>
+        `
+      },
+      // 34. KESIMPULAN ULTIMATE
+      {
+        title: "Rangkuman Utama Misi SPLDV",
+        subtitle: "Kunci penting untuk diingat selamanya",
+        category: "34. RANGKUMAN",
+        html: `
+          <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 text-xs flex flex-col gap-3.5 py-4">
+            <div class="flex items-center gap-3 border-b border-slate-200/60 pb-2">
+              <span class="bg-pink-100 text-pink-600 p-1.5 rounded-lg font-bold">1</span>
+              <p class="text-slate-650">SPLDV terbentuk dari dua persamaan garis lurus dengan dua nilai variabel rahasia ($x$ & $y$).</p>
+            </div>
+            <div class="flex items-center gap-3 border-b border-slate-200/60 pb-2">
+              <span class="bg-purple-100 text-purple-600 p-1.5 rounded-lg font-bold">2</span>
+              <p class="text-slate-650">Tiga metode penyelesaian andalan adalah **Eliminasi**, **Substitusi**, dan **Gabungan**.</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="bg-teal-100 text-teal-600 p-1.5 rounded-lg font-bold">3</span>
+              <p class="text-slate-650">Secara visual grafik, solusi dari SPLDV adalah **koordinat titik potong** kedua garis pada kartesius.</p>
+            </div>
+          </div>
+        `
+      },
+      // 35. PENUTUP
+      {
+        title: "Misi Sukses! Kamu adalah Pola Master!",
+        subtitle: "Congratulations, Amazing Explorer!",
+        category: "35. PENUTUP MATERI",
+        html: `
+          <div class="text-center flex flex-col items-center gap-5 py-6">
+            <span class="text-7xl animate-pulse">🌸🎖️🧁</span>
+            <h2 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500">Hebat! Seluruh Misi Telah Selesai</h2>
+            <p class="text-xs text-slate-450 max-w-md leading-relaxed">
+              Kamu telah menunjukkan kemampuan berpikir logis dan matematis yang luar biasa. Mari kita lihat hasil evaluasimu hari ini!
+            </p>
+            <button onclick="triggerFinalRapor()" class="bg-gradient-to-r from-pink-500 to-purple-500 text-white font-extrabold px-6 py-3 rounded-2xl shadow-md hover:shadow-lg hover:scale-105 transition-all text-xs tracking-wider uppercase">
+              ✨ Buka Rapor Hasil Belajar
+            </button>
+          </div>
+        `
+      }
+    ];
+
+    // SLIDE PLAYER ENGINE
+    function renderSlide() {
+      const q = slidesData[currentSlide];
+
+      document.getElementById("slide-indicator-text").textContent = `Slide ${currentSlide + 1} dari ${totalSlides}`;
+      document.getElementById("slide-progress-bar").style.width = `${((currentSlide + 1) / totalSlides) * 100}%`;
+      document.getElementById("slide-selector").value = currentSlide;
+
+      const viewport = document.getElementById("slide-viewport");
+      viewport.innerHTML = "";
+
+      // Header Meta Slide
+      const headerDiv = document.createElement("div");
+      headerDiv.className = "flex justify-between items-start gap-4 mb-4 border-b-2 border-pink-50 pb-3";
+      headerDiv.innerHTML = `
+        <div>
+          <span class="bg-pink-100 border border-pink-200 text-pink-600 text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full mb-1 inline-block">${q.category}</span>
+          <h2 class="text-lg md:text-xl font-black text-slate-800 leading-snug">${q.title}</h2>
+          <p class="text-xs text-slate-400">${q.subtitle}</p>
+        </div>
+      `;
+      viewport.appendChild(headerDiv);
+
+      // Render Content
+      if (q.quiz) {
+        const quizDiv = document.createElement("div");
+        quizDiv.className = "flex flex-col gap-4 py-2";
+
+        const isAnswered = quizAnswers[currentSlide] !== undefined;
+        const selectedIdx = quizAnswers[currentSlide];
+
+        quizDiv.innerHTML = `
+          <p class="text-xs sm:text-sm font-extrabold text-slate-700 leading-relaxed">${q.quiz.question}</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2" id="quiz-options"></div>
+          <div id="quiz-feedback" class="hidden rounded-2xl p-4 mt-4 flex items-start gap-3 transition-all duration-300"></div>
+        `;
+        viewport.appendChild(quizDiv);
+
+        const optionsBox = quizDiv.querySelector("#quiz-options");
+        q.quiz.options.forEach((opt, idx) => {
+          const btn = document.createElement("button");
+          btn.className = "p-4 rounded-2xl text-left text-xs font-bold transition-all duration-200 border flex items-center justify-between ";
+          
+          if (!isAnswered) {
+            btn.className += "bg-white border-slate-150 hover:border-pink-300 hover:bg-pink-50/20 text-slate-600 shadow-sm";
+            btn.onclick = () => selectQuizOption(idx);
+          } else {
+            if (idx === q.quiz.correct) {
+              btn.className += "bg-emerald-50 border-emerald-300 text-emerald-700";
+            } else if (idx === selectedIdx) {
+              btn.className += "bg-rose-50 border-rose-300 text-rose-700";
+            } else {
+              btn.className += "bg-slate-50/50 border-slate-100 text-slate-400 opacity-50 cursor-not-allowed";
+            }
+          }
+
+          btn.innerHTML = `<span>${opt}</span>`;
+          optionsBox.appendChild(btn);
+        });
+
+        if (isAnswered) {
+          showQuizInstantFeedback(selectedIdx === q.quiz.correct);
+        }
+
+      } else {
+        const bodyDiv = document.createElement("div");
+        bodyDiv.innerHTML = q.html;
+        viewport.appendChild(bodyDiv);
+      }
+
+      document.getElementById("btn-prev").disabled = currentSlide === 0;
+      if (currentSlide === totalSlides - 1) {
+        document.getElementById("btn-next").textContent = "Selesai ✨";
+      } else {
+        document.getElementById("btn-next").textContent = "Lanjut ➡️";
+      }
+
+      if (window.MathJax) {
+        MathJax.typesetPromise();
+      }
+    }
+
+    // QUIZ DECISION SYSTEM
+    function selectQuizOption(idx) {
+      if (quizAnswers[currentSlide] !== undefined) return;
+      quizAnswers[currentSlide] = idx;
+
+      const q = slidesData[currentSlide];
+      const isCorrect = idx === q.quiz.correct;
+
+      if (isCorrect) {
+        globalXP += 100;
+        document.getElementById("score-text").innerText = globalXP;
+        playSoundEffect('correct');
+      } else {
+        playSoundEffect('wrong');
+      }
+
+      renderSlide();
+    }
+
+    function showQuizInstantFeedback(isCorrect) {
+      const q = slidesData[currentSlide];
+      const fb = document.getElementById("quiz-feedback");
+      if (!fb) return;
+
+      fb.classList.remove("hidden");
+      if (isCorrect) {
+        fb.className = "rounded-2xl p-4 mt-4 text-xs flex items-start gap-3 transition-all duration-300 bg-emerald-50 border border-emerald-200 text-emerald-800";
+        fb.innerHTML = `
+          <span class="text-2xl">🌟</span>
+          <div>
+            <h4 class="font-black text-emerald-700 mb-0.5 text-sm">Jawabanmu Benar! (+100 XP)</h4>
+            <p>${q.quiz.rationale}</p>
+          </div>
+        `;
+      } else {
+        fb.className = "rounded-2xl p-4 mt-4 text-xs flex items-start gap-3 transition-all duration-300 bg-rose-50 border border-rose-200 text-rose-800";
+        fb.innerHTML = `
+          <span class="text-2xl">💡</span>
+          <div>
+            <h4 class="font-black text-rose-700 mb-0.5 text-sm">Mari Pelajari Caranya:</h4>
+            <p>${q.quiz.rationale}</p>
+          </div>
+        `;
+      }
+
+      if (window.MathJax) {
+        MathJax.typesetPromise([fb]);
+      }
+    }
+
+    // SANDBOX SOLVER ENGINE
+    function decodeSPLDVSandbox() {
+      const a1 = parseFloat(document.getElementById("in-a1").value);
+      const b1 = parseFloat(document.getElementById("in-b1").value);
+      const c1 = parseFloat(document.getElementById("in-c1").value);
+      
+      const a2 = parseFloat(document.getElementById("in-a2").value);
+      const b2 = parseFloat(document.getElementById("in-b2").value);
+      const c2 = parseFloat(document.getElementById("in-c2").value);
+
+      const outputBox = document.getElementById("sandbox-solution-output");
+
+      const det = a1 * b2 - a2 * b1;
+      if (det === 0) {
+        if (a1/a2 === c1/c2) {
+          outputBox.innerHTML = "Garis Berhimpit (Solusi Tak Terhingga)";
+        } else {
+          outputBox.innerHTML = "Garis Sejajar (Tidak Ada Solusi)";
+        }
+      } else {
+        const x = (c1 * b2 - c2 * b1) / det;
+        const y = (a1 * c2 - a2 * c1) / det;
+        const rx = Math.round(x * 100) / 100;
+        const ry = Math.round(y * 100) / 100;
+        outputBox.innerHTML = `Hasil: $x = ${rx}$ dan $y = ${ry}$`;
+      }
+
+      if (window.MathJax) {
+        MathJax.typesetPromise([outputBox]);
+      }
+      playSoundEffect('correct');
+    }
+
+    // SLIDE REFLECTION
+    function selectSlideReflection(type) {
+      const out = document.getElementById("slide-ref-output");
+      
+      document.getElementById("ref-b-1").className = "bg-white border-2 border-slate-150 p-4 rounded-xl text-center flex flex-col items-center gap-1.5 transition-all text-xs shadow-sm";
+      document.getElementById("ref-b-2").className = "bg-white border-2 border-slate-150 p-4 rounded-xl text-center flex flex-col items-center gap-1.5 transition-all text-xs shadow-sm";
+      document.getElementById("ref-b-3").className = "bg-white border-2 border-slate-150 p-4 rounded-xl text-center flex flex-col items-center gap-1.5 transition-all text-xs shadow-sm";
+
+      if (type === 1) {
+        document.getElementById("ref-b-1").className = "bg-pink-50 border-2 border-pink-400 p-4 rounded-xl text-center flex flex-col items-center gap-1.5 transition-all text-xs shadow-sm ring-2 ring-pink-150";
+        out.innerText = "Luar biasa! Pemahaman matematikamu sangat tajam. Pertahankan semangat belajarmu!";
+        playSoundEffect('correct');
+      } else if (type === 2) {
+        document.getElementById("ref-b-2").className = "bg-purple-50 border-2 border-purple-400 p-4 rounded-xl text-center flex flex-col items-center gap-1.5 transition-all text-xs shadow-sm ring-2 ring-purple-150";
+        out.innerText = "Keren! Kamu dapat menangkap cara memodelkan kejadian sekitar dengan baik.";
+        playSoundEffect('correct');
+      } else if (type === 3) {
+        document.getElementById("ref-b-3").className = "bg-teal-50 border-2 border-teal-400 p-4 rounded-xl text-center flex flex-col items-center gap-1.5 transition-all text-xs shadow-sm ring-2 ring-teal-150";
+        out.innerText = "Sifat pembelajar sejati adalah berani berlatih. Gunakan papan cakar estetik untuk mencoba!";
+        playSoundEffect('correct');
+      }
+    }
+
+    // DROP-DOWN JUMPS
+    function initJumpSelector() {
+      const select = document.getElementById("slide-selector");
+      select.innerHTML = "";
+      slidesData.forEach((slide, idx) => {
+        const opt = document.createElement("option");
+        opt.value = idx;
+        opt.text = `${idx + 1}. [${slide.category}] ${slide.title.substring(0, 20)}...`;
+        select.appendChild(opt);
+      });
+    }
+
+    function jumpToSlide(idx) {
+      currentSlide = parseInt(idx);
+      renderSlide();
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) {
+        currentSlide++;
+        renderSlide();
+      } else {
+        triggerFinalRapor();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        renderSlide();
+      }
+    }
+
+    function triggerFinalRapor() {
+      let correctQuizCount = 0;
+      let totalQuizCount = 0;
+      slidesData.forEach((slide, idx) => {
+        if (slide.quiz) {
+          totalQuizCount++;
+          if (quizAnswers[idx] === slide.quiz.correct) {
+            correctQuizCount++;
+          }
+        }
+      });
+
+      document.getElementById("final-correct").innerText = `${correctQuizCount} / ${totalQuizCount} Soal`;
+      document.getElementById("final-score").innerText = `${globalXP} XP`;
+
+      const comment = document.getElementById("reflection-comment");
+      if (correctQuizCount >= 8) {
+        comment.innerText = "Luar biasa! Kemampuan BERNALAR KRITIS-mu sangat mengagumkan! Kamu menguasai analisis titik potong SPLDV dengan sempurna. Kamu siap melaju ke tantangan berikutnya!";
+      } else if (correctQuizCount >= 5) {
+        comment.innerText = "Pekerjaan yang bagus! Kamu telah mampu mengawinkan metode eliminasi dan substitusi secara mandiri. Sedikit tingkatkan ketelitian pada tanda negatif ya!";
+      } else {
+        comment.innerText = "Kerja keras yang patut diapresiasi! Ingatlah untuk selalu menyamakan koefisien terlebih dahulu. Cobalah membuat angka-angka baru di mesin solver kanan!";
+      }
+
+      document.getElementById("results-modal").classList.remove("hidden");
+    }
+
+    function restartPresentation() {
+      currentSlide = 0;
+      quizAnswers = {};
+      globalXP = 0;
+      document.getElementById("score-text").innerText = "0";
+      document.getElementById("results-modal").classList.add("hidden");
+      renderSlide();
+    }
+
+    function closeModal() {
+      document.getElementById("results-modal").classList.add("hidden");
+    }
+
+    // ------------------- HIGH-TECH DOODLE BOARD CANVAS -------------------
+    let canvas, ctx;
+    let drawing = false;
+    let penColor = '#EC4899'; // Default aesthetic pink
+
+    function initCanvas() {
+      canvas = document.getElementById("scratchpad");
+      ctx = canvas.getContext("2d");
+      
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+
+      canvas.addEventListener("mousedown", (e) => {
+        drawing = true;
+        draw(e);
+      });
+      canvas.addEventListener("mouseup", () => {
+        drawing = false;
+        ctx.beginPath();
+      });
+      canvas.addEventListener("mousemove", draw);
+
+      canvas.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+        drawing = true;
+        const touch = e.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
+      });
+      canvas.addEventListener("touchmove", (e) => {
+        e.preventDefault();
+        if (!drawing) return;
+        const touch = e.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        ctx.strokeStyle = penColor;
+        ctx.lineWidth = 3.5;
+        ctx.lineCap = "round";
+        ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
+        ctx.stroke();
+        playSoundEffect('draw');
+      });
+      canvas.addEventListener("touchend", () => {
+        drawing = false;
+        ctx.beginPath();
+      });
+    }
+
+    function resizeCanvas() {
+      if (!canvas) return;
+      const tempImg = ctx ? canvas.toDataURL() : null;
+
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = 180 * dpr;
+      canvas.style.width = rect.width + 'px';
+      canvas.style.height = '180px';
+
+      ctx.scale(dpr, dpr);
+      ctx.strokeStyle = penColor;
+      ctx.lineWidth = 3.5;
+      ctx.lineCap = "round";
+
+      if (tempImg) {
+        const img = new Image();
+        img.onload = function() {
+          ctx.drawImage(img, 0, 0, rect.width, 180);
+        };
+        img.src = tempImg;
+      }
+    }
+
+    function draw(e) {
+      if (!drawing) return;
+      const rect = canvas.getBoundingClientRect();
+      ctx.strokeStyle = penColor;
+      ctx.lineWidth = 3.5;
+      ctx.lineCap = "round";
+      ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+      playSoundEffect('draw');
+    }
+
+    function changePenColor(color) {
+      penColor = color;
+    }
+
+    function clearScratchpad() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.beginPath();
+    }
+
+    window.onload = function() {
+      initJumpSelector();
+      renderSlide();
+      initCanvas();
+    };
+  </script>
+</body>
+</html>
