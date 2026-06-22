@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mastering Trik Cepat SPLDV - Lembar Interaktif</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <!-- KaTeX JS Core -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <!-- KaTeX Auto-Render Extension -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="initKaTeX()"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased selection:bg-violet-100">
+
+<script>
+    // Sound Feedback using Web Audio API
+    const playClickSound = () => {
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(600, ctx.currentTime);
+            gain.gain.setValueAtTime(0.04, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.05);
+        } catch (e) {
+            console.log("Audio Context blocked.");
+        }
+    };
+
+    // Global Auto-Render Configuration
+    function initKaTeX() {
+        triggerMathRender(document.body);
+    }
+
+    function triggerMathRender(element) {
+        if (typeof renderMathInElement !== 'undefined') {
+            renderMathInElement(element, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ],
+                throwOnError: false
+            });
+        }
+    }
+</script>
+
+<div class="max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 flex-grow flex flex-col">
+    <!-- Header -->
+    <header class="border-b border-slate-200 pb-6 mb-8 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center space-x-4">
+            <div class="bg-gradient-to-tr from-violet-600 to-indigo-600 text-white p-3 rounded-2xl shadow-lg shadow-indigo-100">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+            </div>
+            <div>
+                <span class="text-xs font-bold text-indigo-600 uppercase tracking-widest bg-indigo-50 px-2.5 py-1 rounded-md">Smart Learning Platform</span>
+                <h1 class="text-3xl font-extrabold tracking-tight text-slate-900 mt-1">Metode & Trik Cepat SPLDV</h1>
+            </div>
+        </div>
+        <p class="text-xs font-medium text-slate-400">Direktorat Belajar Cepat & Solusi Efektif Aljabar</p>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="flex flex-wrap gap-2 mb-8 border-b border-slate-200 pb-4">
+        <button onclick="switchTab('pengantar')" id="tab-pengantar" class="px-4 py-2.5 rounded-xl font-bold text-sm transition-all bg-indigo-600 text-white shadow-md shadow-indigo-100">
+            💡 Pengantar & Warm-up
+        </button>
+        <button onclick="switchTab('trik')" id="tab-trik" class="px-4 py-2.5 rounded-xl font-bold text-sm transition-all bg-white border border-slate-200 text-slate-600 hover:bg-slate-50">
+            ⚡ 3 Trik & Simulator
+        </button>
+        <button onclick="switchTab('contoh')" id="tab-contoh" class="px-4 py-2.5 rounded-xl font-bold text-sm transition-all bg-white border border-slate-200 text-slate-600 hover:bg-slate-50">
+            📝 3 Contoh Soal
+        </button>
+        <button onclick="switchTab('latihan')" id="tab-latihan" class="px-4 py-2.5 rounded-xl font-bold text-sm transition-all bg-white border border-slate-200 text-slate-600 hover:bg-slate-50">
+            🎯 5 Latihan Mandiri
+        </button>
+    </nav>
+
+    <!-- MAIN CONTENT VIEWPORTS -->
+    <main class="flex-grow">
+        
+        <!-- SECTION 1: PENGANTAR, TUJUAN & WARM-UP -->
+        <section id="sec-pengantar" class="space-y-6">
+            <!-- Tujuan Pembelajaran -->
+            <div class="bg-gradient-to-r from-indigo-50 to-violet-50 border border-indigo-100 rounded-3xl p-6 sm:p-8 shadow-sm">
+                <h2 class="text-lg font-extrabold text-indigo-950 mb-3 flex items-center gap-2">
+                    <span class="text-xl">🎯</span> Tujuan Belajar Hari Ini
+                </h2>
+                <ul class="space-y-2 text-slate-700 text-sm sm:text-base">
+                    <li class="flex items-start gap-2">
+                        <span class="text-indigo-600 mt-1">✔</span>
+                        <span>Memahami konsep inti SPLDV tanpa menghafal baris-baris eliminasi panjang yang melelahkan.</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-indigo-600 mt-1">✔</span>
+                        <span>Menguasai <strong>Trik Kali Silang (Modifikasi Cramer)</strong>, <strong>Pola Simetris</strong>, dan <strong>Metode "Semua Sama"</strong> untuk memotong waktu ujian dari 3 menit menjadi kurang dari 20 detik.</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-indigo-600 mt-1">✔</span>
+                        <span>Mampu mendeteksi secara langsung pola soal matematika di ujian nasional maupun seleksi perguruan tinggi (UTBK/AKM).</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Warm-up (Interactive Logic Puzzle) -->
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm space-y-4">
+                <span class="text-xs font-bold text-violet-600 uppercase tracking-widest bg-violet-50 px-2.5 py-1 rounded-md">Pemanasan Otak (Warm-Up)</span>
+                <h2 class="text-xl font-extrabold text-slate-900">Teka-Teki Logika Sederhana</h2>
+                <p class="text-slate-600 text-sm leading-relaxed">
+                    Sebelum masuk ke rumus, mari gunakan logika alami kita. Coba selesaikan tantangan kecil ini secara langsung:
+                </p>
+                <div class="p-5 bg-slate-50 border border-slate-200 rounded-2xl max-w-lg">
+                    <p class="text-slate-800 font-medium text-sm sm:text-base">
+                        "Sepotong pizza dan sekaleng soda berharga total <span class="font-bold text-slate-950">Rp25.000</span>. Jika harga pizza lebih mahal <span class="font-bold text-slate-950">Rp15.000</span> dibanding soda, berapakah harga sekaleng soda?"
+                    </p>
+                </div>
+                <!-- Interactive Choice -->
+                <div class="flex flex-wrap gap-3 pt-2">
+                    <button onclick="checkWarmUp(10000)" class="px-4 py-2 border border-slate-200 hover:border-indigo-400 rounded-xl text-xs font-semibold transition-all">Rp10.000</button>
+                    <button onclick="checkWarmUp(5000)" class="px-4 py-2 border border-slate-200 hover:border-indigo-400 rounded-xl text-xs font-semibold transition-all">Rp5.000</button>
+                    <button onclick="checkWarmUp(15000)" class="px-4 py-2 border border-slate-200 hover:border-indigo-400 rounded-xl text-xs font-semibold transition-all">Rp15.000</button>
+                </div>
+                <div id="warmup-feedback" class="hidden p-4 rounded-xl text-xs sm:text-sm font-semibold transition-all"></div>
+            </div>
+
+            <!-- Penerapan Nyata SPLDV -->
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm space-y-5">
+                <h2 class="text-xl font-extrabold text-slate-900 flex items-center gap-2">
+                    <span class="text-xl">🏬</span> Penerapan Nyata SPLDV di Dunia Riil
+                </h2>
+                <p class="text-slate-600 text-sm leading-relaxed">
+                    SPLDV bukanlah sekadar huruf $x$ dan $y$ yang tidak berarti di kertas buram. Di sekitar kita, konsep ini selalu digunakan secara langsung maupun tidak langsung:
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="p-5 border border-slate-100 rounded-2xl bg-slate-50/50 space-y-2">
+                        <span class="text-lg">💰</span>
+                        <h4 class="font-bold text-slate-900 text-sm">Kasir Supermarket</h4>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            Menghitung harga satuan buah apel dan jeruk jika struk hanya mencantumkan total gabungan dari beberapa kilogram pembelian.
+                        </p>
+                    </div>
+                    <div class="p-5 border border-slate-100 rounded-2xl bg-slate-50/50 space-y-2">
+                        <span class="text-lg">🚗</span>
+                        <h4 class="font-bold text-slate-900 text-sm">Pengelolaan Lahan Parkir</h4>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            Mencocokkan jumlah tiket kendaraan keluar dengan jumlah uang kas di laci kasir berdasarkan perhitungan roda ban motor & mobil.
+                        </p>
+                    </div>
+                    <div class="p-5 border border-slate-100 rounded-2xl bg-slate-50/50 space-y-2">
+                        <span class="text-lg">🎟️</span>
+                        <h4 class="font-bold text-slate-900 text-sm">Penjualan Tiket Bundling</h4>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            Mengetahui komposisi penjualan tiket kelas VIP dan kelas Ekonomi dalam suatu konser musik demi optimasi keuntungan panitia.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: 3 TRIK & SIMULATOR -->
+        <section id="sec-trik" class="hidden space-y-8">
+            <!-- TRIK 1: KALI SILANG (CRAMER MODIFIED) -->
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
+                <div class="flex items-center gap-2.5">
+                    <span class="text-2xl">⚡</span>
+                    <h2 class="text-xl font-extrabold text-slate-900">Trik 1: Metode Kali Silang (Modifikasi Cramer)</h2>
+                </div>
+                <p class="text-slate-600 text-sm leading-relaxed">
+                    Trik ini memanfaatkan pola perkalian silang angka pembentuk SPLDV. Kita bisa langsung menemukan nilai $x$ atau $y$ tanpa proses eliminasi bertahap!
+                </p>
+
+                <div class="p-5 bg-slate-50 border border-slate-200 rounded-2xl">
+                    <span class="text-xs font-bold text-slate-400 uppercase block mb-3 text-center">Bentuk Umum & Rumus Cepat</span>
+                    <div class="text-center text-sm font-semibold text-slate-900 py-2">
+                        Sistem: $$a_1x + b_1y = c_1 \quad \text{dan} \quad a_2x + b_2y = c_2$$
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                        <div class="bg-white p-4 border border-slate-100 rounded-xl text-center">
+                            <span class="text-xs font-bold text-indigo-600 block mb-1">Mencari Nilai x:</span>
+                            <div class="text-base font-bold my-1">$$x = \frac{c_1b_2 - b_1c_2}{a_1b_2 - b_1a_2}$$</div>
+                        </div>
+                        <div class="bg-white p-4 border border-slate-100 rounded-xl text-center">
+                            <span class="text-xs font-bold text-indigo-600 block mb-1">Mencari Nilai y:</span>
+                            <div class="text-base font-bold my-1">$$y = \frac{a_1c_2 - c_1a_2}{a_1b_2 - b_1a_2}$$</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Simulator Cramer -->
+                <div class="border-t border-slate-100 pt-6 space-y-4">
+                    <h3 class="font-extrabold text-slate-900 text-base">🔧 Simulator Kalkulator Trik Kali Silang</h3>
+                    <div class="grid grid-cols-3 sm:grid-cols-6 gap-3 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">a₁</label>
+                            <input type="number" id="inp-a1" value="2" class="w-full text-center p-2.5 border border-slate-200 rounded-xl text-sm font-bold">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">b₁</label>
+                            <input type="number" id="inp-b1" value="3" class="w-full text-center p-2.5 border border-slate-200 rounded-xl text-sm font-bold">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">c₁</label>
+                            <input type="number" id="inp-c1" value="13" class="w-full text-center p-2.5 border border-slate-200 rounded-xl text-sm font-bold">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">a₂</label>
+                            <input type="number" id="inp-a2" value="1" class="w-full text-center p-2.5 border border-slate-200 rounded-xl text-sm font-bold">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">b₂</label>
+                            <input type="number" id="inp-b2" value="-2" class="w-full text-center p-2.5 border border-slate-200 rounded-xl text-sm font-bold">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">c₂</label>
+                            <input type="number" id="inp-c2" value="-4" class="w-full text-center p-2.5 border border-slate-200 rounded-xl text-sm font-bold">
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button onclick="calculateCramer()" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-xs transition-all shadow-md">
+                            🚀 Hitung Sekarang & Tampilkan Cara
+                        </button>
+                    </div>
+
+                    <div id="cramer-result-card" class="hidden p-5 bg-violet-50/50 border border-violet-100 rounded-2xl space-y-4">
+                        <h4 class="font-extrabold text-sm text-violet-800">📊 Langkah Penyelesaian Cepat:</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="p-4 bg-white border border-slate-100 rounded-xl">
+                                <span class="text-xs font-bold text-indigo-600 block mb-2">Nilai x:</span>
+                                <div id="math-step-x" class="text-xs sm:text-sm"></div>
+                            </div>
+                            <div class="p-4 bg-white border border-slate-100 rounded-xl">
+                                <span class="text-xs font-bold text-indigo-600 block mb-2">Nilai y:</span>
+                                <div id="math-step-y" class="text-xs sm:text-sm"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TRIK 2: KOEFISIEN SIMETRIS -->
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
+                <div class="flex items-center gap-2.5">
+                    <span class="text-2xl">🔄</span>
+                    <h2 class="text-xl font-extrabold text-slate-900">Trik 2: Pola Koefisien Simetris</h2>
+                </div>
+                <p class="text-slate-600 text-sm leading-relaxed">
+                    Sering muncul di ujian nasional dengan angka yang besar dan disilang, misalnya: 
+                    <br>
+                    <span class="font-bold text-slate-800">$37x + 29y = 103$</span> dan <span class="font-bold text-slate-800">$29x + 37y = 95$</span>.
+                    Triknya adalah dengan <strong>menjumlahkan</strong> kedua sistem dan <strong>mengurangi</strong> keduanya untuk mendapatkan sistem baru yang sangat sederhana.
+                </p>
+
+                <!-- Simulator Simetris -->
+                <div class="border-t border-slate-100 pt-6 space-y-4">
+                    <h3 class="font-extrabold text-slate-900 text-base">🔧 Simulator Soal Simetris</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Koefisien a</label>
+                            <input type="number" id="sym-a" value="37" class="w-full text-center p-2.5 border border-slate-200 rounded-xl text-sm font-bold">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Koefisien b</label>
+                            <input type="number" id="sym-b" value="29" class="w-full text-center p-2.5 border border-slate-200 rounded-xl text-sm font-bold">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Hasil c</label>
+                            <input type="number" id="sym-c" value="103" class="w-full text-center p-2.5 border border-slate-200 rounded-xl text-sm font-bold">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Hasil d</label>
+                            <input type="number" id="sym-d" value="95" class="w-full text-center p-2.5 border border-slate-200 rounded-xl text-sm font-bold">
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button onclick="calculateSymmetric()" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-xs transition-all shadow-md">
+                            🔄 Jalankan Trik Simetris
+                        </button>
+                    </div>
+
+                    <div id="symmetric-result-card" class="hidden p-5 bg-sky-50/50 border border-sky-100 rounded-2xl space-y-4">
+                        <h4 class="font-extrabold text-sm text-sky-800">📊 Langkah Penyelesaian Cepat:</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="p-4 bg-white border border-slate-100 rounded-xl">
+                                <span class="text-xs font-bold text-indigo-600 block mb-2">Langkah 1: Jumlahkan Persamaan</span>
+                                <div id="sym-step-add" class="text-xs"></div>
+                            </div>
+                            <div class="p-4 bg-white border border-slate-100 rounded-xl">
+                                <span class="text-xs font-bold text-indigo-600 block mb-2">Langkah 2: Kurangkan Persamaan</span>
+                                <div id="sym-step-sub" class="text-xs"></div>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-white border border-slate-100 rounded-xl">
+                            <span class="text-xs font-bold text-emerald-600 block mb-2">Hasil Akhir:</span>
+                            <div id="sym-step-final" class="text-xs leading-relaxed"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TRIK 3: KAKI & RODA -->
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
+                <div class="flex items-center gap-2.5">
+                    <span class="text-2xl">🐾</span>
+                    <h2 class="text-xl font-extrabold text-slate-900">Trik 3: Magic Formula Soal Cerita Roda & Kaki</h2>
+                </div>
+                <p class="text-slate-600 text-sm leading-relaxed">
+                    Trik hebat untuk menyelesaikan tipe soal cerita parkiran kendaraan (mobil-motor) atau peternakan hewan (kambing-ayam) dengan <strong>Metode Asumsi Ekstrim</strong>.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-4 bg-slate-50 border border-slate-100 rounded-xl text-center">
+                        <span class="text-xs font-bold text-indigo-600 block mb-1">Mencari Objek Kaki 4 / Roda 4:</span>
+                        <div class="text-base font-bold my-1">$$\text{Objek Kaki 4} = \frac{\text{Total Roda} - (2 \times \text{Total Kepala})}{2}$$</div>
+                    </div>
+                    <div class="p-4 bg-slate-50 border border-slate-100 rounded-xl text-center">
+                        <span class="text-xs font-bold text-indigo-600 block mb-1">Mencari Objek Kaki 2 / Roda 2:</span>
+                        <div class="text-base font-bold my-1">$$\text{Objek Kaki 2} = \frac{(4 \times \text{Total Kepala}) - \text{Total Roda}}{2}$$</div>
+                    </div>
+                </div>
+
+                <!-- Simulator Kaki & Roda -->
+                <div class="border-t border-slate-100 pt-6 space-y-4">
+                    <h3 class="font-extrabold text-slate-900 text-base">🐾 Simulator Magic Formula</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Total Kendaraan / Kepala Hewan (K)</label>
+                            <input type="number" id="story-k" value="40" class="w-full p-2.5 border border-slate-200 rounded-xl text-sm font-bold">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Total Roda / Kaki Hewan (R)</label>
+                            <input type="number" id="story-r" value="110" class="w-full p-2.5 border border-slate-200 rounded-xl text-sm font-bold">
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button onclick="calculateStory()" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-xs transition-all shadow-md">
+                            🐾 Hitung Detik itu Juga
+                        </button>
+                    </div>
+
+                    <div id="story-result-card" class="hidden p-5 bg-emerald-50/50 border border-emerald-100 rounded-2xl space-y-4">
+                        <h4 class="font-extrabold text-sm text-emerald-800">📊 Hasil Deteksi Cepat:</h4>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="p-4 bg-white border border-slate-100 rounded-xl text-center">
+                                <span class="text-lg">🚗</span>
+                                <span class="block text-slate-400 text-[10px] font-bold uppercase">Objek Kaki 4 / Roda 4:</span>
+                                <div id="story-calc-kaki4" class="text-2xl font-black text-slate-800">0</div>
+                            </div>
+                            <div class="p-4 bg-white border border-slate-100 rounded-xl text-center">
+                                <span class="text-lg">🏍️</span>
+                                <span class="block text-slate-400 text-[10px] font-bold uppercase">Objek Kaki 2 / Roda 2:</span>
+                                <div id="story-calc-kaki2" class="text-2xl font-black text-slate-800">0</div>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-white border border-slate-100 rounded-xl text-xs">
+                            <span class="font-bold text-indigo-600 block mb-1">Penjelasan Logis:</span>
+                            <div id="story-step-explanation" class="leading-relaxed"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: 3 CONTOH SOAL -->
+        <section id="sec-contoh" class="hidden space-y-6">
+            <h2 class="text-2xl font-extrabold text-slate-900 mb-4">📝 Pembahasan 3 Contoh Soal Terbimbing</h2>
+            
+            <!-- Contoh 1 -->
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm space-y-3">
+                <div class="flex items-center gap-2">
+                    <span class="bg-indigo-50 text-indigo-600 font-bold px-3 py-1 rounded-lg text-xs">Contoh 1</span>
+                    <h3 class="font-bold text-slate-900">Kasus Aljabar Langsung (Trik Cramer)</h3>
+                </div>
+                <p class="text-slate-600 text-sm">
+                    Tentukan nilai $x$ dari SPLDV berikut:
+                    <br>
+                    $$3x + 2y = 12 \quad \text{dan} \quad 2x + 3y = 13$$
+                </p>
+                <button onclick="toggleExample('ex1')" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
+                    📂 Tampilkan Solusi Cepat
+                </button>
+                <div id="ex1" class="hidden p-4 bg-slate-50 border border-slate-100 rounded-2xl space-y-2 text-xs leading-relaxed">
+                    <p class="font-semibold text-slate-800">Gunakan Formula Trik 1 (Kali Silang):</p>
+                    <p>Masukkan variabel: $a_1=3, b_1=2, c_1=12$ serta $a_2=2, b_2=3, c_2=13$.</p>
+                    <div class="my-2">
+                        $$x = \frac{(12 \times 3) - (2 \times 13)}{(3 \times 3) - (2 \times 2)} = \frac{36 - 26}{9 - 4} = \frac{10}{5} = 2$$
+                    </div>
+                    <p class="text-emerald-700 font-bold">Maka, nilai $x = 2$ diperoleh hanya dalam 1 baris hitungan!</p>
+                </div>
+            </div>
+
+            <!-- Contoh 2 -->
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm space-y-3">
+                <div class="flex items-center gap-2">
+                    <span class="bg-indigo-50 text-indigo-600 font-bold px-3 py-1 rounded-lg text-xs">Contoh 2</span>
+                    <h3 class="font-bold text-slate-900">Soal Koefisien Silang Besar (Trik Simetris)</h3>
+                </div>
+                <p class="text-slate-600 text-sm">
+                    Tentukan nilai dari $x + y$ jika:
+                    <br>
+                    $$154x + 146y = 600 \quad \text{dan} \quad 146x + 154y = 300$$
+                </p>
+                <button onclick="toggleExample('ex2')" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
+                    📂 Tampilkan Solusi Cepat
+                </button>
+                <div id="ex2" class="hidden p-4 bg-slate-50 border border-slate-100 rounded-2xl space-y-2 text-xs leading-relaxed">
+                    <p class="font-semibold text-slate-800">Gunakan Formula Trik 2 (Jumlahkan langsung kedua persamaan):</p>
+                    <div class="my-2">
+                        $$(154 + 146)x + (146 + 154)y = 600 + 300$$
+                        $$300x + 300y = 900$$
+                    </div>
+                    <p>Bagi seluruh persamaan dengan 300:</p>
+                    <div class="my-2">
+                        $$x + y = 3$$
+                    </div>
+                    <p class="text-emerald-700 font-bold">Tanpa mencari nilai $x$ atau $y$ satu per satu, nilai $x+y = 3$ langsung didapatkan!</p>
+                </div>
+            </div>
+
+            <!-- Contoh 3 -->
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm space-y-3">
+                <div class="flex items-center gap-2">
+                    <span class="bg-indigo-50 text-indigo-600 font-bold px-3 py-1 rounded-lg text-xs">Contoh 3</span>
+                    <h3 class="font-bold text-slate-900">Soal Cerita Klasik Roda Parkir (Trik 3)</h3>
+                </div>
+                <p class="text-slate-600 text-sm">
+                    Di dalam suatu area parkir terdapat 45 kendaraan (mobil roda 4 dan motor roda 2). Total ban roda di area tersebut adalah 130 buah. Tentukan banyak mobil dan motor.
+                </p>
+                <button onclick="toggleExample('ex3')" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
+                    📂 Tampilkan Solusi Cepat
+                </button>
+                <div id="ex3" class="hidden p-4 bg-slate-50 border border-slate-100 rounded-2xl space-y-2 text-xs leading-relaxed">
+                    <p class="font-semibold text-slate-800">Gunakan Formula Trik 3 (Asumsi Semua Motor):</p>
+                    <p>Total Kendaraan ($K$) = 45, Total Roda ($R$) = 130.</p>
+                    <div class="my-2">
+                        $$\text{Banyak Mobil (Roda 4)} = \frac{130 - (2 \times 45)}{2} = \frac{130 - 90}{2} = 20 \text{ unit}$$
+                    </div>
+                    <p>Maka jumlah motor sisa kendaraan: $45 - 20 = 25$ unit.</p>
+                    <p class="text-emerald-700 font-bold">Selesai kurang dari 10 detik tanpa perlu eliminasi panjang!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: 5 LATIHAN SOAL MANDIRI -->
+        <section id="sec-latihan" class="hidden space-y-6">
+            <div class="flex flex-col sm:flex-row items-center justify-between border-b border-slate-200 pb-4 mb-4 gap-2">
+                <h2 class="text-2xl font-extrabold text-slate-900">🎯 Lembar Uji Kompetensi Mandiri</h2>
+                <span class="bg-violet-100 text-violet-700 font-bold px-3 py-1 rounded-xl text-xs" id="quiz-score-badge">Skor: 0 / 5</span>
+            </div>
+
+            <!-- Quiz Container -->
+            <div id="quiz-container" class="space-y-6">
+                <!-- Soal 1 -->
+                <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm space-y-4">
+                    <span class="text-xs font-bold text-indigo-600 block">Soal Latihan 1</span>
+                    <p class="text-slate-800 font-semibold text-sm sm:text-base">
+                        Carilah nilai $x$ dari sistem persamaan berikut menggunakan Trik Kali Silang:
+                        <br>
+                        $$3x + y = 7 \quad \text{dan} \quad x + 2y = 9$$
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-md pt-2">
+                        <button onclick="answerQuiz(1, 'A', false)" class="q-opt-1 px-4 py-2.5 border border-slate-200 rounded-xl text-xs font-bold hover:bg-slate-50 transition-all text-left">A. $x = 3$</button>
+                        <button onclick="answerQuiz(1, 'B', true)" class="q-opt-1 px-4 py-2.5 border border-slate-200 rounded-xl text-xs font-bold hover:bg-slate-50 transition-all text-left">B. $x = 1$</button>
+                        <button onclick="answerQuiz(1, 'C', false)" class="q-opt-1 px-4 py-2.5 border border-slate-200 rounded-xl text-xs font-bold hover:bg-slate-50 transition-all text-left">C. $x = 2$</button>
+                        <button onclick="answerQuiz(1, 'D', false)" class="q-opt-1 px-4 py-2.5 border border-slate-200 rounded-xl text-xs font-bold hover:bg-slate-50 transition-all text-left">D. $x = 4$</button>
+                    </div>
+                    <div id="q-feedback-1" class="hidden p-4 rounded-xl text-xs leading-relaxed"></div>
+                </div>
+
+                <!-- Soal 2 -->
+                <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm space-y-4">
+                    <span class="text-xs font-bold text-indigo-600 block">Soal Latihan 2</span>
+                    <p class="text-slate-800 font-semibold text-sm sm:text-base">
+                        Menggunakan Trik Simetris, carilah nilai $x + y$ dari sistem persamaan:
+                        <br>
+                        $$43x + 37y = 123 \quad \text{dan} \quad 37x + 43y = 117$$
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-md pt-2">
+                        <button onclick="answerQuiz(2, 'A', false)" class="q-opt-2 px-4 py-2.5 border border-slate-200 rounded-xl text-xs font-bold hover:bg-slate-50 transition-all text-left">A. $x + y = 2$</button>
+                        <button onclick="answerQuiz(2, 'B', false)" class="q-opt-2 px-4 py-2.5 border border-slate-200 rounded-xl text-xs font-bold hover:bg-slate-50 transition-all text-left">B. $x + y = 4$</button>
+                        <button onclick="answerQuiz(2, 'C', true)" class="q-opt-2 px-4 py-2.5 border border-slate-200 rounded-xl text-xs font-bold hover:bg-slate-50 transition-all text-left">C. $x + y = 3$</button>
+                        <button onclick="answerQuiz(2, 'D', false)" class="q-opt-2 px-4 py-2.5 border border-slate-200 rounded-xl text-xs font-bold hover:bg-slate-50 transition-all text-left">D. $x + y = 1$</button>
+                    </div>
+                    <div id="q-feedback-2" class="hidden p-4 rounded-xl text-xs leading-relaxed"></div>
+                </div>
+
+                <!-- Soal 3 -->
+                <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm space-y-4">
+                    <span class="text-xs font-bold text-indigo-600 block">Soal Latihan 3</span>
+                    <p class="text-slate-800 font-semibold text-sm sm:text-base">
+                        Sebuah kandang ternak berisi kambing (kaki 4) dan ayam (kaki 2). Ada total 30 kepala hewan dan total kaki adalah 90. Berapakah jumlah kambing di kandang tersebut?
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-md pt-2">
+                        <button onclick="answerQuiz(3, 'A', true)" class="q-opt-3 px-4 py-2.5 border border-slate-200 rounded-xl text-xs font-bold hover:bg-slate-50 transition-all text-left">A. 15 ekor kambing</button>
+                        <button onclick="answerQuiz(3, 'B', false)" class="q-opt-3 px-4 py-2.5 border border-slate-200 rounded-xl text-xs font-bold hover:bg-slate-50 transition-all text-left">B. 10 ekor kambing</button>
+                        <button onclick="answerQuiz(3, 'C', false)" class="q-opt-3 px-4 py-2.5 border border-slate-200 rounded-xl text-xs font-bold hover:bg-slate-50 transition-all text-left">C. 20 ekor kambing</button>
+                        <button onclick="answerQuiz(3, 'D', false)" class="q-opt-3 px-4 py-2.5 border border-slate-200 rounded-xl text-xs font-bold hover:bg-slate-50 transition-all text-left">D. 12 ekor kambing</button>
+                    </div>
+                    <div id="q-feedback-3" class="hidden p-4 rounded-xl text-xs leading-relaxed"></div>
+                </div>
+
+                <!-- Soal 4 -->
+                <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm space-y-4">
+                    <span class="text-xs font-bold text-indigo-600 block">Soal Latihan 4</span>
+                    <p class="text-slate-800 font-semibold text-sm sm:text-base">
+                        Hitunglah nilai $y$ dari sistem berikut menggunakan trik modifikasi determinan:
+                        <br>
+                        $$5x + 3y = 19 \quad \text{dan} \quad 2x - y = 1$$
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-md pt-2">
+                        <button onclick="answerQuiz(4, 'A', false)" class="q-opt-4 px-4 py-2.5 border border-slate-200 rounded-xl text-xs font-bold hover:bg-slate-50 transition-all text-left">A. $y = 1$</button>
+                        <button onclick="answerQuiz(4, 'B', false)" class="q-opt-4 px-4 py-2.5 border border-slate-200 rounded-xl text-xs font-bold hover:bg-slate-50 transition-all text-left">B. $y = 2$</button>
+                        <button onclick="answerQuiz(4, 'C', true)" class="q-opt-4 px-4 py-2.5 border border-slate-200 rounded-xl text-xs font-bold hover:bg-slate-50 transition-all text-left">C. $y = 3$</button>
+                        <button onclick="answerQuiz(4, 'D', false)" class="q-opt-4 px-4 py-2.5 border border-slate-200 rounded-xl text-xs font-bold hover:bg-slate-50 transition-all text-left">D. $y = 4$</button>
+                    </div>
+                    <div id="q-feedback-4" class="hidden p-4 rounded-xl text-xs leading-relaxed"></div>
+                </div>
+
+                <!-- Soal 5 -->
+                <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm space-y-4">
+                    <span class="text-xs font-bold text-indigo-600 block">Soal Latihan 5</span>
+                    <p class="text-slate-800 font-semibold text-sm sm:text-base">
+                        Sebuah lahan parkir berisi 50 kendaraan (mobil dan motor). Total roda adalah 140. Jika tarif parkir mobil adalah Rp5.000 dan motor adalah Rp2.000, hitunglah total pendapatan kasir parkir tersebut!
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-md pt-2">
+                        <button onclick="answerQuiz(5, 'A', false)" class="q-opt-5 px-4 py-2.5 border border-slate-200 rounded-xl text-xs font-bold hover:bg-slate-50 transition-all text-left">A. Rp140.000</button>
+                        <button onclick="answerQuiz(5, 'B', true)" class="q-opt-5 px-4 py-2.5 border border-slate-200 rounded-xl text-xs font-bold hover:bg-slate-50 transition-all text-left">B. Rp160.000</button>
+                        <button onclick="answerQuiz(5, 'C', false)" class="q-opt-5 px-4 py-2.5 border border-slate-200 rounded-xl text-xs font-bold hover:bg-slate-50 transition-all text-left">C. Rp180.000</button>
+                        <button onclick="answerQuiz(5, 'D', false)" class="q-opt-5 px-4 py-2.5 border border-slate-200 rounded-xl text-xs font-bold hover:bg-slate-50 transition-all text-left">D. Rp200.000</button>
+                    </div>
+                    <div id="q-feedback-5" class="hidden p-4 rounded-xl text-xs leading-relaxed"></div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer Copyright -->
+    <footer class="text-center text-xs text-slate-400 mt-12 border-t border-slate-200/50 pt-6">
+        <p>© 2026 SPLDV Magic Interactive Cheat Sheet. Menggunakan LaTeX KaTeX Engine.</p>
+    </footer>
+</div>
+
+<script>
+    // Tab Controller
+    function switchTab(tabId) {
+        playClickSound();
+        
+        // Hide all views
+        document.getElementById('sec-pengantar').classList.add('hidden');
+        document.getElementById('sec-trik').classList.add('hidden');
+        document.getElementById('sec-contoh').classList.add('hidden');
+        document.getElementById('sec-latihan').classList.add('hidden');
+
+        // Reset Tab button styles
+        const tabs = ['pengantar', 'trik', 'contoh', 'latihan'];
+        tabs.forEach(t => {
+            const el = document.getElementById(`tab-${t}`);
+            el.className = "px-4 py-2.5 rounded-xl font-bold text-sm transition-all bg-white border border-slate-200 text-slate-600 hover:bg-slate-50";
+        });
+
+        // Show target and highlight active tab
+        document.getElementById(`sec-${tabId}`).classList.remove('hidden');
+        const activeBtn = document.getElementById(`tab-${tabId}`);
+        activeBtn.className = "px-4 py-2.5 rounded-xl font-bold text-sm transition-all bg-indigo-600 text-white shadow-md shadow-indigo-100";
+
+        // Trigger math formatting inside the tab container immediately
+        setTimeout(() => {
+            triggerMathRender(document.getElementById(`sec-${tabId}`));
+        }, 50);
+    }
+
+    // Toggle worked examples solution
+    function toggleExample(id) {
+        playClickSound();
+        const el = document.getElementById(id);
+        el.classList.toggle('hidden');
+        if (!el.classList.contains('hidden')) {
+            triggerMathRender(el);
+        }
+    }
+
+    // Warm-Up Solver Logic
+    function checkWarmUp(value) {
+        playClickSound();
+        const f = document.getElementById('warmup-feedback');
+        f.classList.remove('hidden', 'bg-rose-50', 'text-rose-700', 'border-rose-200', 'bg-emerald-50', 'text-emerald-700', 'border-emerald-200');
+        f.classList.add('border');
+
+        if (value === 5000) {
+            f.innerHTML = `
+                🎉 <strong>Luar Biasa, Jawabanmu 100% Benar!</strong> 
+                <br>
+                Jika harga soda = Rp5.000, maka harga pizza (yang lebih mahal Rp15.000) adalah Rp20.000. 
+                Total gabungannya adalah: $Rp5.000 + Rp20.000 = Rp25.000$. 
+                Sadar atau tidak, logika asumsimu barusan telah menerapkan dasar substitusi linear!
+            `;
+            f.classList.add('bg-emerald-50', 'text-emerald-700', 'border-emerald-200');
+        } else {
+            f.innerHTML = `
+                ❌ <strong>Kurang tepat, tapi jangan menyerah!</strong> 
+                <br>
+                Jika harga soda = Rp10.000, maka harga pizza haruslah Rp25.000 (selisih Rp15.000). 
+                Maka totalnya menjadi Rp35.000, yang melebihi batas anggaran Rp25.000. Coba pikirkan kembali selisihnya!
+            `;
+            f.classList.add('bg-rose-50', 'text-rose-700', 'border-rose-200');
+        }
+        triggerMathRender(f);
+    }
+
+    // Simulator Trik 1 (Cramer)
+    function calculateCramer() {
+        playClickSound();
+        const a1 = parseFloat(document.getElementById('inp-a1').value);
+        const b1 = parseFloat(document.getElementById('inp-b1').value);
+        const c1 = parseFloat(document.getElementById('inp-c1').value);
+        const a2 = parseFloat(document.getElementById('inp-a2').value);
+        const b2 = parseFloat(document.getElementById('inp-b2').value);
+        const c2 = parseFloat(document.getElementById('inp-c2').value);
+
+        const card = document.getElementById('cramer-result-card');
+        card.classList.remove('hidden');
+
+        const d = (a1 * b2) - (b1 * a2);
+        const dx = (c1 * b2) - (b1 * c2);
+        const dy = (a1 * c2) - (c1 * a2);
+
+        const stepXEl = document.getElementById('math-step-x');
+        const stepYEl = document.getElementById('math-step-y');
+
+        if (d === 0) {
+            stepXEl.innerHTML = "Penyebut bernilai 0. SPLDV tidak memiliki himpunan penyelesaian tunggal murni.";
+            stepYEl.innerHTML = "-";
+            return;
+        }
+
+        const xVal = dx / d;
+        const yVal = dy / d;
+
+        stepXEl.innerHTML = `
+            $$x = \\frac{(${c1} \\times ${b2}) - (${b1} \\times ${c2})}{(${a1} \\times ${b2}) - (${b1} \\times ${a2})} = \\frac{${c1*b2} - ${b1*c2}}{${a1*b2} - ${b1*a2}} = \\frac{${dx}}{${d}} = ${xVal}$$
+        `;
+        stepYEl.innerHTML = `
+            $$y = \\frac{(${a1} \\times ${c2}) - (${c1} \\times ${a2})}{(${a1} \\times ${b2}) - (${b1} \\times ${a2})} = \\frac{${a1*c2} - ${c1*a2}}{${a1*b2} - ${b1*a2}} = \\frac{${dy}}{${d}} = ${yVal}$$
+        `;
+
+        triggerMathRender(card);
+    }
+
+    // Simulator Trik 2 (Simetris)
+    function calculateSymmetric() {
+        playClickSound();
+        const a = parseFloat(document.getElementById('sym-a').value);
+        const b = parseFloat(document.getElementById('sym-b').value);
+        const c = parseFloat(document.getElementById('sym-c').value);
+        const d = parseFloat(document.getElementById('sym-d').value);
+
+        const card = document.getElementById('symmetric-result-card');
+        card.classList.remove('hidden');
+
+        const sumCoeff = a + b;
+        const sumResult = c + d;
+        const valSum = sumResult / sumCoeff;
+
+        const subCoeff = a - b;
+        const subResult = c - d;
+        const valSub = subResult / subCoeff;
+
+        const stepAdd = document.getElementById('sym-step-add');
+        const stepSub = document.getElementById('sym-step-sub');
+        const stepFinal = document.getElementById('sym-step-final');
+
+        stepAdd.innerHTML = `
+            $$(${a} + ${b})x + (${b} + ${a})y = ${c} + ${d}$$
+            $$${sumCoeff}x + ${sumCoeff}y = ${sumResult}$$
+            $$x + y = ${valSum}$$
+        `;
+
+        stepSub.innerHTML = `
+            $$(${a} - ${b})x + (${b} - ${a})y = ${c} - ${d}$$
+            $$${subCoeff}x - ${subCoeff}y = ${subResult}$$
+            $$x - y = ${valSub}$$
+        `;
+
+        const xVal = (valSum + valSub) / 2;
+        const yVal = valSum - xVal;
+
+        stepFinal.innerHTML = `
+            Dengan menggabungkan kedua sistem baru:
+            $$x + y = ${valSum} \\quad \\text{dan} \\quad x - y = ${valSub}$$
+            Maka kita dapatkan nilai:
+            $$x = ${xVal} \\quad \\text{serta} \\quad y = ${yVal}$$
+        `;
+
+        triggerMathRender(card);
+    }
+
+    // Simulator Trik 3 (Kaki & Roda)
+    function calculateStory() {
+        playClickSound();
+        const k = parseFloat(document.getElementById('story-k').value);
+        const r = parseFloat(document.getElementById('story-r').value);
+
+        const card = document.getElementById('story-result-card');
+        card.classList.remove('hidden');
+
+        const mobil = (r - (2 * k)) / 2;
+        const motor = k - mobil;
+
+        document.getElementById('story-calc-kaki4').textContent = mobil;
+        document.getElementById('story-calc-kaki2').textContent = motor;
+
+        const explanation = document.getElementById('story-step-explanation');
+        explanation.innerHTML = `
+            Asumsikan seluruh <strong>${k} kendaraan</strong> adalah motor (memiliki 2 roda). 
+            Total roda yang ada seharusnya hanya: $${k} \\times 2 = ${k*2}$ roda.
+            Namun, ada total <strong>${r} roda</strong>. Selisih roda berlebih adalah: $${r} - ${k*2} = ${r - (k*2)}$ roda.
+            Setiap 2 selisih roda berlebih menunjukkan keberadaan 1 mobil. 
+            Maka, banyak mobil: $\\frac{${r - (k*2)}}{2} = ${mobil}$ unit.
+        `;
+
+        triggerMathRender(card);
+    }
+
+    // Quiz scoring tracking
+    const quizState = {
+        answered: { 1: false, 2: false, 3: false, 4: false, 5: false },
+        score: 0
+    };
+
+    function answerQuiz(questionNum, chosenOpt, isCorrect) {
+        if (quizState.answered[questionNum]) return; // prevent re-answering
+        quizState.answered[questionNum] = true;
+        playClickSound();
+
+        // Highlight chosen option and disable others
+        const buttons = document.querySelectorAll(`.q-opt-${questionNum}`);
+        buttons.forEach(btn => {
+            btn.disabled = true;
+            if (btn.textContent.startsWith(chosenOpt)) {
+                if (isCorrect) {
+                    btn.className = `q-opt-${questionNum} px-4 py-2.5 border border-emerald-500 bg-emerald-50 text-emerald-800 text-xs font-bold rounded-xl text-left`;
+                    quizState.score++;
+                } else {
+                    btn.className = `q-opt-${questionNum} px-4 py-2.5 border border-rose-500 bg-rose-50 text-rose-800 text-xs font-bold rounded-xl text-left`;
+                }
+            } else {
+                btn.className = `q-opt-${questionNum} px-4 py-2.5 border border-slate-100 bg-slate-50/50 text-slate-400 text-xs font-bold rounded-xl text-left opacity-60`;
+            }
+        });
+
+        // Update total score UI
+        document.getElementById('quiz-score-badge').textContent = `Skor: ${quizState.score} / 5`;
+
+        // Render detailed feedback
+        const fb = document.getElementById(`q-feedback-${questionNum}`);
+        fb.classList.remove('hidden');
+
+        if (isCorrect) {
+            fb.className = "p-4 rounded-xl text-xs leading-relaxed bg-emerald-50 text-emerald-800 border border-emerald-100 mt-3";
+        } else {
+            fb.className = "p-4 rounded-xl text-xs leading-relaxed bg-rose-50 text-rose-800 border border-rose-100 mt-3";
+        }
+
+        let explanationText = "";
+        if (questionNum === 1) {
+            explanationText = `
+                <strong>${isCorrect ? 'Benar!' : 'Kurang tepat.'} Penjelasan Trik Cepat:</strong> 
+                Gunakan Cramer Modifikasi untuk mencari nilai $x$:
+                $$x = \frac{(7 \times 2) - (1 \times 9)}{(3 \times 2) - (1 \times 1)} = \frac{14 - 9}{6 - 1} = \frac{5}{5} = 1$$
+            `;
+        } else if (questionNum === 2) {
+            explanationText = `
+                <strong>${isCorrect ? 'Benar!' : 'Kurang tepat.'} Penjelasan Trik Cepat:</strong>
+                Jumlahkan langsung kedua sistem simetris:
+                $$(43+37)x + (37+43)y = 123 + 117 \implies 80x + 80y = 240$$
+                Bagi kedua ruas dengan 80:
+                $$x + y = 3$$
+            `;
+        } else if (questionNum === 3) {
+            explanationText = `
+                <strong>${isCorrect ? 'Benar!' : 'Kurang tepat.'} Penjelasan Trik Cepat:</strong>
+                Gunakan rumus Trik 3 untuk mencari objek berkaki 4 (kambing):
+                $$\\text{Kambing} = \\frac{\\text{Total Kaki} - (2 \\times \\text{Total Kepala})}{2} = \\frac{90 - (2 \\times 30)}{2} = \\frac{30}{2} = 15$$
+            `;
+        } else if (questionNum === 4) {
+            explanationText = `
+                <strong>${isCorrect ? 'Benar!' : 'Kurang tepat.'} Penjelasan Trik Cepat:</strong>
+                Gunakan Trik Cramer Modifikasi untuk mencari nilai $y$:
+                $$y = \\frac{(5 \\times 1) - (19 \\times 2)}{(5 \\times -1) - (3 \\times 2)} = \\frac{5 - 38}{-5 - 6} = \\frac{-33}{-11} = 3$$
+            `;
+        } else if (questionNum === 5) {
+            explanationText = `
+                <strong>${isCorrect ? 'Benar!' : 'Kurang tepat.'} Penjelasan Trik Cepat:</strong>
+                Cari dulu jumlah masing-masing kendaraan:
+                $$\\text{Mobil (kaki 4)} = \\frac{140 - (2 \\times 50)}{2} = \\frac{40}{2} = 20 \\text{ unit}$$
+                $$\\text{Motor (kaki 2)} = 50 - 20 = 30 \\text{ unit}$$
+                Total Pendapatan:
+                $$(20 \\times Rp5.000) + (30 \\times Rp2.000) = Rp100.000 + Rp60.000 = Rp160.000$$
+            `;
+        }
+
+        fb.innerHTML = explanationText;
+        triggerMathRender(fb);
+    }
+</script>
+
+</body>
+</html>

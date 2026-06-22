@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Interaktif SPLDV - Masterclass</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- KaTeX CSS for Math Formulas -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <!-- KaTeX JS Core -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <!-- KaTeX Auto-Render Extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="initKaTeX()"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(241, 245, 249, 1);
+            border-radius: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(165, 180, 252, 1);
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased selection:bg-indigo-100 transition-colors duration-300">
+
+<script>
+    // Audio engine using Web Audio API to avoid external file dependencies
+    const playSound = (type) => {
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            
+            if (type === 'correct') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+                osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1); // E5
+                gain.gain.setValueAtTime(0.08, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.35);
+            } else if (type === 'wrong') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(220, ctx.currentTime); // A3
+                osc.frequency.setValueAtTime(147, ctx.currentTime + 0.15); // D3
+                gain.gain.setValueAtTime(0.12, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.4);
+            } else if (type === 'click') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+                gain.gain.setValueAtTime(0.05, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.08);
+            } else if (type === 'congrats') {
+                const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+                notes.forEach((freq, index) => {
+                    const oscNote = ctx.createOscillator();
+                    const gainNote = ctx.createGain();
+                    oscNote.connect(gainNote);
+                    gainNote.connect(ctx.destination);
+                    oscNote.type = 'sine';
+                    oscNote.frequency.value = freq;
+                    gainNote.gain.setValueAtTime(0.06, ctx.currentTime + index * 0.1);
+                    gainNote.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + index * 0.1 + 0.3);
+                    oscNote.start(ctx.currentTime + index * 0.1);
+                    oscNote.stop(ctx.currentTime + index * 0.1 + 0.3);
+                });
+            }
+        } catch (e) {
+            console.log("Audio API blocked or not supported");
+        }
+    };
+
+    // Global Auto-Render Configuration
+    function initKaTeX() {
+        triggerMathRender(document.body);
+    }
+
+    function triggerMathRender(element) {
+        if (typeof renderMathInElement !== 'undefined') {
+            renderMathInElement(element, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ],
+                throwOnError: false
+            });
+        }
+    }
+</script>
+
+<div id="app" class="flex-grow flex flex-col max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
+    <!-- Header -->
+    <header class="flex flex-col sm:flex-row items-center justify-between border-b border-slate-200 pb-5 mb-6">
+        <div class="flex items-center space-x-3 mb-4 sm:mb-0">
+            <div class="bg-gradient-to-tr from-indigo-600 to-violet-600 text-white p-2.5 rounded-2xl shadow-lg shadow-indigo-100">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+            </div>
+            <div>
+                <h1 class="text-2xl font-extrabold tracking-tight text-slate-950">Quiz Master SPLDV</h1>
+                <p class="text-xs text-slate-500 font-medium">Sistem Persamaan Linear Dua Variabel • Terintegrasi Trik Cepat</p>
+            </div>
+        </div>
+        
+        <!-- Live Statistics Widget (While Quiz is active) -->
+        <div id="quiz-status-bar" class="hidden flex items-center space-x-6 bg-white border border-slate-200/80 px-4 py-2 rounded-2xl shadow-sm">
+            <div class="text-center">
+                <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Mode</p>
+                <span id="badge-mode" class="text-sm font-bold text-indigo-600">Latihan</span>
+            </div>
+            <div class="h-8 w-px bg-slate-200"></div>
+            <div class="text-center" id="timer-container">
+                <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Sisa Waktu</p>
+                <span id="timer-display" class="text-sm font-extrabold text-rose-600">--:--</span>
+            </div>
+            <div class="h-8 w-px bg-slate-200" id="timer-divider"></div>
+            <div class="text-center">
+                <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Progress</p>
+                <span id="progress-display" class="text-sm font-extrabold text-slate-700">0/30</span>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content" class="flex-grow flex flex-col justify-center">
+        <!-- Welcome Screen -->
+        <section id="welcome-screen" class="max-w-2xl mx-auto w-full bg-white border border-slate-200 shadow-xl rounded-3xl p-6 sm:p-10">
+            <div class="text-center space-y-4 mb-8">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 ring-1 ring-inset ring-indigo-700/10">
+                    Kurikulum Merdeka SMA / SMP / UTBK
+                </span>
+                <h2 class="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">Interactive Challenge SPLDV</h2>
+                <p class="text-slate-600 max-w-md mx-auto text-sm">
+                    Uji dan asah pemahaman Anda melalui 30 soal SPLDV yang dirancang khusus untuk membandingkan metode eliminasi biasa dengan <strong>3 Trik Cepat Unggulan</strong>.
+                </p>
+            </div>
+
+            <!-- Kategori Pembagian Soal -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                <div class="p-4 rounded-2xl bg-indigo-50/30 border border-indigo-100 text-center">
+                    <span class="text-2xl">⚡</span>
+                    <h3 class="font-bold text-sm text-slate-800 mt-2">10 Aljabar Langsung</h3>
+                    <p class="text-[11px] text-slate-500 mt-1">Gunakan Trik 1 (Cramer) dan Trik 2 (Simetris) secara langsung.</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-sky-50/30 border border-sky-100 text-center">
+                    <span class="text-2xl">📝</span>
+                    <h3 class="font-bold text-sm text-slate-800 mt-2">10 Soal Cerita</h3>
+                    <p class="text-[11px] text-slate-500 mt-1">Translasi narasi & penerapan sistem persamaan linear murni.</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-emerald-50/30 border border-emerald-100 text-center">
+                    <span class="text-2xl">🚀</span>
+                    <h3 class="font-bold text-sm text-slate-800 mt-2">10 Kasus Penerapan</h3>
+                    <p class="text-[11px] text-slate-500 mt-1">Simulasi parkiran, keuangan, peternakan lewat Trik 3.</p>
+                </div>
+            </div>
+
+            <!-- Pilih Mode Kuis -->
+            <div class="space-y-4 mb-8">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 text-center mb-4">Pilih Mode Belajar Anda</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Mode Latihan -->
+                    <button id="btn-mode-latihan" onclick="selectMode('latihan')" class="group relative flex flex-col text-left p-5 rounded-2xl border-2 border-slate-200 hover:border-indigo-500 bg-white hover:bg-indigo-50/20 transition-all duration-300 shadow-sm">
+                        <span class="text-lg font-bold text-slate-900 flex items-center gap-1.5">
+                            🎓 Mode Latihan
+                        </span>
+                        <p class="text-xs text-slate-500 mt-2">Sangat direkomendasikan untuk belajar! Penjelasan, rumus cepat, dan pembahasan komparatif langsung muncul setelah Anda menjawab.</p>
+                    </button>
+
+                    <!-- Mode Ujian -->
+                    <button id="btn-mode-ujian" onclick="selectMode('ujian')" class="group relative flex flex-col text-left p-5 rounded-2xl border-2 border-slate-200 hover:border-rose-500 bg-white hover:bg-rose-50/20 transition-all duration-300 shadow-sm">
+                        <span class="text-lg font-bold text-slate-900 flex items-center gap-1.5">
+                            ⏱️ Mode Ujian
+                        </span>
+                        <p class="text-xs text-slate-500 mt-2">Uji kecepatan Anda! Waktu dibatasi 60 menit untuk 30 soal. Seluruh hasil analisa, skor, dan pembahasan dibuka lengkap di akhir.</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Start Button -->
+            <div class="text-center">
+                <button onclick="startQuiz()" id="btn-mulai" class="inline-flex items-center justify-center w-full sm:w-auto px-10 py-4 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-bold rounded-2xl shadow-lg shadow-indigo-100 transition-all transform active:scale-95 duration-200 text-base">
+                    Mulai Sesi Sekarang
+                    <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                </button>
+            </div>
+        </section>
+
+<script>
+    // 30 Complete SPLDV Interactive Questions linked explicitly to Trik Cepat
+    const questions = [
+        // CATEGORY 1: ALJABAR LANGSUNG (1-10)
+        {
+            id: 1,
+            category: "Aljabar",
+            trickBadge: "Trik 1 (Kali Silang / Cramer)",
+            question: "Diberikan sistem persamaan linear berikut:\n$3x + y = 7$\n$x + 2y = 9$\nTentukan nilai $x$ yang memenuhi SPLDV tersebut.",
+            options: [
+                "$x = 2$",
+                "$x = 1$",
+                "$x = 3$",
+                "$x = 4$"
+            ],
+            correct: 1,
+            explanation: "<strong>Perbandingan Metode Pembahasan:</strong><br><br><strong>Cara Lambat (Eliminasi Klasik):</strong><br>Samakan koefisien $y$ dengan mengalikan persamaan pertama dengan 2, lalu kurangkan keduanya. Membutuhkan minimal 4 baris tulisan.<br><br><strong>Cara Cepat - Trik 1 (Kali Silang / Cramer):</strong><br>Sistem: $a_1x + b_1y = c_1$ dan $a_2x + b_2y = c_2$<br>Dimana $a_1=3, b_1=1, c_1=7$ dan $a_2=1, b_2=2, c_2=9$.<br>$$x = \\frac{c_1b_2 - b_1c_2}{a_1b_2 - b_1a_2} = \\frac{(7 \\times 2) - (1 \\times 9)}{(3 \\times 2) - (1 \\times 1)} = \\frac{14 - 9}{6 - 1} = \\frac{5}{5} = 1$$<br>Hanya butuh 1 baris perhitungan langsung!"
+        },
+        {
+            id: 2,
+            category: "Aljabar",
+            trickBadge: "Trik 2 (Pola Simetris)",
+            question: "Gunakan Trik Simetris untuk mencari nilai $x + y$ dari sistem persamaan berikut:\n$43x + 37y = 123$\n$37x + 43y = 117$",
+            options: [
+                "$x + y = 2$",
+                "$x + y = 4$",
+                "$x + y = 3$",
+                "$x + y = 1$"
+            ],
+            correct: 2,
+            explanation: "<strong>Perbandingan Metode Pembahasan:</strong><br><br><strong>Cara Lambat (Eliminasi Klasik):</strong><br>Mengalikan persamaan dengan angka raksasa $43$ dan $37$ akan memakan waktu 3-5 menit dan berisiko tinggi salah hitung.<br><br><strong>Cara Cepat - Trik 2 (Pola Simetris):</strong><br>Karena koefisien saling silang simetris ($a=43, b=37$), kita cukup <strong>menjumlahkan kedua persamaan secara langsung</strong>:<br>$$(43 + 37)x + (37 + 43)y = 123 + 117$$$$80x + 80y = 240$$Bagi kedua ruas dengan 80:<br>$$x + y = 3$$<br>Selesai dalam waktu 5 detik tanpa perlu mencari nilai $x$ atau $y$ satu per satu!"
+        },
+        {
+            id: 3,
+            category: "Aljabar",
+            trickBadge: "Trik 1 (Kali Silang / Cramer)",
+            question: "Tentukan nilai $y$ dari sistem persamaan linear berikut:\n$3x + 2y = 12$\n$x + 2y = 8$",
+            options: [
+                "$y = 2$",
+                "$y = 1$",
+                "$y = 3$",
+                "$y = 4$"
+            ],
+            correct: 2,
+            explanation: "<strong>Cara Cepat - Trik 1 (Kali Silang / Cramer):</strong><br>Dengan $a_1=3, b_1=2, c_1=12$ dan $a_2=1, b_2=2, c_2=8$.<br>$$y = \\frac{a_1c_2 - c_1a_2}{a_1b_2 - b_1a_2} = \\frac{(3 \\times 8) - (12 \\times 1)}{(3 \\times 2) - (2 \\times 1)} = \\frac{24 - 12}{6 - 2} = \\frac{12}{4} = 3$$"
+        },
+        {
+            id: 4,
+            category: "Aljabar",
+            trickBadge: "Trik 1 (Kali Silang / Cramer)",
+            question: "Selesaikan sistem berikut untuk mencari nilai $y$:\n$5x + 3y = 19$\n$2x - y = 1$",
+            options: [
+                "$y = 2$",
+                "$y = 3$",
+                "$y = 1$",
+                "$y = 4$"
+            ],
+            correct: 1,
+            explanation: "<strong>Cara Cepat - Trik 1 (Kali Silang / Cramer):</strong><br>Dengan $a_1=5, b_1=3, c_1=19$ dan $a_2=2, b_2=-1, c_2=1$.<br>$$y = \\frac{a_1c_2 - c_1a_2}{a_1b_2 - b_1a_2} = \\frac{(5 \\times 1) - (19 \\times 2)}{(5 \\times -1) - (3 \\times 2)} = \\frac{5 - 38}{-5 - 6} = \\frac{-33}{-11} = 3$$"
+        },
+        {
+            id: 5,
+            category: "Aljabar",
+            trickBadge: "Trik 1 (Kali Silang / Cramer)",
+            question: "Tentukan himpunan penyelesaian dari sistem:\n$x + y = 5$\n$x - y = 1$",
+            options: [
+                "$\\{(3, 2)\\}$",
+                "$\\{(2, 3)\\}$",
+                "$\\{(4, 1)\\}$",
+                "$\\{(3, 1)\\}$"
+            ],
+            correct: 0,
+            explanation: "<strong>Cara Cepat - Trik 1 (Kali Silang):</strong><br>Meskipun eliminasi sangat mudah di sini, Trik 1 juga bekerja instan:<br>$$x = \\frac{(5 \\times -1) - (1 \\times 1)}{(1 \\times -1) - (1 \\times 1)} = \\frac{-5 - 1}{-1 - 1} = \\frac{-6}{-2} = 3$$Substitusi balik sederhana menghasilkan $y = 2$. Maka penyelesaiannya adalah $\\{(3, 2)\\}$."
+        },
+        {
+            id: 6,
+            category: "Aljabar",
+            trickBadge: "Trik 1 (Kali Silang / Cramer)",
+            question: "Selesaikan untuk mencari nilai $x$ dari SPLDV berikut:\n$2x + y = 8$\n$x - y = 1$",
+            options: [
+                "$x = 2$",
+                "$x = 3$",
+                "$x = 4$",
+                "$x = 5$"
+            ],
+            correct: 1,
+            explanation: "<strong>Cara Cepat - Trik 1 (Kali Silang / Cramer):</strong><br>Dengan $a_1=2, b_1=1, c_1=8$ dan $a_2=1, b_2=-1, c_2=1$.<br>$$x = \\frac{c_1b_2 - b_1c_2}{a_1b_2 - b_1a_2} = \\frac{(8 \\times -1) - (1 \\times 1)}{(2 \\times -1) - (1 \\times 1)} = \\frac{-8 - 1}{-2 - 1} = \\frac{-9}{-3} = 3$$"
+        },
+        {
+            id: 7,
+            category: "Aljabar",
+            trickBadge: "Trik 2 (Pola Simetris)",
+            question: "Diberikan sistem persamaan linear berikut:\n$154x + 146y = 600$\n$146x + 154y = 300$\nTentukan nilai dari $x + y$ secara cepat.",
+            options: [
+                "$x + y = 2$",
+                "$x + y = 3$",
+                "$x + y = 4$",
+                "$x + y = 1$"
+            ],
+            correct: 0,
+            explanation: "<strong>Cara Cepat - Trik 2 (Pola Simetris):</strong><br>Jumlahkan kedua persamaan:<br>$$(154 + 146)x + (146 + 154)y = 600 + 300$$$$300x + 300y = 900$$Bagi seluruh ruas dengan 300:<br>$$x + y = 3$$"
+        },
+        {
+            id: 8,
+            category: "Aljabar",
+            trickBadge: "Trik 1 (Kali Silang / Cramer)",
+            question: "Carilah nilai $x$ dari sistem persamaan berikut:\n$2x + 3y = 13$\n$x - 2y = -4$",
+            options: [
+                "$x = 1$",
+                "$x = 3$",
+                "$x = 2$",
+                "$x = 4$"
+            ],
+            correct: 2,
+            explanation: "<strong>Cara Cepat - Trik 1 (Kali Silang / Cramer):</strong><br>Dengan $a_1=2, b_1=3, c_1=13$ dan $a_2=1, b_2=-2, c_2=-4$.<br>$$x = \\frac{(13 \\times -2) - (3 \\times -4)}{(2 \\times -2) - (3 \\times 1)} = \\frac{-26 - (-12)}{-4 - 3} = \\frac{-14}{-7} = 2$$"
+        },
+        {
+            id: 9,
+            category: "Aljabar",
+            trickBadge: "Trik 1 (Kali Silang / Cramer)",
+            question: "Tentukan penyelesaian $y$ untuk sistem:\n$4x + 5y = 14$\n$3x - 2y = -1$",
+            options: [
+                "$y = 2$",
+                "$y = 1$",
+                "$y = 3$",
+                "$y = -2$"
+            ],
+            correct: 0,
+            explanation: "<strong>Cara Cepat - Trik 1 (Kali Silang / Cramer):</strong><br>Dengan $a_1=4, b_1=5, c_1=14$ dan $a_2=3, b_2=-2, c_2=-1$.<br>$$y = \\frac{a_1c_2 - c_1a_2}{a_1b_2 - b_1a_2} = \\frac{(4 \\times -1) - (14 \\times 3)}{(4 \\times -2) - (5 \\times 3)} = \\frac{-4 - 42}{-8 - 15} = \\frac{-46}{-23} = 2$$"
+        },
+        {
+            id: 10,
+            category: "Aljabar",
+            trickBadge: "Trik 2 (Pola Simetris)",
+            question: "Jika $99x + 101y = 401$ dan $101x + 99y = 399$, tentukan nilai dari $x - y$.",
+            options: [
+                "$x - y = -1$",
+                "$x - y = 2$",
+                "$x - y = 1$",
+                "$x - y = 3$"
+            ],
+            correct: 0,
+            explanation: "<strong>Cara Cepat - Trik 2 (Pola Simetris):</strong><br>Kali ini yang ditanyakan adalah $x - y$. Kita bisa langsung <strong>mengurangkan persamaan pertama dengan persamaan kedua</strong>:<br>$$(99 - 101)x + (101 - 99)y = 401 - 399$$$$-2x + 2y = 2$$Bagi kedua ruas dengan -2:<br>$$x - y = -1$$"
+        },
+
+        // CATEGORY 2: SOAL CERITA / PEMODELAN (11-20)
+        {
+            id: 11,
+            category: "Pemodelan",
+            trickBadge: "Translasi & Eliminasi Cepat",
+            question: "Dua kali umur Budi ditambah umur Andi adalah 30 tahun. Jika selisih umur mereka adalah 3 tahun (Budi lebih tua), tentukan model matematika yang tepat.",
+            options: [
+                "$2B + A = 30$ dan $B - A = 3$",
+                "$2B + A = 30$ dan $A - B = 3$",
+                "$B + 2A = 30$ dan $B - A = 3$",
+                "$2B - A = 30$ dan $B + A = 3$"
+            ],
+            correct: 0,
+            explanation: "<strong>Penjelasan Pemodelan:</strong><br>Misalkan Umur Budi adalah $B$ dan Umur Andi adalah $A$.<br>- \"Dua kali umur Budi ditambah umur Andi adalah 30\" $\\implies 2B + A = 30$<br>- \"Selisih umur mereka adalah 3 tahun (Budi lebih tua)\" $\\implies B - A = 3$"
+        },
+        {
+            id: 12,
+            category: "Pemodelan",
+            trickBadge: "Translasi Model Belanja",
+            question: "Harga 3 buku tulis dan 2 pensil adalah Rp12.000,00. Sedangkan harga 1 buku tulis dan 3 pensil adalah Rp11.000,00. Manakah model yang tepat jika $x$ menyatakan harga buku dan $y$ harga pensil?",
+            options: [
+                "$3x + 2y = 12.000$ dan $x + 3y = 11.000$",
+                "$3x + 2y = 12.000$ dan $3x + y = 11.000$",
+                "$2x + 3y = 12.000$ dan $3x + y = 11.000$",
+                "$3x + 2y = 11.000$ dan $x + 3y = 12.000$"
+            ],
+            correct: 0,
+            explanation: "<strong>Penjelasan Pemodelan:</strong><br>- 3 buku tulis ($3x$) + 2 pensil ($2y$) = Rp12.000,00 $\\implies 3x + 2y = 12.000$<br>- 1 buku tulis ($x$) + 3 pensil ($3y$) = Rp11.000,00 $\\implies x + 3y = 11.000$"
+        },
+        {
+            id: 13,
+            category: "Pemodelan",
+            trickBadge: "Trik 1 (Kali Silang / Cramer)",
+            question: "Keliling sebuah lapangan berbentuk persegi panjang adalah 40 meter. Jika panjangnya 4 meter lebih dari lebarnya, tentukan panjang lapangan tersebut.",
+            options: [
+                "10 meter",
+                "12 meter",
+                "8 meter",
+                "14 meter"
+            ],
+            correct: 1,
+            explanation: "<strong>Cara Cepat - Trik 1 (Cramer) setelah pemodelan:</strong><br>Keliling $= 2(p + l) = 40 \\implies p + l = 20$<br>Hubungan panjang dan lebar: $p - l = 4$<br><br>Gunakan Trik 1:<br>$$p = \\frac{(20 \\times -1) - (1 \\times 4)}{(1 \\times -1) - (1 \\times 1)} = \\frac{-20 - 4}{-2} = \\frac{-24}{-2} = 12\\text{ meter}$$"
+        },
+        {
+            id: 14,
+            category: "Pemodelan",
+            trickBadge: "Pola Penjumlahan Langsung",
+            question: "Jumlah dua bilangan adalah 25. Tiga kali bilangan pertama dikurangi bilangan kedua adalah 15. Tentukan bilangan pertama.",
+            options: [
+                "10",
+                "15",
+                "8",
+                "12"
+            ],
+            correct: 0,
+            explanation: "Misalkan bilangan pertama $= x$, bilangan kedua $= y$.<br>Model:<br>1) $x + y = 25$<br>2) $3x - y = 15$<br><br><strong>Cara Cepat:</strong><br>Jumlahkan langsung kedua persamaan untuk mengeliminasi $y$:<br>$$4x = 40 \\implies x = 10$$"
+        },
+        {
+            id: 15,
+            category: "Pemodelan",
+            trickBadge: "Trik 1 (Kali Silang / Cramer)",
+            question: "Harga tiket bioskop untuk 2 orang dewasa dan 3 anak-anak adalah Rp115.000,00. Sedangkan untuk 1 orang dewasa dan 2 anak-anak adalah Rp70.000,00. Tentukan harga tiket anak-anak.",
+            options: [
+                "Rp20.000,00",
+                "Rp25.000,00",
+                "Rp30.000,00",
+                "Rp35.000,00"
+            ],
+            correct: 1,
+            explanation: "Misalkan tiket dewasa $= x$ dan anak $= y$.<br>Model:<br>$2x + 3y = 115.000$<br>$x + 2y = 70.000$<br><br><strong>Cara Cepat - Trik 1 (Cramer):</strong><br>$$y = \\frac{(2 \\times 70.000) - (115.000 \\times 1)}{(2 \\times 2) - (3 \\times 1)} = \\frac{140.000 - 115.000}{4 - 3} = \\text{Rp}25.000,00$$"
+        },
+        {
+            id: 16,
+            category: "Pemodelan",
+            trickBadge: "Trik 3 (Kaki & Roda)",
+            question: "Di dalam sebuah kandang terdapat ayam dan kambing. Jumlah kepala ada 30 buah dan jumlah kaki ada 90 buah. Manakah model SPLDV yang tepat jika ayam $= a$ dan kambing $= k$?",
+            options: [
+                "$a + k = 30$ dan $2a + 4k = 90$",
+                "$a + k = 30$ dan $4a + 2k = 90$",
+                "$a + k = 90$ dan $2a + 4k = 30$",
+                "$a + k = 30$ dan $2a + 2k = 90$"
+            ],
+            correct: 0,
+            explanation: "<strong>Penjelasan Pemodelan Kaki & Roda:</strong><br>- Jumlah kepala menceritakan jumlah objek: $a + k = 30$<br>- Jumlah kaki menceritakan kontribusi roda/kaki (ayam berkaki 2, kambing berkaki 4): $2a + 4k = 90$"
+        },
+        {
+            id: 17,
+            category: "Pemodelan",
+            trickBadge: "Pola Substitusi Ekspres",
+            question: "Sebuah pecahan bernilai $\\frac{1}{2}$ jika pembilangnya ditambah 1. Jika penyebutnya ditambah 3, pecahan bernilai $\\frac{1}{3}$. Tentukan pembilang pecahan asal.",
+            options: [
+                "$4$",
+                "$5$",
+                "$3$",
+                "$6$"
+            ],
+            correct: 1,
+            explanation: "Misalkan pecahan $= \\frac{x}{y}$.<br>1) $\\frac{x+1}{y} = \\frac{1}{2} \\implies 2x - y = -2$<br>2) $\\frac{x}{y+3} = \\frac{1}{3} \\implies 3x - y = 3$<br><br><strong>Cara Cepat:</strong><br>Kurangkan Persamaan (2) dengan (1):<br>$$(3x - y) - (2x - y) = 3 - (-2) \\implies x = 5$$Pembilang asal ($x$) adalah $5$."
+        },
+        {
+            id: 18,
+            category: "Pemodelan",
+            trickBadge: "Substitusi Sudut Ekspres",
+            question: "Dua sudut saling berpelurus (jumlahnya $180^\\circ$). Sudut terbesar sama dengan dua kali sudut terkecil ditambah $30^\\circ$. Berapakah besar sudut terkecil?",
+            options: [
+                "$40^\\circ$",
+                "$50^\\circ$",
+                "$60^\\circ$",
+                "$70^\\circ$"
+            ],
+            correct: 1,
+            explanation: "Misalkan sudut terbesar $= x$, sudut terkecil $= y$.<br>1) $x + y = 180$<br>2) $x = 2y + 30$<br><br><strong>Cara Cepat:</strong><br>Substitusi (2) langsung ke (1):<br>$$(2y + 30) + y = 180 \\implies 3y = 150 \\implies y = 50^\\circ$$"
+        },
+        {
+            id: 19,
+            category: "Pemodelan",
+            trickBadge: "Trik 1 (Kali Silang / Cramer)",
+            question: "Harga 2 kg apel dan 3 kg jeruk adalah Rp80.000,00. Harga 1 kg apel dan 2 kg jeruk adalah Rp45.000,00. Tentukan harga 1 kg apel.",
+            options: [
+                "Rp25.000,00",
+                "Rp20.000,00",
+                "Rp15.000,00",
+                "Rp10.000,00"
+            ],
+            correct: 0,
+            explanation: "Misalkan apel $= x$, jeruk $= y$.<br>Model:<br>$2x + 3y = 80.000$<br>$x + 2y = 45.000$<br><br><strong>Cara Cepat - Trik 1 (Cramer):</strong><br>$$x = \\frac{(80.000 \\times 2) - (3 \\times 45.000)}{(2 \\times 2) - (3 \\times 1)} = \\frac{160.000 - 135.000}{4 - 3} = \\text{Rp}25.000,00$$"
+        },
+        {
+            id: 20,
+            category: "Pemodelan",
+            trickBadge: "Selisih Aljabar Langsung",
+            question: "Selisih dua bilangan asli adalah 6. Jika bilangan besar ditambah dengan dua kali bilangan kecil hasilnya adalah 21. Tentukan bilangan terkecil.",
+            options: [
+                "$3$",
+                "$4$",
+                "$5$",
+                "$6$"
+            ],
+            correct: 2,
+            explanation: "Misalkan bilangan besar $= x$, kecil $= y$.<br>1) $x - y = 6 \\implies x = y + 6$<br>2) $x + 2y = 21$<br><br><strong>Cara Cepat:</strong><br>Substitusi langsung:<br>$$(y + 6) + 2y = 21 \\implies 3y = 15 \\implies y = 5$$"
+        },
+
+        // CATEGORY 3: REAL-WORLD APPLICATIONS (21-30)
+        {
+            id: 21,
+            category: "Penerapan",
+            trickBadge: "Trik 1 (Kali Silang / Cramer)",
+            question: "Tarif sewa hotel 2 malam weekday + 3 malam weekend adalah Rp1.900.000,00. Sedangkan 3 malam weekday + 1 malam weekend adalah Rp1.100.000,00. Tentukan tarif per malam weekday.",
+            options: [
+                "Rp150.000,00",
+                "Rp200.000,00",
+                "Rp250.000,00",
+                "Rp300.000,00"
+            ],
+            correct: 1,
+            explanation: "Misalkan weekday $= x$, weekend $= y$.<br>$2x + 3y = 1.900.000$<br>$3x + y = 1.100.000$<br><br><strong>Cara Cepat - Trik 1 (Cramer):</strong><br>$$x = \\frac{(1.900.000 \\times 1) - (3 \\times 1.100.000)}{(2 \\times 1) - (3 \\times 3)} = \\frac{1.900.000 - 3.300.000}{2 - 9} = \\frac{-1.400.000}{-7} = \\text{Rp}200.000,00$$"
+        },
+        {
+            id: 22,
+            category: "Penerapan",
+            trickBadge: "Trik 1 (Kali Silang / Cramer)",
+            question: "Paket A (2 semangka, 1 melon) seharga Rp70.000,00. Paket B (1 semangka, 3 melon) seharga Rp110.000,00. Berapa harga melon?",
+            options: [
+                "Rp20.000,00",
+                "Rp25.000,00",
+                "Rp30.000,00",
+                "Rp35.000,00"
+            ],
+            correct: 2,
+            explanation: "Misalkan semangka $= x$, melon $= y$.<br>$2x + y = 70.000$<br>$x + 3y = 110.000$<br><br><strong>Cara Cepat - Trik 1 (Cramer):</strong><br>$$y = \\frac{(2 \\times 110.000) - (70.000 \\times 1)}{(2 \\times 3) - (1 \\times 1)} = \\frac{220.000 - 70.000}{6 - 1} = \\frac{150.000}{5} = \\text{Rp}30.000,00$$"
+        },
+        {
+            id: 23,
+            category: "Penerapan",
+            trickBadge: "Trik Simetris Kecepatan",
+            question: "Searah arus sungai, kapal motor butuh 2 jam untuk menempuh jarak 40 km. Melawan arus sungai, kapal butuh 4 jam untuk menempuh jarak yang sama. Berapa kecepatan kapal di air tenang?",
+            options: [
+                "12 km/jam",
+                "15 km/jam",
+                "18 km/jam",
+                "20 km/jam"
+            ],
+            correct: 1,
+            explanation: "Misalkan Kecepatan Kapal $= v_k$, Kecepatan Arus $= v_a$.<br>1) Searah arus: $v_k + v_a = \\frac{40}{2} = 20$<br>2) Melawan arus: $v_k - v_a = \\frac{40}{4} = 10$<br><br><strong>Cara Cepat - Penjumlahan Simetris:</strong><br>Jumlahkan kedua persamaan:<br>$$2v_k = 30 \\implies v_k = 15\\text{ km/jam}$$"
+        },
+        {
+            id: 24,
+            category: "Penerapan",
+            trickBadge: "Trik 3 (Magic Formula)",
+            question: "Seorang peternak memiliki sejumlah kambing (kaki 4) dan ayam (kaki 2). Total kepala adalah 50 dan jumlah kaki adalah 140. Berapa jumlah kambing?",
+            options: [
+                "20 ekor",
+                "25 ekor",
+                "15 ekor",
+                "30 ekor"
+            ],
+            correct: 0,
+            explanation: "<strong>Cara Cepat - Trik 3 (Kaki & Roda):</strong><br>Mencari Objek berkaki 4 (Kambing):<br>$$\\text{Kambing} = \\frac{\\text{Total Kaki} - (2 \\times \\text{Total Kepala})}{2}$$$$\\text{Kambing} = \\frac{140 - (2 \\times 50)}{2} = \\frac{40}{2} = 20\\text{ ekor}$$"
+        },
+        {
+            id: 25,
+            category: "Penerapan",
+            trickBadge: "Trik 1 (Kali Silang / Cramer)",
+            question: "Baut X butuh 2 jam Mesin A dan 1 jam Mesin B. Baut Y butuh 1 jam Mesin A dan 3 jam Mesin B. Operasional maksimum Mesin A adalah 12 jam, Mesin B adalah 16 jam. Tentukan jumlah baut X yang diproduksi maksimal secara simultan.",
+            options: [
+                "3 unit",
+                "4/unit",
+                "5 unit",
+                "6 unit"
+            ],
+            correct: 1,
+            explanation: "Model Kendala:<br>$2x + y = 12$<br>$x + 3y = 16$<br><br><strong>Cara Cepat - Trik 1 (Cramer):</strong><br>$$x = \\frac{(12 \\times 3) - (1 \\times 16)}{(2 \\times 3) - (1 \\times 1)} = \\frac{36 - 16}{6 - 1} = \\frac{20}{5} = 4\\text{ unit}$$"
+        },
+        {
+            id: 26,
+            category: "Penerapan",
+            trickBadge: "Trik 3 (Sistem Point Ujian)",
+            question: "Dalam ujian 40 soal, Benar mendapat skor +4, Salah skor -1. Jika peserta menjawab semua soal dan mendapat total nilai 110, berapa soal yang dijawab Benar?",
+            options: [
+                "28 soal",
+                "30/soal",
+                "32 soal",
+                "26 soal"
+            ],
+            correct: 1,
+            explanation: "<strong>Cara Cepat - Analogi Trik 3 (Asumsi Ekstrim):</strong><br>Asumsikan semua salah (Skor minimum): $40 \\times (-1) = -40$.<br>Skor aktual $= 110$. Selisih skor $= 110 - (-40) = 150$.<br>Selisih poin tiap jawaban Benar vs Salah $= 4 - (-1) = 5$ poin.<br>$$\\text{Banyak Benar} = \\frac{\\text{Selisih Skor}}{\\text{Selisih Poin}} = \\frac{150}{5} = 30\\text{ soal}$$"
+        },
+        {
+            id: 27,
+            category: "Penerapan",
+            trickBadge: "Trik Perbandingan Kadar",
+            question: "Emas kadar 90% dilebur dengan emas kadar 40% untuk mendapatkan 100 gram emas berkadar 70%. Berapa gram emas berkadar 90% yang dibutuhkan?",
+            options: [
+                "50 gram",
+                "60/gram",
+                "70 gram",
+                "40 gram"
+            ],
+            correct: 1,
+            explanation: "Misalkan emas kadar 90% $= x$ gram dan kadar 40% $= y$ gram.<br>1) $x + y = 100 \\implies y = 100 - x$<br>2) $0.9x + 0.4y = 0.7(100) = 70 \\implies 9x + 4y = 700$<br><br><strong>Cara Cepat - Trik 1 (Cramer):</strong><br>$$x = \\frac{(100 \\times 4) - (1 \\times 700)}{(1 \\times 4) - (1 \\times 9)} = \\frac{400 - 700}{4 - 9} = \\frac{-300}{-5} = 60\\text{ gram}$$"
+        },
+        {
+            id: 28,
+            category: "Penerapan",
+            trickBadge: "Trik 1 (Kali Silang / Cramer)",
+            question: "Paket Manis (3 donat cokelat, 2 keju) seharga Rp26.000,00. Paket Spesial (4 cokelat, 4 keju) seharga Rp44.000,00. Berapa harga 1 donat cokelat?",
+            options: [
+                "Rp3.500,00",
+                "Rp4.000,00",
+                "Rp4.500,00",
+                "Rp5.000,00"
+            ],
+            correct: 1,
+            explanation: "Model:<br>$3x + 2y = 26.000$<br>$4x + 4y = 44.000 \\implies 2x + 2y = 22.000$ (Sederhanakan)<br><br><strong>Cara Cepat:</strong><br>Kurangkan langsung Persamaan 1 dengan model baru:<br>$$(3x + 2y) - (2x + 2y) = 26.000 - 22.000 \\implies x = \\text{Rp}4.000,00$$"
+        },
+        {
+            id: 29,
+            category: "Penerapan",
+            trickBadge: "Trik 1 (Kali Silang / Cramer)",
+            question: "Mesin A cetak 3 jam + Mesin B cetak 2 jam menghasilkan 1.300 brosur. Mesin A cetak 2 jam + Mesin B cetak 3 jam menghasilkan 1.200 brosur. Tentukan kecepatan cetak Mesin A per jam.",
+            options: [
+                "250 lembar/jam",
+                "300 lembar/jam",
+                "350 lembar/jam",
+                "400 lembar/jam"
+            ],
+            correct: 1,
+            explanation: "Model:<br>$3a + 2b = 1300$<br>$2a + 3b = 1200$<br><br><strong>Cara Cepat - Trik 1 (Cramer):</strong><br>$$a = \\frac{(1300 \\times 3) - (2 \\times 1200)}{(3 \\times 3) - (2 \\times 2)} = \\frac{3900 - 2400}{9 - 4} = \\frac{1500}{5} = 300\\text{ lembar/jam}$$"
+        },
+        {
+            id: 30,
+            category: "Penerapan",
+            trickBadge: "Trik Titik Potong Linier",
+            question: "Skema A: Biaya awal Rp10.000,00 + Rp4.000,00/km. Skema B: Biaya awal Rp16.000,00 + Rp3.000,00/km. Pada jarak berapakah tarif kedua skema bernilai tepat sama?",
+            options: [
+                "4 km",
+                "5 km",
+                "6/km",
+                "8 km"
+            ],
+            correct: 2,
+            explanation: "Skema A: $y = 4000x + 10000$<br>Skema B: $y = 3000x + 16000$<br><br><strong>Cara Cepat - Selisih Langsung:</strong><br>$$4000x + 10000 = 3000x + 16000$$$$1000x = 6000 \\implies x = 6\\text{ km}$$"
+        }
+    ];
+</script>
+
+        <!-- Quiz Play Screen -->
+        <section id="quiz-screen" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- Left Panel: Navigation Grid & Control -->
+            <div class="lg:col-span-4 bg-white border border-slate-200 shadow-sm rounded-3xl p-5 space-y-5">
+                <div class="flex items-center justify-between">
+                    <h3 class="font-extrabold text-slate-900 text-sm tracking-tight">Peta Soal Kuis</h3>
+                    <button onclick="toggleDoubtFilter()" id="btn-doubt-filter" class="inline-flex items-center px-2.5 py-1 text-[11px] font-semibold text-slate-500 hover:text-indigo-600 bg-slate-50 border border-slate-200 hover:border-indigo-200 rounded-lg transition-all">
+                        ⭐ Filter Ragu-ragu
+                    </button>
+                </div>
+                
+                <!-- Quick Map Legends -->
+                <div class="flex flex-wrap gap-2 text-[10px] text-slate-500 font-medium">
+                    <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 bg-slate-100 rounded border border-slate-300"></span> Belum</div>
+                    <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 bg-indigo-600 rounded"></span> Terjawab</div>
+                    <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 bg-amber-400 rounded"></span> Ragu-ragu</div>
+                </div>
+
+                <!-- Scrollable Grid numbers -->
+                <div id="questions-grid" class="grid grid-cols-5 gap-2 max-h-72 overflow-y-auto pr-1 custom-scrollbar">
+                    <!-- Dynamic indicators injected here -->
+                </div>
+
+                <!-- Related Trick Info Bar -->
+                <div class="border-t border-slate-100 pt-4">
+                    <div class="p-3 bg-violet-50/50 border border-violet-100 rounded-xl">
+                        <span class="text-[10px] font-bold text-violet-500 uppercase tracking-widest block">Trik Terkait Soal Ini</span>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span class="text-xs font-bold text-slate-800" id="active-trick-badge">⚡ Trik 1: Kali Silang</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Finish Action Button -->
+                <div class="pt-2">
+                    <button onclick="confirmSubmitQuiz()" class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-slate-900 hover:bg-slate-950 text-white font-semibold rounded-2xl transition-all shadow-md">
+                        Selesaikan Kuis
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Panel: Question Viewer -->
+            <div class="lg:col-span-8 space-y-4">
+                <div class="bg-white border border-slate-200 shadow-md rounded-3xl p-6 sm:p-8 space-y-6">
+                    
+                    <!-- Question Header Info -->
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                        <span id="question-index-tag" class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-xl">Soal No 1 dari 30</span>
+                        <div class="flex items-center gap-2">
+                            <!-- Flag Question as Doubtful -->
+                            <button id="btn-doubt" onclick="toggleDoubt()" class="flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-medium border border-slate-200 hover:border-amber-400 bg-white hover:bg-amber-50 text-slate-500 hover:text-amber-600 transition-all">
+                                <span id="doubt-star">☆</span> Ragu-ragu
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Question Text & Formula rendering -->
+                    <div class="space-y-4">
+                        <div id="question-text" class="text-slate-800 font-medium text-base sm:text-lg leading-relaxed whitespace-pre-wrap">
+                            <!-- Question injected here -->
+                        </div>
+                    </div>
+
+                    <!-- Options List -->
+                    <div id="options-container" class="grid grid-cols-1 gap-3.5">
+                        <!-- Options buttons injected here -->
+                    </div>
+
+                    <!-- Practice Mode Instant Feedback & Explanation Container -->
+                    <div id="feedback-panel" class="hidden border-t border-slate-100 pt-6 space-y-3">
+                        <div class="flex items-center gap-2">
+                            <span id="feedback-icon" class="text-xl"></span>
+                            <span id="feedback-title" class="font-extrabold text-sm uppercase tracking-wide"></span>
+                        </div>
+                        <div id="feedback-explanation" class="bg-slate-50 border border-slate-200 p-4 rounded-2xl text-slate-700 text-sm leading-relaxed whitespace-pre-wrap">
+                            <!-- Explanation injected here -->
+                        </div>
+                    </div>
+
+                    <!-- Bottom Nav Actions inside Question Viewer -->
+                    <div class="flex items-center justify-between border-t border-slate-100 pt-6">
+                        <button id="btn-prev" onclick="navigatePrev()" class="inline-flex items-center px-4 py-2.5 text-xs font-semibold text-slate-600 hover:text-slate-800 bg-slate-50 border border-slate-200 rounded-xl transition-all disabled:opacity-40 disabled:pointer-events-none">
+                            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+                            Sebelumnya
+                        </button>
+                        
+                        <div class="flex items-center gap-2">
+                            <button id="btn-explain" onclick="revealExplanationPanel()" class="hidden inline-flex items-center px-4 py-2.5 text-xs font-semibold text-indigo-600 hover:text-indigo-800 bg-indigo-50 border border-indigo-100 rounded-xl transition-all">
+                                💡 Pembahasan
+                            </button>
+                            
+                            <button id="btn-next" onclick="navigateNext()" class="inline-flex items-center px-4 py-2.5 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-all">
+                                Selanjutnya
+                                <svg class="w-4 h-4 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz Results & Performance Analysis Screen -->
+        <section id="result-screen" class="hidden max-w-4xl mx-auto w-full space-y-8">
+            <!-- Header Result -->
+            <div class="bg-white border border-slate-200 shadow-xl rounded-3xl p-8 text-center space-y-6">
+                <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-indigo-50 text-indigo-600 text-4xl shadow-inner mb-2">
+                    🏆
+                </div>
+                <div class="space-y-2">
+                    <h2 class="text-3xl font-extrabold tracking-tight text-slate-900">Sesi Evaluasi Selesai!</h2>
+                    <p class="text-slate-500 max-w-md mx-auto text-sm">Selamat! Anda telah menyelesaikan tantangan dan menguji ketangguhan rumus Trik Cepat SPLDV.</p>
+                </div>
+
+                <!-- Main Score Dashboard Grid -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl mx-auto">
+                    <div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block font-sans">Skor Akhir</span>
+                        <span id="score-text" class="text-3xl font-extrabold text-indigo-600">0/100</span>
+                    </div>
+                    <div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block font-sans">Akurasi Jawaban</span>
+                        <span id="accuracy-text" class="text-3xl font-extrabold text-slate-800">0%</span>
+                    </div>
+                    <div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block font-sans">Benar / Salah</span>
+                        <span id="stats-ratio-text" class="text-sm font-extrabold text-slate-800 mt-2 block">0 Benar, 0 Salah</span>
+                    </div>
+                    <div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block font-sans">Predikat Anda</span>
+                        <span id="badge-title" class="text-xs font-bold text-emerald-600 mt-2 block bg-emerald-50 px-2 py-1 rounded-lg">Linear Novice</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Performance Breakdown -->
+            <div class="bg-white border border-slate-200 shadow-md rounded-3xl p-6 sm:p-8 space-y-6">
+                <h3 class="font-extrabold text-slate-900 text-lg">Analisa Kekuatan Kompetensi</h3>
+                <p class="text-xs text-slate-500 -mt-4">Visualisasi performa pemahaman Anda per kategori modul SPLDV.</p>
+                
+                <div class="space-y-5">
+                    <!-- Category 1 -->
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between text-xs font-bold text-slate-700">
+                            <span class="flex items-center gap-1.5">⚡ Aljabar Murni (10 Soal)</span>
+                            <span id="cat-aljabar-percent">0%</span>
+                        </div>
+                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                            <div id="cat-aljabar-bar" class="bg-indigo-600 h-full rounded-full transition-all duration-1000" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <!-- Category 2 -->
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between text-xs font-bold text-slate-700">
+                            <span class="flex items-center gap-1.5">📝 Soal Cerita Pemodelan (10 Soal)</span>
+                            <span id="cat-pemodelan-percent">0%</span>
+                        </div>
+                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                            <div id="cat-pemodelan-bar" class="bg-sky-500 h-full rounded-full transition-all duration-1000" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <!-- Category 3 -->
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between text-xs font-bold text-slate-700">
+                            <span class="flex items-center gap-1.5">🚀 Penerapan Riil & Aplikasi (10 Soal)</span>
+                            <span id="cat-penerapan-percent">0%</span>
+                        </div>
+                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                            <div id="cat-penerapan-bar" class="bg-emerald-500 h-full rounded-full transition-all duration-1000" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Review of All Questions -->
+            <div class="bg-white border border-slate-200 shadow-md rounded-3xl p-6 sm:p-8 space-y-6">
+                <div class="flex items-center justify-between">
+                    <h3 class="font-extrabold text-slate-900 text-lg">Pembahasan Lengkap & Review Jawaban</h3>
+                    <div class="flex gap-2">
+                        <button onclick="filterReview('all')" id="btn-rev-all" class="px-3 py-1 bg-indigo-600 text-white text-xs font-semibold rounded-lg transition-all">Semua</button>
+                        <button onclick="filterReview('wrong')" id="btn-rev-wrong" class="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded-lg hover:bg-slate-200 transition-all">Salah Saja</button>
+                    </div>
+                </div>
+
+                <div id="review-list-container" class="space-y-6 divide-y divide-slate-100">
+                    <!-- Dynamically generated review items injected here -->
+                </div>
+            </div>
+
+            <!-- Footer options -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <button onclick="restartQuiz()" class="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-bold rounded-2xl shadow-lg shadow-indigo-100 hover:from-indigo-700 transition-all text-sm">
+                    Ulangi Kuis
+                </button>
+                <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="w-full sm:w-auto px-8 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-2xl transition-all text-sm">
+                    Kembali Ke Atas
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer Copyright -->
+    <footer class="text-center text-xs text-slate-400 mt-12 border-t border-slate-200/50 pt-6">
+        <p>© 2026 SPLDV Interactive Masterclass. Dirancang terintegrasi dengan Lembar Trik Cepat SPLDV.</p>
+    </footer>
+</div>
+
+<!-- Modal Dialog Confirm (Custom, No alert) -->
+<div id="custom-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white border border-slate-200 rounded-3xl shadow-2xl p-6 max-w-md w-full space-y-5">
+        <div class="text-center space-y-2">
+            <span class="text-3xl">⚠️</span>
+            <h3 id="modal-title" class="text-lg font-extrabold text-slate-900">Konfirmasi</h3>
+            <p id="modal-desc" class="text-xs text-slate-500 leading-relaxed"></p>
+        </div>
+        <div class="flex gap-3">
+            <button id="modal-btn-cancel" class="flex-1 py-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 font-semibold rounded-xl text-xs transition-all"></button>
+            <button id="modal-btn-confirm" class="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-xs transition-all shadow-md"></button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // State of the Quiz
+    let activeMode = 'latihan'; // 'latihan' or 'ujian'
+    let currentQuestionIdx = 0;
+    let userAnswers = Array(30).fill(null); // stores index of chosen options
+    let doubtStatus = Array(30).fill(false); // stores boolean flag status
+    let doubtFilterActive = false;
+    let timer = null;
+    let totalTime = 60 * 60; // 60 minutes in seconds
+    let timeLeft = totalTime;
+
+    // Initialize Setup landing view
+    window.addEventListener('load', () => {
+        selectMode('latihan');
+    });
+
+    function selectMode(mode) {
+        playSound('click');
+        activeMode = mode;
+        const btnLatihan = document.getElementById('btn-mode-latihan');
+        const btnUjian = document.getElementById('btn-mode-ujian');
+
+        if (mode === 'latihan') {
+            btnLatihan.classList.add('border-indigo-500', 'bg-indigo-50/20');
+            btnLatihan.classList.remove('border-slate-200', 'bg-white');
+            btnUjian.classList.remove('border-rose-500', 'bg-rose-50/20');
+            btnUjian.classList.add('border-slate-200', 'bg-white');
+        } else {
+            btnUjian.classList.add('border-rose-500', 'bg-rose-50/20');
+            btnUjian.classList.remove('border-slate-200', 'bg-white');
+            btnLatihan.classList.remove('border-indigo-500', 'bg-indigo-50/20');
+            btnLatihan.classList.add('border-slate-200', 'bg-white');
+        }
+    }
+
+    // Custom Modal System
+    function showModal(title, desc, confirmText, cancelText, onConfirm) {
+        const modal = document.getElementById('custom-modal');
+        document.getElementById('modal-title').textContent = title;
+        document.getElementById('modal-desc').textContent = desc;
+        
+        const btnConfirm = document.getElementById('modal-btn-confirm');
+        const btnCancel = document.getElementById('modal-btn-cancel');
+        
+        btnConfirm.textContent = confirmText;
+        btnCancel.textContent = cancelText;
+        
+        modal.classList.remove('hidden');
+        
+        btnConfirm.onclick = () => {
+            modal.classList.add('hidden');
+            onConfirm();
+        };
+        
+        btnCancel.onclick = () => {
+            modal.classList.add('hidden');
+        };
+    }
+
+    // Start Quiz implementation
+    function startQuiz() {
+        playSound('congrats');
+        
+        // Hide welcome, Show Quiz Screen & Status Bar
+        document.getElementById('welcome-screen').classList.add('hidden');
+        document.getElementById('quiz-screen').classList.remove('hidden');
+        document.getElementById('quiz-status-bar').classList.remove('hidden');
+        
+        // Update live status widgets
+        const badgeMode = document.getElementById('badge-mode');
+        const timerContainer = document.getElementById('timer-container');
+        const timerDivider = document.getElementById('timer-divider');
+
+        if (activeMode === 'latihan') {
+            badgeMode.textContent = "Latihan";
+            badgeMode.className = "text-sm font-bold text-indigo-600";
+            timerContainer.classList.add('hidden');
+            timerDivider.classList.add('hidden');
+        } else {
+            badgeMode.textContent = "Ujian";
+            badgeMode.className = "text-sm font-bold text-rose-600";
+            timerContainer.classList.remove('hidden');
+            timerDivider.classList.remove('hidden');
+            startTimer();
+        }
+
+        renderQuestionGrid();
+        loadQuestion(0);
+    }
+
+    // Timer logic
+    function startTimer() {
+        timeLeft = totalTime;
+        updateTimerDisplay();
+        timer = setInterval(() => {
+            timeLeft--;
+            updateTimerDisplay();
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                playSound('wrong');
+                showModal(
+                    "Waktu Ujian Habis",
+                    "Waktu pengerjaan ujian Anda sudah habis. Klik tombol di bawah untuk melihat hasil evaluasi secara otomatis.",
+                    "Selesai & Lihat Skor",
+                    "Tutup",
+                    () => { submitQuiz(); }
+                );
+            }
+        }, 1000);
+    }
+
+    function updateTimerDisplay() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        const display = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        document.getElementById('timer-display').textContent = display;
+    }
+
+    // Build the grid list 1-30 in the Left Panel
+    function renderQuestionGrid() {
+        const grid = document.getElementById('questions-grid');
+        grid.innerHTML = '';
+        
+        for (let i = 0; i < questions.length; i++) {
+            // Apply doubt filter condition if active
+            if (doubtFilterActive && !doubtStatus[i]) continue;
+
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.onclick = () => { playSound('click'); loadQuestion(i); };
+            btn.textContent = (i + 1).toString();
+            
+            // Base layout classes
+            let bgClass = "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100 hover:border-slate-300";
+            
+            // Determine styling based on state
+            if (userAnswers[i] !== null) {
+                bgClass = "bg-indigo-600 hover:bg-indigo-700 border-indigo-600 text-white shadow-sm shadow-indigo-100";
+            }
+            if (doubtStatus[i]) {
+                bgClass = "bg-amber-400 hover:bg-amber-500 border-amber-400 text-slate-950 font-bold shadow-sm shadow-amber-100";
+            }
+            if (i === currentQuestionIdx) {
+                // Active highlighting
+                btn.className = `w-11 h-11 flex items-center justify-center font-bold text-xs rounded-xl border-2 ring-2 ring-indigo-500/20 transition-all ${bgClass}`;
+            } else {
+                btn.className = `w-11 h-11 flex items-center justify-center font-semibold text-xs rounded-xl border transition-all ${bgClass}`;
+            }
+            
+            grid.appendChild(btn);
+        }
+    }
+
+    // Toggle showing only doubt marked questions in grid
+    function toggleDoubtFilter() {
+        playSound('click');
+        doubtFilterActive = !doubtFilterActive;
+        const btn = document.getElementById('btn-doubt-filter');
+        if (doubtFilterActive) {
+            btn.classList.add('bg-amber-50', 'border-amber-300', 'text-amber-700');
+            btn.textContent = "★ Tampilkan Semua";
+        } else {
+            btn.classList.remove('bg-amber-50', 'border-amber-300', 'text-amber-700');
+            btn.textContent = "⭐ Filter Ragu-ragu";
+        }
+        renderQuestionGrid();
+    }
+
+    // Populate question card with accurate active values
+    function loadQuestion(index) {
+        currentQuestionIdx = index;
+        const question = questions[index];
+        
+        // Render index badge tag
+        document.getElementById('question-index-tag').textContent = `Soal No ${index + 1} dari ${questions.length}`;
+        
+        // Highlight active question in the grid
+        renderQuestionGrid();
+
+        // Bind related trick badge
+        document.getElementById('active-trick-badge').textContent = question.trickBadge || "Aljabar Linear Murni";
+
+        // Render Question Text
+        document.getElementById('question-text').innerHTML = question.question;
+
+        // Render options buttons
+        const container = document.getElementById('options-container');
+        container.innerHTML = '';
+
+        question.options.forEach((optText, optIdx) => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.onclick = () => selectOption(optIdx);
+            
+            const optMarker = String.fromCharCode(65 + optIdx); // A, B, C, D
+            
+            let btnClass = "w-full flex items-center text-left p-4 rounded-2xl border transition-all duration-200 shadow-sm ";
+            
+            // Highlight selected
+            if (userAnswers[index] === optIdx) {
+                btnClass += "bg-indigo-50/50 border-indigo-500 hover:bg-indigo-50/80";
+            } else {
+                btnClass += "bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50/40";
+            }
+
+            btn.className = btnClass;
+            
+            let innerHTML = `
+                <span class="inline-flex items-center justify-center w-8 h-8 rounded-xl font-bold text-xs mr-4 transition-all ${
+                    userAnswers[index] === optIdx 
+                    ? 'bg-indigo-600 text-white' 
+                    : 'bg-slate-100 text-slate-500'
+                }">${optMarker}</span>
+                <span class="flex-grow text-slate-700 font-medium text-sm sm:text-base">${optText}</span>
+            `;
+            
+            btn.innerHTML = innerHTML;
+            container.appendChild(btn);
+        });
+
+        // Set state for Ragu-ragu button
+        const btnDoubt = document.getElementById('btn-doubt');
+        const star = document.getElementById('doubt-star');
+        if (doubtStatus[index]) {
+            star.textContent = "★";
+            btnDoubt.className = "flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-semibold border border-amber-300 bg-amber-50 text-amber-700 shadow-inner transition-all";
+        } else {
+            star.textContent = "☆";
+            btnDoubt.className = "flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-medium border border-slate-200 hover:border-amber-400 bg-white hover:bg-amber-50 text-slate-500 hover:text-amber-600 transition-all";
+        }
+
+        // Manage footer buttons states
+        document.getElementById('btn-prev').disabled = (index === 0);
+        document.getElementById('btn-next').textContent = (index === questions.length - 1) ? "Kirim Hasil" : "Selanjutnya";
+
+        // Setup Instant feedback for Mode Latihan
+        const fbPanel = document.getElementById('feedback-panel');
+        const btnExplain = document.getElementById('btn-explain');
+        
+        if (activeMode === 'latihan' && userAnswers[index] !== null) {
+            revealExplanationPanel();
+        } else {
+            fbPanel.classList.add('hidden');
+            btnExplain.classList.add('hidden');
+        }
+
+        // Track user dynamic progress count
+        const completedCount = userAnswers.filter(ans => ans !== null).length;
+        document.getElementById('progress-display').textContent = `${completedCount}/${questions.length}`;
+
+        // Fast render KaTeX on loaded card element
+        triggerMathRender(document.getElementById('quiz-screen'));
+    }
+
+    // Execute when option is selected
+    function selectOption(optIndex) {
+        const question = questions[currentQuestionIdx];
+        const isAlreadyAnswered = userAnswers[currentQuestionIdx] !== null;
+
+        if (activeMode === 'latihan' && isAlreadyAnswered) {
+            // Cannot change answer in training mode once chosen to keep educational flow strict
+            return;
+        }
+
+        userAnswers[currentQuestionIdx] = optIndex;
+        
+        if (activeMode === 'latihan') {
+            const isCorrect = (optIndex === question.correct);
+            playSound(isCorrect ? 'correct' : 'wrong');
+            revealExplanationPanel();
+        } else {
+            playSound('click');
+        }
+
+        // Auto reload views to display updated styling
+        loadQuestion(currentQuestionIdx);
+    }
+
+    // Toggle doubt status logic
+    function toggleDoubt() {
+        playSound('click');
+        doubtStatus[currentQuestionIdx] = !doubtStatus[currentQuestionIdx];
+        loadQuestion(currentQuestionIdx);
+    }
+
+    // Interactive show explanation in Practice Mode
+    function revealExplanationPanel() {
+        const question = questions[currentQuestionIdx];
+        const selected = userAnswers[currentQuestionIdx];
+        const isCorrect = (selected === question.correct);
+
+        const fbPanel = document.getElementById('feedback-panel');
+        const fbIcon = document.getElementById('feedback-icon');
+        const fbTitle = document.getElementById('feedback-title');
+        const fbExplanation = document.getElementById('feedback-explanation');
+
+        fbPanel.classList.remove('hidden');
+
+        if (isCorrect) {
+            fbIcon.textContent = "✅";
+            fbTitle.textContent = "Jawaban Benar!";
+            fbTitle.className = "font-extrabold text-sm uppercase tracking-wide text-emerald-600";
+            fbPanel.className = "border-t border-emerald-100 pt-6 space-y-3";
+        } else {
+            fbIcon.textContent = "❌";
+            fbTitle.textContent = "Jawaban Kurang Tepat!";
+            fbTitle.className = "font-extrabold text-sm uppercase tracking-wide text-rose-600";
+            fbPanel.className = "border-t border-rose-100 pt-6 space-y-3";
+        }
+
+        fbExplanation.innerHTML = question.explanation;
+        triggerMathRender(fbPanel);
+    }
+
+    // Navigation triggers
+    function navigatePrev() {
+        if (currentQuestionIdx > 0) {
+            playSound('click');
+            loadQuestion(currentQuestionIdx - 1);
+        }
+    }
+
+    function navigateNext() {
+        if (currentQuestionIdx < questions.length - 1) {
+            playSound('click');
+            loadQuestion(currentQuestionIdx + 1);
+        } else {
+            confirmSubmitQuiz();
+        }
+    }
+
+    // Show confirm dialog
+    function confirmSubmitQuiz() {
+        playSound('click');
+        const unansweredCount = userAnswers.filter(ans => ans === null).length;
+        let desc = "Apakah Anda yakin ingin menyelesaikan kuis ini?";
+        if (unansweredCount > 0) {
+            desc = `Terdapat ${unansweredCount} soal yang belum Anda jawab. Apakah Anda yakin ingin menyelesaikan kuis dan mengumpulkan nilai?`;
+        }
+
+        showModal(
+            "Selesaikan Kuis?",
+            desc,
+            "Ya, Kirim Hasil",
+            "Batal",
+            () => { submitQuiz(); }
+        );
+    }
+
+    // Execute grading algorithm
+    function submitQuiz() {
+        if (timer) clearInterval(timer);
+        playSound('congrats');
+
+        // Hide App headers status & active quiz screen
+        document.getElementById('quiz-screen').classList.add('hidden');
+        document.getElementById('quiz-status-bar').classList.add('hidden');
+        document.getElementById('result-screen').classList.remove('hidden');
+
+        let correctCount = 0;
+        let categoryStats = {
+            'Aljabar': { correct: 0, total: 10 },
+            'Pemodelan': { correct: 0, total: 10 },
+            'Penerapan': { correct: 0, total: 10 }
+        };
+
+        // Evaluate score
+        questions.forEach((q, idx) => {
+            const userAns = userAnswers[idx];
+            if (userAns === q.correct) {
+                correctCount++;
+                if (categoryStats[q.category]) {
+                    categoryStats[q.category].correct++;
+                }
+            }
+        });
+
+        const rawScore = Math.round((correctCount / questions.length) * 100);
+        const accuracy = Math.round((correctCount / questions.length) * 100);
+
+        // Bind Score Details
+        document.getElementById('score-text').textContent = `${rawScore}/100`;
+        document.getElementById('accuracy-text').textContent = `${accuracy}%`;
+        document.getElementById('stats-ratio-text').textContent = `${correctCount} Benar, ${questions.length - correctCount} Salah`;
+
+        // Calculate & Bind Badge/Predikat
+        let badge = "Linear Novice";
+        let badgeClass = "text-xs font-bold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-lg";
+        if (rawScore >= 90) {
+            badge = "🏆 SPLDV Master";
+            badgeClass = "text-xs font-bold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-lg";
+        } else if (rawScore >= 75) {
+            badge = "⚡ Linear Expert";
+            badgeClass = "text-xs font-bold text-indigo-700 bg-indigo-100 px-2.5 py-1 rounded-lg";
+        } else if (rawScore >= 50) {
+            badge = "📝 Linear Practitioner";
+            badgeClass = "text-xs font-bold text-sky-700 bg-sky-100 px-2.5 py-1 rounded-lg";
+        } else {
+            badge = "⚠️ Belajar Lagi";
+            badgeClass = "text-xs font-bold text-rose-700 bg-rose-100 px-2.5 py-1 rounded-lg";
+        }
+        
+        const badgeEl = document.getElementById('badge-title');
+        badgeEl.textContent = badge;
+        badgeEl.className = badgeClass;
+
+        // Render Category bars
+        const aljabarPercent = Math.round((categoryStats['Aljabar'].correct / categoryStats['Aljabar'].total) * 100);
+        const pemodelanPercent = Math.round((categoryStats['Pemodelan'].correct / categoryStats['Pemodelan'].total) * 100);
+        const penerapanPercent = Math.round((categoryStats['Penerapan'].correct / categoryStats['Penerapan'].total) * 100);
+
+        document.getElementById('cat-aljabar-percent').textContent = `${aljabarPercent}%`;
+        document.getElementById('cat-aljabar-bar').style.width = `${aljabarPercent}%`;
+
+        document.getElementById('cat-pemodelan-percent').textContent = `${pemodelanPercent}%`;
+        document.getElementById('cat-pemodelan-bar').style.width = `${pemodelanPercent}%`;
+
+        document.getElementById('cat-penerapan-percent').textContent = `${penerapanPercent}%`;
+        document.getElementById('cat-penerapan-bar').style.width = `${penerapanPercent}%`;
+
+        // Generate full reviews
+        renderDetailedReview('all');
+    }
+
+    // Generate individual cards for all questions and user actions
+    let activeReviewFilter = 'all';
+    
+    function filterReview(type) {
+        playSound('click');
+        activeReviewFilter = type;
+        
+        const btnAll = document.getElementById('btn-rev-all');
+        const btnWrong = document.getElementById('btn-rev-wrong');
+
+        if (type === 'all') {
+            btnAll.className = "px-3 py-1 bg-indigo-600 text-white text-xs font-semibold rounded-lg transition-all";
+            btnWrong.className = "px-3 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded-lg hover:bg-slate-200 transition-all";
+        } else {
+            btnWrong.className = "px-3 py-1 bg-indigo-600 text-white text-xs font-semibold rounded-lg transition-all";
+            btnAll.className = "px-3 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded-lg hover:bg-slate-200 transition-all";
+        }
+
+        renderDetailedReview(type);
+    }
+
+    function renderDetailedReview(filter) {
+        const container = document.getElementById('review-list-container');
+        container.innerHTML = '';
+
+        questions.forEach((q, idx) => {
+            const userAns = userAnswers[idx];
+            const isCorrect = (userAns === q.correct);
+
+            if (filter === 'wrong' && isCorrect) return; // skip correct answers if filtered
+
+            const reviewCard = document.createElement('div');
+            reviewCard.className = "pt-6 first:pt-0 pb-2 space-y-4";
+
+            // Status Badge
+            const statusBadge = isCorrect 
+                ? `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/10">Benar</span>`
+                : `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 ring-1 ring-inset ring-rose-600/10">Salah / Kosong</span>`;
+
+            // Category tag
+            const categoryBadge = `<span class="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-1">${q.category} • ${q.trickBadge}</span>`;
+
+            // Display of user answer vs actual answer
+            const userAnsText = userAns !== null ? q.options[userAns] : "Tidak Dijawab";
+            const correctAnsText = q.options[q.correct];
+
+            reviewCard.innerHTML = `
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        ${categoryBadge}
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-slate-400 font-medium">Soal #${q.id}</span>
+                            ${statusBadge}
+                        </div>
+                    </div>
+                    <h4 class="text-slate-900 font-semibold text-sm leading-relaxed">${q.question}</h4>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                    <div class="p-3 rounded-xl border ${isCorrect ? 'bg-emerald-50/25 border-emerald-100' : 'bg-rose-50/25 border-rose-100'}">
+                        <span class="block text-slate-400 font-bold mb-1 uppercase tracking-wider text-[9px]">Jawaban Anda:</span>
+                        <span class="${isCorrect ? 'text-emerald-700 font-semibold' : 'text-rose-700 font-semibold'}">${userAnsText}</span>
+                    </div>
+                    <div class="p-3 rounded-xl border border-slate-100 bg-slate-50/50">
+                        <span class="block text-slate-400 font-bold mb-1 uppercase tracking-wider text-[9px]">Kunci Jawaban:</span>
+                        <span class="text-slate-800 font-semibold">${correctAnsText}</span>
+                    </div>
+                </div>
+
+                <div class="bg-indigo-50/20 border border-indigo-100/50 p-4 rounded-2xl">
+                    <div class="flex items-center gap-1.5 mb-2 text-indigo-700 font-bold text-xs">
+                        <span>💡 Penjelasan Trik Cepat:</span>
+                    </div>
+                    <p class="text-slate-600 text-xs sm:text-sm leading-relaxed whitespace-pre-wrap">${q.explanation}</p>
+                </div>
+            `;
+
+            container.appendChild(reviewCard);
+        });
+
+        triggerMathRender(container);
+
+        if (container.children.length === 0) {
+            container.innerHTML = `
+                <div class="text-center py-10">
+                    <span class="text-3xl">🎉</span>
+                    <h4 class="text-slate-900 font-extrabold mt-2">Hebat! Tidak Ada Jawaban Salah</h4>
+                    <p class="text-xs text-slate-400">Pertahankan performa sempurna ini pada kuis-kuis selanjutnya!</p>
+                </div>
+            `;
+        }
+    }
+
+    // Reset All State back to Welcome View
+    function restartQuiz() {
+        playSound('click');
+        currentQuestionIdx = 0;
+        userAnswers = Array(30).fill(null);
+        doubtStatus = Array(30).fill(false);
+        doubtFilterActive = false;
+        if (timer) clearInterval(timer);
+        
+        document.getElementById('result-screen').classList.add('hidden');
+        document.getElementById('welcome-screen').classList.remove('hidden');
+    }
+</script>
+</body>
+</html>
