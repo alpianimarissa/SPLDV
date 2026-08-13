@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mastery SPLDV: Interaktif & Trik Cepat</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- MathJax Configuration & Script for rendering math formulas -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .tab-btn.active {
+            border-bottom-color: #4f46e5;
+            color: #4f46e5;
+            font-weight: 700;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between">
+
+    <!-- Header / Navigation -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-3">
+                    <div class="bg-indigo-600 text-white p-2 rounded-xl shadow-md">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-slate-900 tracking-tight">SPLDV Interactive Master</h1>
+                        <p class="text-xs text-slate-500 font-medium">Konsep Dasar, Trik Cepat, & Aplikasi Nyata</p>
+                    </div>
+                </div>
+
+                <!-- Progress Indicator -->
+                <div class="hidden md:flex items-center gap-4">
+                    <div class="text-right">
+                        <span class="text-xs font-semibold text-slate-400 block uppercase tracking-wider">Kemajuan Modul</span>
+                        <span id="progress-text" class="text-sm font-bold text-indigo-600">0% Selesai</span>
+                    </div>
+                    <div class="w-32 bg-slate-200 rounded-full h-2.5 overflow-hidden">
+                        <div id="progress-bar" class="bg-indigo-600 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Navigation -->
+            <nav class="flex space-x-2 sm:space-x-8 overflow-x-auto custom-scrollbar border-t border-slate-100 text-sm font-medium">
+                <button onclick="switchTab('tujuan')" id="tab-tujuan" class="tab-btn active py-3 px-2 border-b-2 border-transparent text-slate-600 hover:text-indigo-600 whitespace-nowrap transition-all">
+                    🎯 1. Tujuan
+                </button>
+                <button onclick="switchTab('warmup')" id="tab-warmup" class="tab-btn py-3 px-2 border-b-2 border-transparent text-slate-600 hover:text-indigo-600 whitespace-nowrap transition-all">
+                    🔥 2. Warm-Up (8 Soal)
+                </button>
+                <button onclick="switchTab('koneksi')" id="tab-koneksi" class="tab-btn py-3 px-2 border-b-2 border-transparent text-slate-600 hover:text-indigo-600 whitespace-nowrap transition-all">
+                    🌐 3. Koneksi Nyata
+                </button>
+                <button onclick="switchTab('materi')" id="tab-materi" class="tab-btn py-3 px-2 border-b-2 border-transparent text-slate-600 hover:text-indigo-600 whitespace-nowrap transition-all">
+                    📚 4. Materi & Trik Cepat
+                </button>
+                <button onclick="switchTab('latihan')" id="tab-latihan" class="tab-btn py-3 px-2 border-b-2 border-transparent text-slate-600 hover:text-indigo-600 whitespace-nowrap transition-all">
+                    ✏️ 5. Latihan Terbimbing
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow">
+
+        <!-- SECTION 1: TUJUAN PEMBELAJARAN -->
+        <section id="sec-tujuan" class="tab-content block space-y-6">
+            <div class="bg-gradient-to-r from-indigo-600 to-violet-700 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
+                <div class="relative z-10 max-w-3xl">
+                    <span class="bg-white/20 text-white text-xs px-3 py-1 rounded-full font-semibold uppercase tracking-wider">Modul Pembelajaran Interaktif</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold mt-3 tracking-tight">Kuasai SPLDV dengan Strategi Modern & Trik 5 Detik</h2>
+                    <p class="mt-4 text-indigo-100 text-base sm:text-lg leading-relaxed">
+                        Modul ini dirancang agar kamu tidak hanya menghafal prosedur, tetapi memahami logika di balik Sistem Persamaan Linear Dua Variabel (SPLDV), mengenali pola soal cerita dengan instan, dan menyelesaikan soal-soal khusus secara kilat.
+                    </p>
+                    <div class="mt-6 flex flex-wrap gap-3">
+                        <button onclick="switchTab('warmup')" class="bg-white text-indigo-600 font-bold px-6 py-3 rounded-xl shadow-lg hover:bg-indigo-50 transition transform active:scale-95">
+                            Mulai Warm-Up Sekarang →
+                        </button>
+                    </div>
+                </div>
+                <div class="absolute right-0 bottom-0 opacity-10 transform translate-x-10 translate-y-10 pointer-events-none">
+                    <svg class="w-96 h-96 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Objectives Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center font-bold text-xl mb-4">1</div>
+                    <h3 class="font-bold text-slate-800 text-lg mb-2">Konsep & Soal Biasa</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">Memahami bentuk umum SPLDV, metode eliminasi, substitusi, serta metode campuran secara sistematis.</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center font-bold text-xl mb-4">2</div>
+                    <h3 class="font-bold text-slate-800 text-lg mb-2">Soal Kaki Hewan</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">Menyelesaikan soal klasik jumlah kepala dan kaki dua jenis hewan (berkaki 2 vs berkaki 4) beserta trik formula cepatnya.</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center font-bold text-xl mb-4">3</div>
+                    <h3 class="font-bold text-slate-800 text-lg mb-2">Roda & Tarif Parkir</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">Menganalisis soal cerita kendaraan (motor & mobil), jumlah roda, dan menghitung total pendapatan retribusi parkir.</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center font-bold text-xl mb-4">4</div>
+                    <h3 class="font-bold text-slate-800 text-lg mb-2">Simetris & Trik Cepat</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">Menguasai trik persamaan berkoefisien simetris ($ax+by=c$ & $bx+ay=d$) dan algoritma identifikasi kilat 5 detik.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: WARM-UP (8 SOAL INTERAKTIF) -->
+        <section id="sec-warmup" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-6 mb-6">
+                    <div>
+                        <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full uppercase tracking-wide">Pemanasan Otak</span>
+                        <h2 class="text-2xl font-bold text-slate-900 mt-1">Diagnostik Awal: 8 Soal Warm-Up</h2>
+                        <p class="text-slate-500 text-sm">Uji kesiapan dasar aljabar kamu sebelum masuk ke materi utama SPLDV.</p>
+                    </div>
+                    <div class="bg-slate-100 px-4 py-2 rounded-2xl flex items-center gap-3">
+                        <span class="text-sm text-slate-600 font-medium">Skor Pemanasan:</span>
+                        <span id="warmup-score" class="text-2xl font-black text-indigo-600">0 / 8</span>
+                    </div>
+                </div>
+
+                <!-- Warm-up Questions Container -->
+                <div id="warmup-questions-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Dynamic JS Inject Warmup questions -->
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-slate-100 flex justify-between items-center">
+                    <span id="warmup-status" class="text-sm font-medium text-slate-500">Jawab semua pertanyaan di atas.</span>
+                    <button onclick="switchTab('koneksi')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2.5 rounded-xl transition shadow">
+                        Lanjut ke Koneksi Nyata →
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: KONEKSI NYATA -->
+        <section id="sec-koneksi" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+                <div class="max-w-3xl">
+                    <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full uppercase tracking-wide">Mengapa SPLDV Penting?</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2">Penerapan SPLDV dalam Dunia Nyata</h2>
+                    <p class="text-slate-600 mt-2 leading-relaxed">
+                        SPLDV bukan sekadar simbol $x$ dan $y$. SPLDV adalah alat bantu matematika yang digunakan oleh petugas parkir, peternak, pemilik toko, hingga analisis keuangan untuk menyibak misteri angka tanpa perlu membongkar satu per satu secara manual.
+                    </p>
+                </div>
+
+                <!-- Interactive Scenario Simulator -->
+                <div class="mt-8 bg-slate-900 rounded-3xl p-6 sm:p-8 text-white relative overflow-hidden">
+                    <h3 class="text-xl font-bold text-emerald-400 mb-2">Simulasi Detektif Parkir & Peternakan</h3>
+                    <p class="text-slate-300 text-sm mb-6">Ubah slider di bawah untuk melihat bagaimana perubahan jumlah objek secara visual membentuk dua variabel berbeda.</p>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- Interactive Vehicle Simulator -->
+                        <div class="bg-slate-800/80 p-5 rounded-2xl border border-slate-700">
+                            <h4 class="font-bold text-indigo-300 mb-3 flex items-center justify-between">
+                                <span>🅿️ Skenario Parkir Supermarket</span>
+                                <span class="text-xs font-normal text-slate-400">Motor (2 Roda) vs Mobil (4 Roda)</span>
+                            </h4>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="text-xs text-slate-300 flex justify-between">
+                                        <span>Jumlah Motor ($x$): <strong id="sim-motor-val" class="text-indigo-400 text-sm">15</strong></span>
+                                        <span>@ Rp 2.000</span>
+                                    </label>
+                                    <input type="range" id="sim-motor" min="1" max="50" value="15" class="w-full accent-indigo-500 mt-1" oninput="updateRealWorldSim()">
+                                </div>
+                                <div>
+                                    <label class="text-xs text-slate-300 flex justify-between">
+                                        <span>Jumlah Mobil ($y$): <strong id="sim-mobil-val" class="text-indigo-400 text-sm">10</strong></span>
+                                        <span>@ Rp 5.000</span>
+                                    </label>
+                                    <input type="range" id="sim-mobil" min="1" max="50" value="10" class="w-full accent-indigo-500 mt-1" oninput="updateRealWorldSim()">
+                                </div>
+
+                                <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-700/80 text-xs space-y-2 font-mono">
+                                    <div class="flex justify-between text-slate-300">
+                                        <span>Persamaan 1 (Total Kendaraan):</span>
+                                        <span id="eq-v-1" class="text-emerald-400 font-bold">15 + 10 = 25</span>
+                                    </div>
+                                    <div class="flex justify-between text-slate-300">
+                                        <span>Persamaan 2 (Total Roda):</span>
+                                        <span id="eq-v-2" class="text-amber-400 font-bold">2(15) + 4(10) = 70</span>
+                                    </div>
+                                    <div class="pt-2 border-t border-slate-800 flex justify-between text-white font-sans text-sm font-bold">
+                                        <span>Total Pendapatan Parkir:</span>
+                                        <span id="total-parkir-income" class="text-emerald-400">Rp 80.000</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Interactive Animal Simulator -->
+                        <div class="bg-slate-800/80 p-5 rounded-2xl border border-slate-700">
+                            <h4 class="font-bold text-amber-300 mb-3 flex items-center justify-between">
+                                <span>🐓 Skenario Peternakan</span>
+                                <span class="text-xs font-normal text-slate-400">Ayam (2 Kaki) vs Sapi (4 Kaki)</span>
+                            </h4>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="text-xs text-slate-300 flex justify-between">
+                                        <span>Jumlah Ayam ($x$): <strong id="sim-ayam-val" class="text-amber-400 text-sm">20</strong></span>
+                                        <span>2 Kaki / ekor</span>
+                                    </label>
+                                    <input type="range" id="sim-ayam" min="1" max="50" value="20" class="w-full accent-amber-500 mt-1" oninput="updateRealWorldSim()">
+                                </div>
+                                <div>
+                                    <label class="text-xs text-slate-300 flex justify-between">
+                                        <span>Jumlah Sapi ($y$): <strong id="sim-sapi-val" class="text-amber-400 text-sm">8</strong></span>
+                                        <span>4 Kaki / ekor</span>
+                                    </label>
+                                    <input type="range" id="sim-sapi" min="1" max="50" value="8" class="w-full accent-amber-500 mt-1" oninput="updateRealWorldSim()">
+                                </div>
+
+                                <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-700/80 text-xs space-y-2 font-mono">
+                                    <div class="flex justify-between text-slate-300">
+                                        <span>Persamaan 1 (Total Kepala):</span>
+                                        <span id="eq-a-1" class="text-emerald-400 font-bold">20 + 8 = 28</span>
+                                    </div>
+                                    <div class="flex justify-between text-slate-300">
+                                        <span>Persamaan 2 (Total Kaki):</span>
+                                        <span id="eq-a-2" class="text-amber-400 font-bold">2(20) + 4(8) = 72</span>
+                                    </div>
+                                    <div class="pt-2 border-t border-slate-800 text-slate-400 font-sans text-xs italic">
+                                        💡 Dalam soal nyata, kamu diberikan "Total Kepala" & "Total Kaki", lalu diminta menebak jumlah masing-masing hewan!
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end pt-4">
+                    <button onclick="switchTab('materi')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2.5 rounded-xl transition shadow">
+                        Pelajari Konsep & Trik Cepat →
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: MATERI INTI & TRIK CEPAT -->
+        <section id="sec-materi" class="tab-content hidden space-y-6">
+            <!-- Sub Navigation for Modules -->
+            <div class="flex flex-wrap gap-2 border-b border-slate-200 pb-3">
+                <button onclick="switchMateriSub('biasa')" id="subtab-biasa" class="subtab-btn bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-semibold transition">
+                    1. Soal Biasa & Konsep
+                </button>
+                <button onclick="switchMateriSub('hewan')" id="subtab-hewan" class="subtab-btn bg-slate-100 text-slate-700 hover:bg-slate-200 px-4 py-2 rounded-xl text-sm font-semibold transition">
+                    2. Jumlah Kaki Hewan
+                </button>
+                <button onclick="switchMateriSub('roda')" id="subtab-roda" class="subtab-btn bg-slate-100 text-slate-700 hover:bg-slate-200 px-4 py-2 rounded-xl text-sm font-semibold transition">
+                    3. Roda & Tarif Parkir
+                </button>
+                <button onclick="switchMateriSub('simetris')" id="subtab-simetris" class="subtab-btn bg-slate-100 text-slate-700 hover:bg-slate-200 px-4 py-2 rounded-xl text-sm font-semibold transition">
+                    4. Persamaan Simetris
+                </button>
+                <button onclick="switchMateriSub('identifikasi')" id="subtab-identifikasi" class="subtab-btn bg-slate-100 text-slate-700 hover:bg-slate-200 px-4 py-2 rounded-xl text-sm font-semibold transition">
+                    5. Identifikasi & Trik 5 Detik
+                </button>
+            </div>
+
+            <!-- SUB-MODULE 1: SOAL BIASA -->
+            <div id="sub-biasa" class="materi-sub-content space-y-6">
+                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+                    <h3 class="text-2xl font-bold text-slate-900">1. Konsep Dasar & Soal Biasa (Standard)</h3>
+                    <p class="text-slate-600 mt-2 leading-relaxed">
+                        Bentuk umum SPLDV terdiri dari dua persamaan linear dengan dua variabel $x$ dan $y$:
+                    </p>
+                    <div class="my-4 p-4 bg-slate-50 border border-slate-200 rounded-2xl text-center text-lg font-bold text-indigo-700">
+                        $$\begin{cases} a_1 x + b_1 y = c_1 \\ a_2 x + b_2 y = c_2 \end{cases}$$
+                    </div>
+
+                    <!-- Step-by-Step Example Box -->
+                    <div class="mt-6 bg-indigo-50/50 p-6 rounded-2xl border border-indigo-100">
+                        <h4 class="font-bold text-indigo-900 text-lg mb-3">📌 Contoh Soal Biasa & Penyelesaian Lengkap</h4>
+                        <p class="text-slate-700 text-sm mb-3">Tentukan nilai $x$ dan $y$ dari sistem persamaan berikut:</p>
+                        <div class="bg-white p-3 rounded-xl border border-slate-200 mb-4 font-mono text-sm text-center font-bold">
+                            (1) $2x + 3y = 12$ <br>
+                            (2) $x - y = 1$
+                        </div>
+
+                        <div class="space-y-4 text-sm text-slate-700">
+                            <div class="bg-white p-4 rounded-xl border border-slate-200">
+                                <span class="font-bold text-indigo-600 block mb-1">Langkah 1: Eliminasi salah satu variabel (misal $y$)</span>
+                                Samakan koefisien $y$. Kalikan persamaan (2) dengan 3:
+                                <br>Persamaan (2) $\times 3 \implies 3x - 3y = 3$.
+                                <br>Jumlahkan dengan persamaan (1):
+                                <div class="mt-2 font-mono bg-slate-50 p-2 rounded text-xs">
+                                    &nbsp;&nbsp;$2x + 3y = 12$<br>
+                                    +$3x - 3y = 3$<br>
+                                    ───────────────<br>
+                                    &nbsp;&nbsp;$5x = 15 \implies x = 3$
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-4 rounded-xl border border-slate-200">
+                                <span class="font-bold text-indigo-600 block mb-1">Langkah 2: Substitusi nilai $x$ ke salah satu persamaan</span>
+                                Masukkan $x = 3$ ke persamaan (2):
+                                <br>$3 - y = 1 \implies -y = 1 - 3 \implies -y = -2 \implies y = 2$.
+                            </div>
+
+                            <div class="bg-emerald-50 text-emerald-800 p-3 rounded-xl font-semibold text-center border border-emerald-200">
+                                HP = {(3, 2)}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUB-MODULE 2: SOAL HIMPUNAN/KAKI HEWAN -->
+            <div id="sub-hewan" class="materi-sub-content hidden space-y-6">
+                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+                    <span class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full">Tipe Soal Cerita #1</span>
+                    <h3 class="text-2xl font-bold text-slate-900 mt-2">2. Jumlah Kaki 2 Jenis Hewan</h3>
+                    <p class="text-slate-600 mt-2 leading-relaxed">
+                        Ciri khas tipe ini: Selalu ada hewan <b>berkaki 2</b> (Ayam, Bebek, Burung) dan hewan <b>berkaki 4</b> (Kambing, Sapi, Kucing).
+                    </p>
+
+                    <!-- Formula breakdown -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
+                        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                            <h4 class="font-bold text-slate-800 mb-2">Pemisalan Standar:</h4>
+                            <ul class="text-sm text-slate-600 space-y-2 list-disc list-inside">
+                                <li>$x$ = Jumlah Hewan Berkaki 2 (misal Ayam)</li>
+                                <li>$y$ = Jumlah Hewan Berkaki 4 (misal Kambing)</li>
+                                <li><b>Persamaan Kepala:</b> $x + y = \text{Total Kepala}$</li>
+                                <li><b>Persamaan Kaki:</b> $2x + 4y = \text{Total Kaki}$</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-amber-50 p-5 rounded-2xl border border-amber-200">
+                            <h4 class="font-bold text-amber-900 mb-2 flex items-center gap-2">
+                                ⚡ Trik Rumus Cepat Kaki Hewan
+                            </h4>
+                            <p class="text-xs text-amber-800 mb-3">Langsung dapatkan jumlah hewan berkaki 4 ($y$) dalam sekali hitung!</p>
+                            <div class="bg-white p-3 rounded-xl text-center font-bold text-amber-700 text-sm shadow-sm border border-amber-300">
+                                $$y = \frac{\text{Total Kaki} - 2 \times (\text{Total Kepala})}{2}$$
+                            </div>
+                            <p class="text-xs text-amber-700 mt-2">Setelah $y$ didapat, jumlah hewan berkaki 2 ($x$) $= \text{Total Kepala} - y$.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step by Step Worked Example -->
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                        <h4 class="font-bold text-slate-800 text-base mb-3"> Contoh Soal Lengkap:</h4>
+                        <p class="text-sm text-slate-700 mb-4">
+                            Di sebuah kandang terdapat <b>40 ekor</b> hewan yang terdiri dari ayam dan kambing. Jika jumlah seluruh kaki hewan adalah <b>112 buah</b>, tentukan banyak masing-masing ayam dan kambing!
+                        </p>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                            <!-- Cara Biasa -->
+                            <div class="bg-white p-4 rounded-xl border border-slate-200 text-xs space-y-2">
+                                <span class="font-bold text-indigo-600 text-sm block">Cara Konvensional (Eliminasi):</span>
+                                <p>$x + y = 40 \quad (\times 2) \implies 2x + 2y = 80$</p>
+                                <p>$2x + 4y = 112 \quad (\times 1) \implies 2x + 4y = 112$</p>
+                                <p class="text-slate-400">────────────────────────────── (—)</p>
+                                <p class="font-bold text-slate-800">$-2y = -32 \implies y = 16 \text{ ekor kambing}$</p>
+                                <p>$x = 40 - 16 = 24 \text{ ekor ayam}$</p>
+                            </div>
+
+                            <!-- Cara Cepat -->
+                            <div class="bg-amber-100/60 p-4 rounded-xl border border-amber-200 text-xs space-y-2">
+                                <span class="font-bold text-amber-800 text-sm block">Cara Cepat (5 Detik):</span>
+                                <p>Hewan kaki 4 (Kambing):</p>
+                                <p class="font-bold text-slate-900">$y = \frac{112 - 2(40)}{2} = \frac{112 - 80}{2} = \frac{32}{2} = 16$</p>
+                                <p>Hewan kaki 2 (Ayam):</p>
+                                <p class="font-bold text-slate-900">$x = 40 - 16 = 24$</p>
+                                <span class="inline-block bg-amber-200 text-amber-900 font-bold px-2 py-0.5 rounded mt-1">Sangat hemat waktu!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUB-MODULE 3: RODA & TARIF PARKIR -->
+            <div id="sub-roda" class="materi-sub-content hidden space-y-6">
+                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+                    <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-3 py-1 rounded-full">Tipe Soal Cerita #2</span>
+                    <h3 class="text-2xl font-bold text-slate-900 mt-2">3. Roda Kendaraan & Pendapatan Parkir</h3>
+                    <p class="text-slate-600 mt-2 leading-relaxed">
+                        Prinsip matematika soal roda kendaraan sama persis dengan soal kaki hewan: Sepeda motor memiliki <b>2 roda</b> dan Mobil memiliki <b>4 roda</b>. Namun sering dikembangkan dengan menghitung total tarif parkir!
+                    </p>
+
+                    <!-- Fast Trick Formula -->
+                    <div class="bg-indigo-50 border border-indigo-200 p-5 rounded-2xl my-6">
+                        <h4 class="font-bold text-indigo-900 mb-2">⚡ Trik Rumus Cepat Parkiran:</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-white p-4 rounded-xl border border-indigo-100">
+                                <span class="text-xs text-slate-500 block">Jumlah Mobil ($y$, Roda 4):</span>
+                                <span class="text-sm font-bold text-indigo-700">$$y = \frac{\text{Total Roda} - 2 \times (\text{Total Kendaraan})}{2}$$</span>
+                            </div>
+                            <div class="bg-white p-4 rounded-xl border border-indigo-100">
+                                <span class="text-xs text-slate-500 block">Total Pendapatan ($R$):</span>
+                                <span class="text-sm font-bold text-indigo-700">$$R = (x \times \text{Tarif Motor}) + (y \times \text{Tarif Mobil})$$</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Example -->
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                        <h4 class="font-bold text-slate-800 text-base mb-2"> Contoh Soal Lengkap:</h4>
+                        <p class="text-sm text-slate-700 mb-4">
+                            Di sebuah tempat parkir terdapat <b>90 kendaraan</b> yang terdiri dari sepeda motor dan mobil. Jumlah roda seluruhnya ada <b>248 buah</b>. Biaya parkir motor Rp 3.000 dan mobil Rp 7.000. Berapa total pendapatan parkir tersebut?
+                        </p>
+
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 text-sm space-y-3">
+                            <div>
+                                <span class="font-bold text-indigo-600">Langkah 1: Hitung Jumlah Mobil ($y$) dengan Trik Cepat</span>
+                                <p class="font-mono bg-slate-50 p-2 rounded mt-1 text-xs">$y = \frac{248 - 2(90)}{2} = \frac{248 - 180}{2} = \frac{68}{2} = 34 \text{ mobil}$</p>
+                            </div>
+                            <div>
+                                <span class="font-bold text-indigo-600">Langkah 2: Hitung Jumlah Motor ($x$)</span>
+                                <p class="font-mono bg-slate-50 p-2 rounded mt-1 text-xs">$x = 90 - 34 = 56 \text{ motor}$</p>
+                            </div>
+                            <div>
+                                <span class="font-bold text-indigo-600">Langkah 3: Hitung Total Pendapatan</span>
+                                <p class="font-mono bg-emerald-50 p-2 rounded mt-1 text-xs text-emerald-800 font-bold">
+                                    Total = (56 × Rp 3.000) + (34 × Rp 7.000) = Rp 168.000 + Rp 238.000 = Rp 406.000
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUB-MODULE 4: PERSAMAAN SIMETRIS -->
+            <div id="sub-simetris" class="materi-sub-content hidden space-y-6">
+                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+                    <span class="bg-purple-100 text-purple-800 text-xs font-bold px-3 py-1 rounded-full">Trik Khusus Ulangan / Ujian</span>
+                    <h3 class="text-2xl font-bold text-slate-900 mt-2">4. Persamaan Berkoefisien Simetris (Tertukar)</h3>
+                    <p class="text-slate-600 mt-2 leading-relaxed">
+                        Pernahkah kamu melihat soal SPLDV dengan angka-angka koefisien yang besar tapi saling tertukar? 
+                    </p>
+                    <div class="my-4 p-4 bg-purple-50 border border-purple-200 rounded-2xl text-center text-lg font-bold text-purple-900">
+                        $$\begin{cases} \mathbf{a}x + \mathbf{b}y = c \\ \mathbf{b}x + \mathbf{a}y = d \end{cases}$$
+                    </div>
+
+                    <div class="bg-amber-50 border border-amber-200 p-5 rounded-2xl mb-6">
+                        <h4 class="font-bold text-amber-900 mb-2">⚠️ JANGAN gunakan eliminasi perkalian biasa!</h4>
+                        <p class="text-sm text-amber-800">
+                            Mengalikan dengan angka besar akan membuang waktu dan memicu salah hitung. Gunakan <b>Trik Penjumlahan & Pengurangan Langsung</b>!
+                        </p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
+                            <div class="bg-white p-3 rounded-xl text-xs font-bold text-slate-800 border border-amber-200">
+                                1️⃣ JUMLAHKAN kedua persamaan <br>
+                                $\implies (a+b)x + (a+b)y = c+d$ <br>
+                                $\implies \mathbf{x + y = \text{sesuatu}}$
+                            </div>
+                            <div class="bg-white p-3 rounded-xl text-xs font-bold text-slate-800 border border-amber-200">
+                                2️⃣ KURANGKAN kedua persamaan <br>
+                                $\implies (a-b)x - (a-b)y = c-d$ <br>
+                                $\implies \mathbf{x - y = \text{sesuatu}}$
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Worked Example -->
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                        <h4 class="font-bold text-slate-800 text-base mb-3"> Contoh Soal Simetris Super Cepat:</h4>
+                        <p class="text-sm text-slate-700 mb-3">Selesaikan SPLDV berikut:</p>
+                        <div class="bg-white p-3 rounded-xl border border-slate-200 font-mono text-center font-bold text-sm mb-4">
+                            (1) $21x + 19y = 122$ <br>
+                            (2) $19x + 21y = 118$
+                        </div>
+
+                        <div class="space-y-3 text-sm text-slate-700">
+                            <div class="bg-white p-4 rounded-xl border border-slate-200">
+                                <span class="font-bold text-purple-700">Langkah A: Jumlahkan (1) + (2)</span>
+                                <p class="font-mono text-xs mt-1">$40x + 40y = 240 \quad (\text{Bagi 40}) \implies \mathbf{x + y = 6}$</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-xl border border-slate-200">
+                                <span class="font-bold text-purple-700">Langkah B: Kurangkan (1) - (2)</span>
+                                <p class="font-mono text-xs mt-1">$2x - 2y = 4 \quad (\text{Bagi 2}) \implies \mathbf{x - y = 2}$</p>
+                            </div>
+                            <div class="bg-purple-50 p-4 rounded-xl border border-purple-200 font-bold text-purple-900">
+                                Langkah C: Selesaikan sistem baru yang sangat sederhana!
+                                <div class="font-mono text-xs mt-2 font-normal">
+                                    $x + y = 6$<br>
+                                    $x - y = 2$<br>
+                                    ────────── (+)<br>
+                                    $2x = 8 \implies \mathbf{x = 4}$<br>
+                                    $4 + y = 6 \implies \mathbf{y = 2}$
+                                </div>
+                                <p class="text-xs text-emerald-600 mt-2 font-sans">Tanpa perlu mengalikan angka puluhan sama sekali! 🎉</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUB-MODULE 5: IDENTIFIKASI & TRIK 5 DETIK -->
+            <div id="sub-identifikasi" class="materi-sub-content hidden space-y-6">
+                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+                    <span class="bg-rose-100 text-rose-800 text-xs font-bold px-3 py-1 rounded-full">Strategi Ujian Nasional / SNBT</span>
+                    <h3 class="text-2xl font-bold text-slate-900 mt-2">5. Identifikasi Cepat & Formula Determinan / Silang</h3>
+                    <p class="text-slate-600 mt-2 leading-relaxed">
+                        Bagaimana cara mengenali bahwa suatu soal cerita adalah SPLDV hanya dalam 3 detik?
+                    </p>
+
+                    <!-- Checklist Identifikasi -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-6">
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                            <span class="text-rose-600 font-bold text-lg block mb-1">Ciri 1</span>
+                            <p class="text-xs text-slate-600">Ada <b>DUA jenis benda/objek</b> yang tidak diketahui harganya atau jumlahnya (misal: Buku & Pensil, Tiket Dewasa & Anak).</p>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                            <span class="text-rose-600 font-bold text-lg block mb-1">Ciri 2</span>
+                            <p class="text-xs text-slate-600">Diberikan <b>DUA kondisi/informasi total</b> (misal: Ani beli 2 buku + 3 pensil = 15 ribu; Budi beli 1 buku + 1 pensil = 7 ribu).</p>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                            <span class="text-rose-600 font-bold text-lg block mb-1">Ciri 3</span>
+                            <p class="text-xs text-slate-600">Ditanyakan <b>kondisi KETIGA</b> (misal: Berapa yang harus dibayar Caca jika membeli 3 buku + 2 pensil?).</p>
+                        </div>
+                    </div>
+
+                    <!-- Cramer / Determinant Fast Trick -->
+                    <div class="bg-rose-50 border border-rose-200 p-6 rounded-2xl">
+                        <h4 class="font-bold text-rose-900 text-base mb-2">⚡ Trik Determinan Silang (Cramer Shortcut)</h4>
+                        <p class="text-xs text-rose-800 mb-4">Untuk mencari nilai $x$ secara langsung tanpa eliminasi langkah demi langkah:</p>
+                        
+                        <div class="bg-white p-4 rounded-xl border border-rose-200 text-center font-mono text-sm font-bold text-slate-800">
+                            $$x = \frac{c_1 b_2 - c_2 b_1}{a_1 b_2 - a_2 b_1}$$
+                        </div>
+
+                        <div class="mt-4 p-4 bg-white/80 rounded-xl text-xs text-slate-700 leading-relaxed">
+                            💡 <b>Tips Ingat Mudah:</b> Sebut saja rumus ini <i>"Perkalian Silang Bawah dikurangi Atas"</i>. Sangat berguna untuk soal pilihan ganda agar hemat kertas buram!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center pt-4">
+                <span class="text-xs text-slate-400">Pahami setiap tipe materi sebelum melanjut.</span>
+                <button onclick="switchTab('latihan')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2.5 rounded-xl transition shadow">
+                    Mulai Latihan Terbimbing →
+                </button>
+            </div>
+        </section>
+
+        <!-- SECTION 5: LATIHAN SOAL TERBIMBING -->
+        <section id="sec-latihan" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-6 mb-6">
+                    <div>
+                        <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full uppercase tracking-wide">Latihan Terbimbing Interaktif</span>
+                        <h2 class="text-2xl font-bold text-slate-900 mt-1">Uji Pemahaman & Bimbingan Step-by-Step</h2>
+                        <p class="text-slate-500 text-sm">Selesaikan soal-soal berikut. Kamu bisa menggunakan tombol Petunjuk jika mengalami kesulitan!</p>
+                    </div>
+                    <div class="flex items-center gap-2 bg-slate-100 p-2 rounded-2xl">
+                        <span class="text-xs font-semibold text-slate-500 px-2">Skor Latihan:</span>
+                        <span id="practice-score" class="text-xl font-bold text-indigo-600">0 / 500</span>
+                    </div>
+                </div>
+
+                <!-- Guided Exercises Container -->
+                <div id="guided-practice-container" class="space-y-8">
+                    <!-- Dynamic Practice Cards rendered via JS -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-6 mt-12 text-center text-xs text-slate-400">
+        <div class="max-w-7xl mx-auto px-4">
+            <p>© 2026 Interactive SPLDV Learning Module • Matematika SMP/SMA Interaktif</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Global Application State
+        const state = {
+            warmupAnswers: {},
+            warmupScore: 0,
+            practiceScore: 0,
+            visitedTabs: new Set(['tujuan']),
+        };
+
+        // Warmup Questions Data
+        const warmupQuestions = [
+            {
+                id: 1,
+                q: "Jika $2x = 10$, berapakah nilai dari $x$?",
+                options: ["2", "5", "8", "20"],
+                correct: 1,
+                exp: "Bagi kedua ruas dengan 2: $x = 10 / 2 = 5$."
+            },
+            {
+                id: 2,
+                q: "Manakah yang merupakan bentuk Persamaan Linear Dua Variabel?",
+                options: ["$x^2 + y = 5$", "$2x + 3y = 12$", "$x + y + z = 6$", "$xy = 8$"],
+                correct: 1,
+                exp: "SPLDV memiliki variabel berpangkat satu dan tepat ada 2 variabel ($x$ dan $y$)."
+            },
+            {
+                id: 3,
+                q: "Jumlah kaki seekor ayam dan seekor kambing adalah ...",
+                options: ["4 kaki", "6 kaki", "8 kaki", "2 kaki"],
+                correct: 1,
+                exp: "Ayam memiliki 2 kaki + Kambing memiliki 4 kaki = Total 6 kaki."
+            },
+            {
+                id: 4,
+                q: "Sebuah mobil memiliki 4 roda dan motor memiliki 2 roda. Berapa total roda dari 3 mobil dan 2 motor?",
+                options: ["12 roda", "14 roda", "16 roda", "10 roda"],
+                correct: 2,
+                exp: "$(3 \\times 4) + (2 \\times 2) = 12 + 4 = 16$ roda."
+            },
+            {
+                id: 5,
+                q: "Hasil dari $3(x + 2)$ adalah ...",
+                options: ["$3x + 2$", "$3x + 6$", "$x + 6$", "$6x$"],
+                correct: 1,
+                exp: "Gunakan sifat distributif: $3 \\times x + 3 \\times 2 = 3x + 6$."
+            },
+            {
+                id: 6,
+                q: "Jika $x + y = 10$ dan $x = 4$, berapakah nilai $y$?",
+                options: ["4", "5", "6", "14"],
+                correct: 2,
+                exp: "Substitusi $x = 4$: $4 + y = 10 \\implies y = 10 - 4 = 6$."
+            },
+            {
+                id: 7,
+                q: "Jika $x - y = 3$ dan $x + y = 7$, berapakah nilai $x$ jika kedua persamaan dijumlahkan?",
+                options: ["$2x = 10 \\implies x = 5$", "$2y = 10 \\implies y = 5$", "$x = 4$", "$x = 10$"],
+                correct: 0,
+                exp: "$(x-y) + (x+y) = 3+7 \\implies 2x = 10 \\implies x = 5$."
+            },
+            {
+                id: 8,
+                q: "Suatu parkiran menampung $x$ motor dan $y$ mobil. Jika tarif motor Rp2.000 dan mobil Rp5.000, bentuk pendapatan totalnya adalah ...",
+                options: ["$2000x + 5000y$", "$7000(x+y)$", "$5000x + 2000y$", "$2000 + 5000$"],
+                correct: 0,
+                exp: "Total tarif = (Tarif Motor $\\times x$) + (Tarif Mobil $\\times y$) = $2000x + 5000y$."
+            }
+        ];
+
+        // Guided Practice Data
+        const practiceData = [
+            {
+                id: 1,
+                title: "Soal 1: Soal Biasa (Standard)",
+                badge: "Dasar Aljabar",
+                badgeColor: "bg-blue-100 text-blue-800",
+                problem: "Diketahui sistem persamaan linear dua variabel:<br><b>(1) $x + 2y = 8$</b><br><b>(2) $2x - y = 1$</b><br>Tentukan nilai dari $x + y$!",
+                hints: [
+                    "Petunjuk 1: Eliminasi variabel $y$ dengan mengalikan Persamaan (2) dengan angka 2.",
+                    "Petunjuk 2: Persamaan (2) $\\times 2 \\implies 4x - 2y = 2$. Tambahkan dengan Persamaan (1) untuk mendapatkan $x = 2$.",
+                    "Petunjuk 3: Substitusi $x=2$ ke $x + 2y = 8 \\implies 2y = 6 \\implies y = 3$. Jadi $x+y = 2+3 = 5$."
+                ],
+                targetX: 2,
+                targetY: 3,
+                targetAns: 5,
+                points: 100
+            },
+            {
+                id: 2,
+                title: "Soal 2: Kasus Jumlah Kaki Hewan",
+                badge: "Soal Cerita Hewan",
+                badgeColor: "bg-amber-100 text-amber-800",
+                problem: "Di dalam sebuah peternakan terdapat <b>30 ekor hewan</b> yang terdiri dari bebek (kaki 2) dan kambing (kaki 4). Jika jumlah seluruh kaki hewan adalah <b>88 buah</b>, berapa banyak <b>kambing</b> di peternakan tersebut?",
+                hints: [
+                    "Petunjuk 1: Gunakan Trik Cepat Rumus Kaki Hewan: $y = \\frac{\\text{Total Kaki} - 2(\\text{Total Kepala})}{2}$.",
+                    "Petunjuk 2: Total Kepala = 30, Total Kaki = 88.",
+                    "Petunjuk 3: $y = \\frac{88 - 2(30)}{2} = \\frac{88 - 60}{2} = \\frac{28}{2} = 14$ kambing."
+                ],
+                targetAns: 14,
+                points: 100,
+                singleInputLabel: "Jumlah Kambing:"
+            },
+            {
+                id: 3,
+                title: "Soal 3: Parkir & Retribusi Pendapatan",
+                badge: "Soal Cerita Parkir",
+                badgeColor: "bg-emerald-100 text-emerald-800",
+                problem: "Sebuah lapangan parkir memuat <b>50 kendaraan</b> (sepeda motor dan mobil). Total roda kendaraan adalah <b>140 buah</b>. Jika tarif parkir motor <b>Rp 2.000</b> dan mobil <b>Rp 5.000</b>, tentukan <b>total uang parkir</b> yang diperoleh!",
+                hints: [
+                    "Petunjuk 1: Hitung dulu jumlah mobil ($y$) dengan trik cepat: $y = \\frac{140 - 2(50)}{2}$.",
+                    "Petunjuk 2: $y = \\frac{40}{2} = 20$ mobil. Maka jumlah motor ($x$) = $50 - 20 = 30$ motor.",
+                    "Petunjuk 3: Total Uang = $(30 \\times 2000) + (20 \\times 5000) = 60.000 + 100.000 = 160.000$."
+                ],
+                targetAns: 160000,
+                points: 100,
+                singleInputLabel: "Total Pendapatan (Rp):"
+            },
+            {
+                id: 4,
+                title: "Soal 4: Trik Persamaan Simetris",
+                badge: "Trik Ulangan",
+                badgeColor: "bg-purple-100 text-purple-800",
+                problem: "Diberikan persamaan simetris:<br><b>(1) $35x + 15y = 135$</b><br><b>(2) $15x + 35y = 115$</b><br>Tentukan nilai dari <b>$x - y$</b>!",
+                hints: [
+                    "Petunjuk 1: Ingat trik cepat! Untuk mencari $(x - y)$, kurangkan Persamaan (1) dengan Persamaan (2) secara langsung.",
+                    "Petunjuk 2: $(35x - 15x) + (15y - 35y) = 135 - 115 \\implies 20x - 20y = 20$.",
+                    "Petunjuk 3: Bagi kedua ruas dengan 20 $\\implies x - y = 1$."
+                ],
+                targetAns: 1,
+                points: 100,
+                singleInputLabel: "Nilai x - y:"
+            },
+            {
+                id: 5,
+                title: "Soal 5: Trik Identifikasi & Determinan Cepat",
+                badge: "SNBT / Ujian Sekolah",
+                badgeColor: "bg-rose-100 text-rose-800",
+                problem: "Harga <b>3 buku dan 2 pensil</b> adalah <b>Rp 13.000</b>. Harga <b>1 buku dan 3 pensil</b> adalah <b>Rp 9.000</b>. Berapakah harga <b>1 buah buku</b>?",
+                hints: [
+                    "Petunjuk 1: Buat persamaannya terlebih dahulu: $3x + 2y = 13000$ dan $1x + 3y = 9000$.",
+                    "Petunjuk 2: Gunakan Trik Determinan Silang: $x = \\frac{(13000 \\times 3) - (9000 \\times 2)}{(3 \\times 3) - (1 \\times 2)}$.",
+                    "Petunjuk 3: $x = \\frac{39000 - 18000}{9 - 2} = \\frac{21000}{7} = 3000$."
+                ],
+                targetAns: 3000,
+                points: 100,
+                singleInputLabel: "Harga 1 Buku (Rp):"
+            }
+        ];
+
+        // Helper functions for text formatting and MathJax re-rendering
+        function formatText(str) {
+            if (!str) return '';
+            return str.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+        }
+
+        function triggerMathJax() {
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise().catch((err) => console.log('MathJax error:', err));
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderWarmupQuestions();
+            renderPracticeQuestions();
+            updateRealWorldSim();
+            triggerMathJax();
+        });
+
+        // Tab Switcher
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+            document.getElementById(`sec-${tabId}`).classList.remove('hidden');
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+
+            state.visitedTabs.add(tabId);
+            updateProgressBar();
+            triggerMathJax();
+        }
+
+        function switchMateriSub(subId) {
+            document.querySelectorAll('.materi-sub-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.subtab-btn').forEach(el => {
+                el.classList.remove('bg-indigo-600', 'text-white');
+                el.classList.add('bg-slate-100', 'text-slate-700');
+            });
+
+            document.getElementById(`sub-${subId}`).classList.remove('hidden');
+            const btn = document.getElementById(`subtab-${subId}`);
+            btn.classList.remove('bg-slate-100', 'text-slate-700');
+            btn.classList.add('bg-indigo-600', 'text-white');
+
+            triggerMathJax();
+        }
+
+        // Progress Bar Updater
+        function updateProgressBar() {
+            const totalTabs = 5;
+            const progress = Math.round((state.visitedTabs.size / totalTabs) * 100);
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+            document.getElementById('progress-text').innerText = `${progress}% Selesai`;
+        }
+
+        function renderWarmupQuestions() {
+            const container = document.getElementById('warmup-questions-container');
+            container.innerHTML = warmupQuestions.map((q, idx) => `
+                <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 text-sm space-y-3" id="wq-card-${q.id}">
+                    <div class="flex items-start justify-between gap-2">
+                        <span class="font-bold text-slate-800 text-base">Soal #${idx + 1}</span>
+                        <span id="wq-status-${q.id}" class="text-xs px-2.5 py-0.5 rounded-full font-semibold bg-slate-200 text-slate-600">Belum dijawab</span>
+                    </div>
+                    <p class="text-slate-700 font-medium">${formatText(q.q)}</p>
+                    <div class="space-y-2 pt-1">
+                        ${q.options.map((opt, oIdx) => `
+                            <button onclick="checkWarmup(${q.id}, ${oIdx})" id="wq-opt-${q.id}-${oIdx}" class="w-full text-left p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-indigo-50/50 hover:border-indigo-300 transition text-xs flex items-center justify-between">
+                                <span>${formatText(opt)}</span>
+                                <span class="w-4 h-4 rounded-full border border-slate-300 inline-block text-center text-[10px] leading-3 text-transparent">✓</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                    <div id="wq-exp-${q.id}" class="hidden p-3 rounded-xl text-xs bg-indigo-50 border border-indigo-100 text-indigo-900 mt-2">
+                        <b>Penjelasan:</b> ${formatText(q.exp)}
+                    </div>
+                </div>
+            `).join('');
+            triggerMathJax();
+        }
+
+        function checkWarmup(qId, optIdx) {
+            const q = warmupQuestions.find(item => item.id === qId);
+            if (!q || state.warmupAnswers[qId] !== undefined) return; // prevent re-answering
+
+            state.warmupAnswers[qId] = optIdx;
+            const isCorrect = optIdx === q.correct;
+
+            const card = document.getElementById(`wq-card-${qId}`);
+            const statusBadge = document.getElementById(`wq-status-${qId}`);
+            const selectedBtn = document.getElementById(`wq-opt-${qId}-${optIdx}`);
+            const expBox = document.getElementById(`wq-exp-${qId}`);
+
+            if (isCorrect) {
+                state.warmupScore += 1;
+                statusBadge.className = "text-xs px-2.5 py-0.5 rounded-full font-semibold bg-emerald-100 text-emerald-800";
+                statusBadge.innerText = "Benar! 🎉";
+                selectedBtn.classList.add('bg-emerald-100', 'border-emerald-400', 'font-bold');
+            } else {
+                statusBadge.className = "text-xs px-2.5 py-0.5 rounded-full font-semibold bg-rose-100 text-rose-800";
+                statusBadge.innerText = "Salah ❌";
+                selectedBtn.classList.add('bg-rose-100', 'border-rose-400');
+                
+                // Highlight correct
+                const correctBtn = document.getElementById(`wq-opt-${qId}-${q.correct}`);
+                correctBtn.classList.add('bg-emerald-50', 'border-emerald-300', 'font-semibold');
+            }
+
+            expBox.classList.remove('hidden');
+            document.getElementById('warmup-score').innerText = `${state.warmupScore} / 8`;
+
+            if (Object.keys(state.warmupAnswers).length === 8) {
+                document.getElementById('warmup-status').innerText = `Selesai! Skor akhir pemanasan kamu adalah ${state.warmupScore} dari 8.`;
+                document.getElementById('warmup-status').className = "text-sm font-bold text-indigo-600";
+            }
+
+            triggerMathJax();
+        }
+
+        function updateRealWorldSim() {
+            // Vehicle Sim
+            const motor = parseInt(document.getElementById('sim-motor').value);
+            const mobil = parseInt(document.getElementById('sim-mobil').value);
+            
+            document.getElementById('sim-motor-val').innerText = motor;
+            document.getElementById('sim-mobil-val').innerText = mobil;
+            
+            const totalKendaraan = motor + mobil;
+            const totalRoda = (motor * 2) + (mobil * 4);
+            const totalPendapatan = (motor * 2000) + (mobil * 5000);
+
+            document.getElementById('eq-v-1').innerText = `${motor} + ${mobil} = ${totalKendaraan} Kendaraan`;
+            document.getElementById('eq-v-2').innerText = `2(${motor}) + 4(${mobil}) = ${totalRoda} Roda`;
+            document.getElementById('total-parkir-income').innerText = `Rp ${totalPendapatan.toLocaleString('id-ID')}`;
+
+            // Animal Sim
+            const ayam = parseInt(document.getElementById('sim-ayam').value);
+            const sapi = parseInt(document.getElementById('sim-sapi').value);
+
+            document.getElementById('sim-ayam-val').innerText = ayam;
+            document.getElementById('sim-sapi-val').innerText = sapi;
+
+            const totalKepala = ayam + sapi;
+            const totalKaki = (ayam * 2) + (sapi * 4);
+
+            document.getElementById('eq-a-1').innerText = `${ayam} + ${sapi} = ${totalKepala} Kepala`;
+            document.getElementById('eq-a-2').innerText = `2(${ayam}) + 4(${sapi}) = ${totalKaki} Kaki`;
+        }
+
+        function renderPracticeQuestions() {
+            const container = document.getElementById('guided-practice-container');
+            container.innerHTML = practiceData.map((p, idx) => `
+                <div class="bg-slate-50 p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4" id="practice-card-${p.id}">
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-bold px-3 py-1 rounded-full ${p.badgeColor}">${p.badge}</span>
+                            <h3 class="font-bold text-slate-800 text-lg">${p.title}</h3>
+                        </div>
+                        <span id="practice-status-${p.id}" class="text-xs font-bold text-slate-400 bg-slate-200 px-3 py-1 rounded-full">Belum Selesai</span>
+                    </div>
+
+                    <div class="text-slate-700 text-sm leading-relaxed">
+                        ${formatText(p.problem)}
+                    </div>
+
+                    <!-- Hints Toggle Section -->
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">💡 Bimbingan & Petunjuk Step-by-Step</span>
+                            <button onclick="toggleHint(${p.id})" id="hint-btn-${p.id}" class="text-xs bg-indigo-50 text-indigo-600 font-semibold px-3 py-1.5 rounded-lg hover:bg-indigo-100 transition">
+                                Tampilkan Petunjuk (0/3)
+                            </button>
+                        </div>
+                        <div id="hint-box-${p.id}" class="hidden space-y-2 pt-2 text-xs border-t border-slate-100">
+                            <!-- Hints will populate here -->
+                        </div>
+                    </div>
+
+                    <!-- Input Answer Box -->
+                    <div class="bg-indigo-50/60 p-4 rounded-2xl border border-indigo-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div class="w-full sm:w-auto flex items-center gap-3">
+                            <label class="text-xs font-bold text-indigo-900 whitespace-nowrap">${p.singleInputLabel || "Jawaban Akhir:"}</label>
+                            <input type="number" id="practice-input-${p.id}" placeholder="Masukkan angka..." class="w-full sm:w-40 px-3 py-2 rounded-xl border border-indigo-200 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        </div>
+                        <button onclick="checkPractice(${p.id})" class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-2 rounded-xl text-sm transition shadow">
+                            Cek Jawaban
+                        </button>
+                    </div>
+
+                    <div id="practice-feedback-${p.id}" class="hidden p-3 rounded-xl text-xs font-semibold"></div>
+                </div>
+            `).join('');
+            triggerMathJax();
+        }
+
+        const hintState = {};
+
+        function toggleHint(pId) {
+            if (!hintState[pId]) hintState[pId] = 0;
+            const p = practiceData.find(item => item.id === pId);
+            const hintBox = document.getElementById(`hint-box-${pId}`);
+            const hintBtn = document.getElementById(`hint-btn-${pId}`);
+
+            if (hintState[pId] < p.hints.length) {
+                hintState[pId] += 1;
+            }
+
+            hintBox.classList.remove('hidden');
+            hintBtn.innerText = `Petunjuk (${hintState[pId]}/${p.hints.length})`;
+
+            hintBox.innerHTML = p.hints.slice(0, hintState[pId]).map((h, i) => `
+                <div class="p-2.5 bg-indigo-50/80 rounded-xl border border-indigo-100 text-indigo-900 font-medium">
+                    ${formatText(h)}
+                </div>
+            `).join('');
+
+            triggerMathJax();
+        }
+
+        function checkPractice(pId) {
+            const p = practiceData.find(item => item.id === pId);
+            const userAns = parseFloat(document.getElementById(`practice-input-${pId}`).value);
+            const feedback = document.getElementById(`practice-feedback-${pId}`);
+            const statusBadge = document.getElementById(`practice-status-${pId}`);
+
+            if (isNaN(userAns)) {
+                feedback.className = "p-3 rounded-xl text-xs font-semibold bg-amber-100 text-amber-800 block";
+                feedback.innerText = "⚠️ Harap masukkan angka jawaban terlebih dahulu.";
+                return;
+            }
+
+            feedback.classList.remove('hidden');
+
+            if (userAns === p.targetAns) {
+                feedback.className = "p-3 rounded-xl text-xs font-semibold bg-emerald-100 text-emerald-800 block border border-emerald-200";
+                feedback.innerText = `🎉 Tepat sekali! Jawaban kamu benar (${p.targetAns}). Selamat +${p.points} poin!`;
+                
+                statusBadge.className = "text-xs font-bold text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full";
+                statusBadge.innerText = "Selesai (Benar) ✓";
+
+                state.practiceScore += p.points;
+                document.getElementById('practice-score').innerText = `${state.practiceScore} / 500`;
+            } else {
+                feedback.className = "p-3 rounded-xl text-xs font-semibold bg-rose-100 text-rose-800 block border border-rose-200";
+                feedback.innerText = `❌ Masih belum tepat (${userAns}). Coba periksa kembali petunjuk di atas!`;
+            }
+
+            triggerMathJax();
+        }
+    </script>
+</body>
+</html>
