@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modul Pembelajaran Interaktif SPLDV - Grafik & Substitusi</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- KaTeX for Math Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af'
+                        },
+                        secondary: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .tab-btn.active {
+            border-bottom-color: #2563eb;
+            color: #2563eb;
+            font-weight: 600;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .accordion-content.open {
+            max-height: 2500px;
+            transition: max-height 0.5s ease-in;
+        }
+        .tp-table th, .tp-table td {
+            border: 1px solid #cbd5e1;
+            padding: 8px 12px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <!-- Header Navigation -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-blue-600 text-white p-2.5 rounded-xl shadow-md">
+                        <i class="fa-solid font-bold fa-square-root-variable text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold text-slate-900 leading-tight">SPLDV Interaktif</h1>
+                        <p class="text-xs text-slate-500">Sistem Persamaan Linear Dua Variabel</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs Desktop -->
+                <nav class="hidden md:flex space-x-1 lg:space-x-3">
+                    <button onclick="switchTab('materi-dasar')" class="nav-link tab-btn active px-3 py-2 text-sm font-medium border-b-2 border-transparent text-slate-600 hover:text-blue-600">Pengantar</button>
+                    <button onclick="switchTab('metode-grafik')" class="nav-link tab-btn px-3 py-2 text-sm font-medium border-b-2 border-transparent text-slate-600 hover:text-blue-600">Metode Grafik</button>
+                    <button onclick="switchTab('contoh-grafik')" class="nav-link tab-btn px-3 py-2 text-sm font-medium border-b-2 border-transparent text-slate-600 hover:text-blue-600">Contoh Grafik (3)</button>
+                    <button onclick="switchTab('metode-substitusi')" class="nav-link tab-btn px-3 py-2 text-sm font-medium border-b-2 border-transparent text-slate-600 hover:text-blue-600">Metode Substitusi</button>
+                    <button onclick="switchTab('contoh-substitusi')" class="nav-link tab-btn px-3 py-2 text-sm font-medium border-b-2 border-transparent text-slate-600 hover:text-blue-600">Contoh Substitusi (3)</button>
+                    <button onclick="switchTab('lab-kalkulator')" class="nav-link tab-btn px-3 py-2 text-sm font-medium border-b-2 border-transparent text-slate-600 hover:text-blue-600">Lab & Solver</button>
+                    <button onclick="switchTab('kuis-interaktif')" class="nav-link tab-btn px-3 py-2 text-sm font-medium border-b-2 border-transparent text-slate-600 hover:text-blue-600">Kuis</button>
+                </nav>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobileMenuBtn" onclick="toggleMobileMenu()" class="text-slate-600 p-2 rounded-lg hover:bg-slate-100">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobileMenu" class="hidden md:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-4 space-y-1">
+            <button onclick="switchTab('materi-dasar'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg">Pengantar SPLDV</button>
+            <button onclick="switchTab('metode-grafik'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg">Metode Grafik</button>
+            <button onclick="switchTab('contoh-grafik'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg">Contoh Soal Grafik (3)</button>
+            <button onclick="switchTab('metode-substitusi'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg">Metode Substitusi</button>
+            <button onclick="switchTab('contoh-substitusi'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg">Contoh Soal Substitusi (3)</button>
+            <button onclick="switchTab('lab-kalkulator'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg">Lab Interaktif & Solver</button>
+            <button onclick="switchTab('kuis-interaktif'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg">Kuis Evaluasi</button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- TAB 1: MATERI DASAR PENGANTAR -->
+        <section id="materi-dasar" class="tab-content block space-y-8">
+            <!-- Hero Banner -->
+            <div class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-2xl p-6 sm:p-10 text-white shadow-xl relative overflow-hidden">
+                <div class="relative z-10 max-w-3xl">
+                    <span class="inline-block px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-semibold tracking-wider uppercase mb-3">Matematika SMP / SMA</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold mb-4">Sistem Persamaan Linear Dua Variabel (SPLDV)</h2>
+                    <p class="text-blue-100 text-base sm:text-lg leading-relaxed mb-6">
+                        Pelajari konsep dasar penyelesaian SPLDV secara visual melalui <strong>Metode Grafik</strong> dan secara aljabar runtut melalui <strong>Metode Substitusi</strong> dilengkapi dengan tabel titik potong dan simulasi interaktif.
+                    </p>
+                    <div class="flex flex-wrap gap-3">
+                        <button onclick="switchTab('metode-grafik')" class="bg-white text-blue-700 hover:bg-blue-50 font-semibold px-5 py-2.5 rounded-xl shadow transition duration-200">
+                            Mulai Pelajari Grafik <i class="fa-solid fa-arrow-right ml-2"></i>
+                        </button>
+                        <button onclick="switchTab('metode-substitusi')" class="bg-blue-700/60 hover:bg-blue-700 text-white font-semibold px-5 py-2.5 rounded-xl border border-white/30 backdrop-blur-sm transition duration-200">
+                            Pelajari Substitusi
+                        </button>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chart-line text-white/10 text-9xl absolute -right-6 -bottom-6 pointer-events-none"></i>
+            </div>
+
+            <!-- Conceptual Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-4 text-xl">
+                        <i class="fa-solid fa-subscript"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">Bentuk Umum SPLDV</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                        SPLDV terdiri dari dua persamaan linear yang masing-masing memiliki dua variabel berpangkat satu.
+                    </p>
+                    <div class="bg-slate-100 p-3 rounded-lg text-center font-mono text-sm text-slate-800 border border-slate-200">
+                        $$\begin{cases} a_1 x + b_1 y = c_1 \\ a_2 x + b_2 y = c_2 \end{cases}$$
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center mb-4 text-xl">
+                        <i class="fa-solid fa-bullseye"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">Arti "Penyelesaian"</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                        Pasangan berurutan $(x, y)$ yang memenuhi <strong>kedua persamaan sekaligus</strong>. Himpunan Penyelesaian dituliskan sebagai:
+                    </p>
+                    <div class="bg-slate-100 p-3 rounded-lg text-center font-mono text-sm text-slate-800 border border-slate-200">
+                        $$HP = \{(x, y)\}$$
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center mb-4 text-xl">
+                        <i class="fa-solid fa-layer-group"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">Kemungkinan Solusi</h3>
+                    <ul class="text-slate-600 text-sm space-y-2">
+                        <li class="flex items-start"><i class="fa-solid fa-check text-green-500 mt-1 mr-2 text-xs"></i><span><strong>Tepat 1 Solusi:</strong> Garis berpotongan di 1 titik.</span></li>
+                        <li class="flex items-start"><i class="fa-solid fa-xmark text-red-500 mt-1 mr-2 text-xs"></i><span><strong>Tidak Ada Solusi:</strong> Garis sejajar ($m_1 = m_2$).</span></li>
+                        <li class="flex items-start"><i class="fa-solid fa-infinity text-blue-500 mt-1 mr-2 text-xs"></i><span><strong>Tak Hingga Solusi:</strong> Garis saling berimpit.</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: METODE GRAFIK DETIL -->
+        <section id="metode-grafik" class="tab-content hidden space-y-8">
+            <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200">
+                <div class="border-b border-slate-200 pb-4 mb-6 flex items-center space-x-3">
+                    <div class="bg-blue-600 text-white p-3 rounded-xl">
+                        <i class="fa-solid fa-chart-aorta text-xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-900">Metode Grafik (Graphical Method)</h2>
+                        <p class="text-slate-500 text-sm">Konsep, Penggunaan Tabel Titik Potong, dan Gambar Kartesius</p>
+                    </div>
+                </div>
+
+                <!-- Explanation Body -->
+                <div class="space-y-6 text-slate-700 leading-relaxed">
+                    <p class="text-base">
+                        <strong>Metode Grafik</strong> adalah cara menentukan penyelesaian SPLDV dengan menggambar grafik kedua persamaan linear pada bidang koordinat Kartesius. <strong>Titik potong (TP)</strong> antara kedua garis tersebut merupakan pasangan nilai $(x, y)$ yang menjadi Himpunan Penyelesaian ($HP$).
+                    </p>
+
+                    <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-table text-blue-600"></i> Format Tabel Titik Potong (TP) Garis:
+                    </h3>
+                    <p class="text-sm">
+                        Untuk mempermudah menggambar garis linear, kita dapat membuat tabel penentuan titik potong terhadap sumbu-$X$ (saat $y=0$) dan sumbu-$Y$ (saat $x=0$):
+                    </p>
+
+                    <!-- Example Table Concept -->
+                    <div class="overflow-x-auto my-4">
+                        <table class="tp-table w-full max-w-md mx-auto text-sm bg-white shadow-sm rounded-lg">
+                            <thead class="bg-blue-600 text-white font-bold">
+                                <tr>
+                                    <th colspan="3">Persamaan: $a x + b y = c$</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="font-bold bg-slate-100">$x$</td>
+                                    <td>$0$</td>
+                                    <td class="text-blue-600 font-semibold">$x_1$</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold bg-slate-100">$y$</td>
+                                    <td class="text-blue-600 font-semibold">$y_1$</td>
+                                    <td>$0$</td>
+                                </tr>
+                                <tr class="bg-blue-50 font-bold">
+                                    <td class="bg-slate-200">TP $(x, y)$</td>
+                                    <td>$(0, y_1)$</td>
+                                    <td>$(x_1, 0)$</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-blue-600"></i> Langkah-Langkah Sistematis:
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div class="bg-blue-50 border border-blue-200 p-4 rounded-xl">
+                            <div class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold mb-3">1</div>
+                            <h4 class="font-semibold text-blue-900 mb-1">Tabel TP Persamaan 1</h4>
+                            <p class="text-xs text-blue-800">Cari titik potong sumbu-$X$ ($y=0$) dan sumbu-$Y$ ($x=0$) lalu susun dalam tabel.</p>
+                        </div>
+
+                        <div class="bg-blue-50 border border-blue-200 p-4 rounded-xl">
+                            <div class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold mb-3">2</div>
+                            <h4 class="font-semibold text-blue-900 mb-1">Tabel TP Persamaan 2</h4>
+                            <p class="text-xs text-blue-800">Lakukan hal yang sama untuk persamaan kedua untuk memperoleh pasangan titik koordinat.</p>
+                        </div>
+
+                        <div class="bg-blue-50 border border-blue-200 p-4 rounded-xl">
+                            <div class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold mb-3">3</div>
+                            <h4 class="font-semibold text-blue-900 mb-1">Plot Kedua Garis</h4>
+                            <p class="text-xs text-blue-800">Hubungkan titik-titik koordinat dari tabel pada bidang Kartesius hingga saling berpotongan.</p>
+                        </div>
+
+                        <div class="bg-blue-50 border border-blue-200 p-4 rounded-xl">
+                            <div class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold mb-3">4</div>
+                            <h4 class="font-semibold text-blue-900 mb-1">Tentukan HP $(x, y)$</h4>
+                            <p class="text-xs text-blue-800">Baca koordinat titik perpotongan $(x, y)$. Koordinat tersebut adalah Himpunan Penyelesaiannya.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: CONTOH SOAL GRAFIK (3 SOAL LENGKAP DENGAN TABEL) -->
+        <section id="contoh-grafik" class="tab-content hidden space-y-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-900">3 Contoh Soal Metode Grafik</h2>
+                    <p class="text-slate-500 text-sm">Lengkap dengan Tabel Titik Potong (TP) dan Gambar Grafik Kartesius</p>
+                </div>
+            </div>
+
+            <!-- CONTOH SOAL 1 (GRAFIK) -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="bg-blue-600 text-white p-4 font-bold flex justify-between items-center">
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-pen-to-square"></i> Contoh Soal 1 (Grafik Standar)</span>
+                    <span class="text-xs bg-blue-800 px-2.5 py-1 rounded-full font-medium">Dasar</span>
+                </div>
+                <div class="p-6 space-y-6">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <p class="text-slate-800 font-medium mb-2">Tentukan Himpunan Penyelesaian (HP) dari SPLDV berikut dengan metode grafik:</p>
+                        <div class="text-center text-lg font-mono text-blue-700 bg-white p-3 rounded-lg border border-slate-200 shadow-sm max-w-sm mx-auto">
+                            $$\begin{cases} x + y = 5 \quad \text{...(Persamaan 1)} \\ x - y = 1 \quad \text{...(Persamaan 2)} \end{cases}$$
+                        </div>
+                    </div>
+
+                    <div>
+                        <button onclick="toggleAccordion('acc-g1')" class="w-full flex justify-between items-center bg-slate-100 hover:bg-slate-200 text-slate-800 px-4 py-3 rounded-xl font-semibold transition">
+                            <span><i class="fa-solid fa-square-check text-blue-600 mr-2"></i> Lihat Pembahasan & Tabel Titik Potong</span>
+                            <i id="acc-g1-icon" class="fa-solid fa-chevron-down transition-transform"></i>
+                        </button>
+
+                        <div id="acc-g1" class="accordion-content">
+                            <div class="pt-4 space-y-6 text-sm text-slate-700 border-t border-slate-200 mt-3">
+                                
+                                <!-- Step 1 & Tables -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <!-- Table Persamaan 1 -->
+                                    <div class="bg-blue-50/60 p-4 rounded-xl border border-blue-200 space-y-3">
+                                        <h5 class="font-bold text-blue-900 flex items-center gap-2">
+                                            <i class="fa-solid fa-table text-blue-600"></i> Titik Potong Persamaan (1): $x + y = 5$
+                                        </h5>
+                                        <div class="overflow-x-auto">
+                                            <table class="tp-table w-full bg-white text-xs rounded shadow-sm">
+                                                <thead class="bg-blue-600 text-white">
+                                                    <tr><th colspan="3">$x + y = 5$</th></tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr><td class="font-bold bg-slate-100">$x$</td><td>$0$</td><td class="font-bold text-blue-600">$5$</td></tr>
+                                                    <tr><td class="font-bold bg-slate-100">$y$</td><td class="font-bold text-blue-600">$5$</td><td>$0$</td></tr>
+                                                    <tr class="bg-blue-100/70 font-bold"><td>TP $(x,y)$</td><td>$(0, 5)$</td><td>$(5, 0)$</td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="text-xs space-y-1 font-mono text-slate-600 bg-white p-2.5 rounded border border-slate-200">
+                                            <p>• Jika $x = 0 \implies 0 + y = 5 \implies y = 5$</p>
+                                            <p>• Jika $y = 0 \implies x + 0 = 5 \implies x = 5$</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Table Persamaan 2 -->
+                                    <div class="bg-emerald-50/60 p-4 rounded-xl border border-emerald-200 space-y-3">
+                                        <h5 class="font-bold text-emerald-900 flex items-center gap-2">
+                                            <i class="fa-solid fa-table text-emerald-600"></i> Titik Potong Persamaan (2): $x - y = 1$
+                                        </h5>
+                                        <div class="overflow-x-auto">
+                                            <table class="tp-table w-full bg-white text-xs rounded shadow-sm">
+                                                <thead class="bg-emerald-600 text-white">
+                                                    <tr><th colspan="3">$x - y = 1$</th></tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr><td class="font-bold bg-slate-100">$x$</td><td>$0$</td><td class="font-bold text-emerald-600">$1$</td></tr>
+                                                    <tr><td class="font-bold bg-slate-100">$y$</td><td class="font-bold text-emerald-600">$-1$</td><td>$0$</td></tr>
+                                                    <tr class="bg-emerald-100/70 font-bold"><td>TP $(x,y)$</td><td>$(0, -1)$</td><td>$(1, 0)$</td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="text-xs space-y-1 font-mono text-slate-600 bg-white p-2.5 rounded border border-slate-200">
+                                            <p>• Jika $x = 0 \implies 0 - y = 1 \implies y = -1$</p>
+                                            <p>• Jika $y = 0 \implies x - 0 = 1 \implies x = 1$</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Plot Canvas -->
+                                <div>
+                                    <h5 class="font-bold text-slate-900 mb-2">Gambar Grafik Kartesius & Titik Potong:</h5>
+                                    <div class="bg-slate-900 p-4 rounded-xl flex flex-col items-center">
+                                        <canvas id="canvasEx1" width="380" height="300" class="bg-slate-900 rounded-lg max-w-full"></canvas>
+                                        <div class="text-xs text-slate-300 mt-3 flex flex-wrap justify-center gap-4">
+                                            <span class="flex items-center gap-1.5"><span class="w-3 h-3 bg-blue-500 rounded-full inline-block"></span> Garis 1: $x+y=5$</span>
+                                            <span class="flex items-center gap-1.5"><span class="w-3 h-3 bg-emerald-500 rounded-full inline-block"></span> Garis 2: $x-y=1$</span>
+                                            <span class="flex items-center gap-1.5"><span class="w-3 h-3 bg-red-500 rounded-full inline-block"></span> Titik Potong $(3, 2)$</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-emerald-50 border border-emerald-300 p-3.5 rounded-xl text-emerald-900 font-semibold text-center">
+                                    Kesimpulan: Kedua garis berpotongan di titik $(3, 2)$. Maka Himpunan Penyelesaian $HP = \{(3, 2)\}$.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTOH SOAL 2 (GRAFIK) -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="bg-blue-600 text-white p-4 font-bold flex justify-between items-center">
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-pen-to-square"></i> Contoh Soal 2 (Garis Melalui Titik Pusat)</span>
+                    <span class="text-xs bg-blue-800 px-2.5 py-1 rounded-full font-medium">Sedang</span>
+                </div>
+                <div class="p-6 space-y-6">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <p class="text-slate-800 font-medium mb-2">Tentukan Himpunan Penyelesaian dari SPLDV berikut:</p>
+                        <div class="text-center text-lg font-mono text-blue-700 bg-white p-3 rounded-lg border border-slate-200 shadow-sm max-w-sm mx-auto">
+                            $$\begin{cases} 2x + y = 6 \quad \text{...(Persamaan 1)} \\ x - y = 0 \quad \text{...(Persamaan 2)} \end{cases}$$
+                        </div>
+                    </div>
+
+                    <div>
+                        <button onclick="toggleAccordion('acc-g2')" class="w-full flex justify-between items-center bg-slate-100 hover:bg-slate-200 text-slate-800 px-4 py-3 rounded-xl font-semibold transition">
+                            <span><i class="fa-solid fa-square-check text-blue-600 mr-2"></i> Lihat Pembahasan & Tabel Titik Potong</span>
+                            <i id="acc-g2-icon" class="fa-solid fa-chevron-down transition-transform"></i>
+                        </button>
+
+                        <div id="acc-g2" class="accordion-content">
+                            <div class="pt-4 space-y-6 text-sm text-slate-700 border-t border-slate-200 mt-3">
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <!-- Table Persamaan 1 -->
+                                    <div class="bg-blue-50/60 p-4 rounded-xl border border-blue-200 space-y-3">
+                                        <h5 class="font-bold text-blue-900 flex items-center gap-2">
+                                            <i class="fa-solid fa-table text-blue-600"></i> Titik Potong Persamaan (1): $2x + y = 6$
+                                        </h5>
+                                        <div class="overflow-x-auto">
+                                            <table class="tp-table w-full bg-white text-xs rounded shadow-sm">
+                                                <thead class="bg-blue-600 text-white">
+                                                    <tr><th colspan="3">$2x + y = 6$</th></tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr><td class="font-bold bg-slate-100">$x$</td><td>$0$</td><td class="font-bold text-blue-600">$3$</td></tr>
+                                                    <tr><td class="font-bold bg-slate-100">$y$</td><td class="font-bold text-blue-600">$6$</td><td>$0$</td></tr>
+                                                    <tr class="bg-blue-100/70 font-bold"><td>TP $(x,y)$</td><td>$(0, 6)$</td><td>$(3, 0)$</td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="text-xs space-y-1 font-mono text-slate-600 bg-white p-2.5 rounded border border-slate-200">
+                                            <p>• Jika $x = 0 \implies 2(0) + y = 6 \implies y = 6$</p>
+                                            <p>• Jika $y = 0 \implies 2x + 0 = 6 \implies x = 3$</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Table Persamaan 2 -->
+                                    <div class="bg-emerald-50/60 p-4 rounded-xl border border-emerald-200 space-y-3">
+                                        <h5 class="font-bold text-emerald-900 flex items-center gap-2">
+                                            <i class="fa-solid fa-table text-emerald-600"></i> Titik Potong Persamaan (2): $x - y = 0$
+                                        </h5>
+                                        <p class="text-xs text-slate-500 italic">Garis melalui titik pusat $(0,0)$, pilih titik bantuan $x=2$:</p>
+                                        <div class="overflow-x-auto">
+                                            <table class="tp-table w-full bg-white text-xs rounded shadow-sm">
+                                                <thead class="bg-emerald-600 text-white">
+                                                    <tr><th colspan="3">$x - y = 0$</th></tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr><td class="font-bold bg-slate-100">$x$</td><td>$0$</td><td class="font-bold text-emerald-600">$2$</td></tr>
+                                                    <tr><td class="font-bold bg-slate-100">$y$</td><td class="font-bold text-emerald-600">$0$</td><td>$2$</td></tr>
+                                                    <tr class="bg-emerald-100/70 font-bold"><td>TP $(x,y)$</td><td>$(0, 0)$</td><td>$(2, 2)$</td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="text-xs space-y-1 font-mono text-slate-600 bg-white p-2.5 rounded border border-slate-200">
+                                            <p>• Jika $x = 0 \implies 0 - y = 0 \implies y = 0$</p>
+                                            <p>• Jika $x = 2 \implies 2 - y = 0 \implies y = 2$</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Plot Canvas -->
+                                <div>
+                                    <h5 class="font-bold text-slate-900 mb-2">Gambar Grafik Kartesius & Titik Potong:</h5>
+                                    <div class="bg-slate-900 p-4 rounded-xl flex flex-col items-center">
+                                        <canvas id="canvasEx2" width="380" height="300" class="bg-slate-900 rounded-lg max-w-full"></canvas>
+                                        <div class="text-xs text-slate-300 mt-3 flex flex-wrap justify-center gap-4">
+                                            <span class="flex items-center gap-1.5"><span class="w-3 h-3 bg-blue-500 rounded-full inline-block"></span> Garis 1: $2x+y=6$</span>
+                                            <span class="flex items-center gap-1.5"><span class="w-3 h-3 bg-emerald-500 rounded-full inline-block"></span> Garis 2: $x-y=0$</span>
+                                            <span class="flex items-center gap-1.5"><span class="w-3 h-3 bg-red-500 rounded-full inline-block"></span> Titik Potong $(2, 2)$</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-emerald-50 border border-emerald-300 p-3.5 rounded-xl text-emerald-900 font-semibold text-center">
+                                    Kesimpulan: Garis berpotongan di titik $(2, 2)$. Himpunan Penyelesaian $HP = \{(2, 2)\}$.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTOH SOAL 3 (GRAFIK KONTEKSTUAL) -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="bg-blue-600 text-white p-4 font-bold flex justify-between items-center">
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-pen-to-square"></i> Contoh Soal 3 (Soal Cerita / Aplikasi)</span>
+                    <span class="text-xs bg-blue-800 px-2.5 py-1 rounded-full font-medium">Aplikasi</span>
+                </div>
+                <div class="p-6 space-y-6">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <p class="text-slate-800 font-medium leading-relaxed">
+                            <strong>Soal Toko Alat Tulis:</strong> Budi membeli 1 buku dan 2 pensil seharga Rp8.000. Ani membeli 2 buku dan 1 pensil seharga Rp7.000. Tentukan harga 1 buku dan harga 1 pensil secara grafik!
+                        </p>
+                    </div>
+
+                    <div>
+                        <button onclick="toggleAccordion('acc-g3')" class="w-full flex justify-between items-center bg-slate-100 hover:bg-slate-200 text-slate-800 px-4 py-3 rounded-xl font-semibold transition">
+                            <span><i class="fa-solid fa-square-check text-blue-600 mr-2"></i> Lihat Model Matematika, Tabel, & Gambar</span>
+                            <i id="acc-g3-icon" class="fa-solid fa-chevron-down transition-transform"></i>
+                        </button>
+
+                        <div id="acc-g3" class="accordion-content">
+                            <div class="pt-4 space-y-6 text-sm text-slate-700 border-t border-slate-200 mt-3">
+                                
+                                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                                    <p class="font-bold text-slate-800">Pemisalan Model Matematika (dalam ribuan rupiah):</p>
+                                    <p>Misal $x$ = Harga 1 buku, $y$ = Harga 1 pensil.</p>
+                                    <div class="text-center font-mono text-blue-700 font-bold mt-1">
+                                        $$\begin{cases} x + 2y = 8 \quad \text{...(Budi)} \\ 2x + y = 7 \quad \text{...(Ani)} \end{cases}$$
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <!-- Table Persamaan 1 -->
+                                    <div class="bg-blue-50/60 p-4 rounded-xl border border-blue-200 space-y-3">
+                                        <h5 class="font-bold text-blue-900 flex items-center gap-2">
+                                            <i class="fa-solid fa-table text-blue-600"></i> Tabel Titik Potong (Budi): $x + 2y = 8$
+                                        </h5>
+                                        <div class="overflow-x-auto">
+                                            <table class="tp-table w-full bg-white text-xs rounded shadow-sm">
+                                                <thead class="bg-blue-600 text-white">
+                                                    <tr><th colspan="3">$x + 2y = 8$</th></tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr><td class="font-bold bg-slate-100">$x$</td><td>$0$</td><td class="font-bold text-blue-600">$8$</td></tr>
+                                                    <tr><td class="font-bold bg-slate-100">$y$</td><td class="font-bold text-blue-600">$4$</td><td>$0$</td></tr>
+                                                    <tr class="bg-blue-100/70 font-bold"><td>TP $(x,y)$</td><td>$(0, 4)$</td><td>$(8, 0)$</td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <!-- Table Persamaan 2 -->
+                                    <div class="bg-emerald-50/60 p-4 rounded-xl border border-emerald-200 space-y-3">
+                                        <h5 class="font-bold text-emerald-900 flex items-center gap-2">
+                                            <i class="fa-solid fa-table text-emerald-600"></i> Tabel Titik Potong (Ani): $2x + y = 7$
+                                        </h5>
+                                        <div class="overflow-x-auto">
+                                            <table class="tp-table w-full bg-white text-xs rounded shadow-sm">
+                                                <thead class="bg-emerald-600 text-white">
+                                                    <tr><th colspan="3">$2x + y = 7$</th></tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr><td class="font-bold bg-slate-100">$x$</td><td>$0$</td><td class="font-bold text-emerald-600">$3,5$</td></tr>
+                                                    <tr><td class="font-bold bg-slate-100">$y$</td><td class="font-bold text-emerald-600">$7$</td><td>$0$</td></tr>
+                                                    <tr class="bg-emerald-100/70 font-bold"><td>TP $(x,y)$</td><td>$(0, 7)$</td><td>$(3,5; 0)$</td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Plot Canvas -->
+                                <div>
+                                    <h5 class="font-bold text-slate-900 mb-2">Gambar Grafik Kartesius & Titik Potong:</h5>
+                                    <div class="bg-slate-900 p-4 rounded-xl flex flex-col items-center">
+                                        <canvas id="canvasEx3" width="380" height="300" class="bg-slate-900 rounded-lg max-w-full"></canvas>
+                                        <div class="text-xs text-slate-300 mt-3 flex flex-wrap justify-center gap-4">
+                                            <span class="flex items-center gap-1.5"><span class="w-3 h-3 bg-blue-500 rounded-full inline-block"></span> Garis 1: $x+2y=8$</span>
+                                            <span class="flex items-center gap-1.5"><span class="w-3 h-3 bg-emerald-500 rounded-full inline-block"></span> Garis 2: $2x+y=7$</span>
+                                            <span class="flex items-center gap-1.5"><span class="w-3 h-3 bg-red-500 rounded-full inline-block"></span> Titik Potong $(2, 3)$</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-emerald-50 border border-emerald-300 p-3.5 rounded-xl text-emerald-900 font-semibold text-center">
+                                    Kesimpulan: Titik potong $(2, 3) \implies$ Harga 1 buku ($x$) = Rp2.000 dan Harga 1 pensil ($y$) = Rp3.000.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: METODE SUBSTITUSI DETIL -->
+        <section id="metode-substitusi" class="tab-content hidden space-y-8">
+            <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200">
+                <div class="border-b border-slate-200 pb-4 mb-6 flex items-center space-x-3">
+                    <div class="bg-emerald-600 text-white p-3 rounded-xl">
+                        <i class="fa-solid fa-arrows-rotate text-xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-900">Metode Substitusi (Substitution Method)</h2>
+                        <p class="text-slate-500 text-sm">Konsep Mengganti Variabel dan Penjabaran Aljabar Tepat</p>
+                    </div>
+                </div>
+
+                <!-- Explanation Body -->
+                <div class="space-y-6 text-slate-700 leading-relaxed">
+                    <p class="text-base">
+                        <strong>Metode Substitusi</strong> adalah teknik menyelesaikan SPLDV dengan cara <strong>menggantikan (mensubstitusikan)</strong> satu variabel dari satu persamaan ke persamaan lainnya. Metode ini sangat akurat dan presisi.
+                    </p>
+
+                    <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-list-ol text-emerald-600"></i> Langkah-Langkah Sistematis Metode Substitusi:
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl">
+                            <div class="w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center font-bold mb-3">1</div>
+                            <h4 class="font-semibold text-emerald-900 mb-1">Isolasi Variabel</h4>
+                            <p class="text-xs text-emerald-800">Pilih salah satu persamaan, lalu nyatakan $x$ dalam $y$ ($x = \dots$) atau $y$ dalam $x$ ($y = \dots$).</p>
+                        </div>
+
+                        <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl">
+                            <div class="w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center font-bold mb-3">2</div>
+                            <h4 class="font-semibold text-emerald-900 mb-1">Substitusi Variabel</h4>
+                            <p class="text-xs text-emerald-800">Substitusikan ungkapan variabel tersebut ke <strong>persamaan lain</strong>.</p>
+                        </div>
+
+                        <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl">
+                            <div class="w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center font-bold mb-3">3</div>
+                            <h4 class="font-semibold text-emerald-900 mb-1">Hitung Variabel Pertama</h4>
+                            <p class="text-xs text-emerald-800">Selesaikan persamaan 1 variabel yang terbentuk untuk mendapatkan nilai variabel pertama.</p>
+                        </div>
+
+                        <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl">
+                            <div class="w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center font-bold mb-3">4</div>
+                            <h4 class="font-semibold text-emerald-900 mb-1">Hitung Variabel Kedua</h4>
+                            <p class="text-xs text-emerald-800">Substitusikan nilai yang diperoleh ke persamaan isolasi awal untuk mendapat variabel kedua.</p>
+                        </div>
+                    </div>
+
+                    <!-- Pro-Tip Box -->
+                    <div class="bg-indigo-50 border-l-4 border-indigo-500 p-5 rounded-r-xl">
+                        <h4 class="font-bold text-indigo-900 flex items-center gap-2 mb-2">
+                            <i class="fa-solid fa-lightbulb text-amber-500"></i> Tips Cerdas Isolasi Variabel:
+                        </h4>
+                        <p class="text-sm text-indigo-950">
+                            Utamakan memilih variabel yang memiliki <strong>koefisien $1$ atau $-1$</strong> (seperti $x$ pada $x + 3y = 7$). Ini akan menghindarkan Anda dari perhitungan bentuk pecahan!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: CONTOH SOAL SUBSTITUSI (3 SOAL LENGKAP) -->
+        <section id="contoh-substitusi" class="tab-content hidden space-y-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-900">3 Contoh Soal Metode Substitusi</h2>
+                    <p class="text-slate-500 text-sm">Pembahasan rinci aljabar beserta langkah penjabarannya</p>
+                </div>
+            </div>
+
+            <!-- CONTOH SOAL 1 (SUBSTITUSI) -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="bg-emerald-600 text-white p-4 font-bold flex justify-between items-center">
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-pen-to-square"></i> Contoh Soal 1 (Bentuk Eksplisit)</span>
+                    <span class="text-xs bg-emerald-800 px-2.5 py-1 rounded-full font-medium">Dasar</span>
+                </div>
+                <div class="p-6 space-y-6">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <p class="text-slate-800 font-medium mb-2">Selesaikan sistem persamaan berikut dengan metode substitusi:</p>
+                        <div class="text-center text-lg font-mono text-emerald-700 bg-white p-3 rounded-lg border border-slate-200 shadow-sm max-w-sm mx-auto">
+                            $$\begin{cases} y = 2x - 1 \quad \text{...(Persamaan 1)} \\ 3x + y = 9 \quad \text{...(Persamaan 2)} \end{cases}$$
+                        </div>
+                    </div>
+
+                    <div>
+                        <button onclick="toggleAccordion('acc-s1')" class="w-full flex justify-between items-center bg-slate-100 hover:bg-slate-200 text-slate-800 px-4 py-3 rounded-xl font-semibold transition">
+                            <span><i class="fa-solid fa-square-check text-emerald-600 mr-2"></i> Lihat Penjabaran Langkah Demi Langkah</span>
+                            <i id="acc-s1-icon" class="fa-solid fa-chevron-down transition-transform"></i>
+                        </button>
+
+                        <div id="acc-s1" class="accordion-content">
+                            <div class="pt-4 space-y-4 text-sm text-slate-700 border-t border-slate-200 mt-3">
+                                <div>
+                                    <h5 class="font-bold text-slate-900 mb-1">Langkah 1: Identifikasi Isolasi Variabel</h5>
+                                    <p class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                                        Persamaan (1) sudah berada dalam bentuk eksplisit: $y = 2x - 1$.
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <h5 class="font-bold text-slate-900 mb-1">Langkah 2 & 3: Substitusikan $y$ ke Persamaan (2) dan Cari $x$</h5>
+                                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 font-mono space-y-1 text-slate-800">
+                                        <p>$$3x + (2x - 1) = 9$$</p>
+                                        <p>$$5x - 1 = 9 \implies 5x = 10 \implies x = 2$$</p>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h5 class="font-bold text-slate-900 mb-1">Langkah 4: Substitusikan $x = 2$ ke Persamaan (1) untuk Cari $y$</h5>
+                                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 font-mono space-y-1 text-slate-800">
+                                        <p>$$y = 2(2) - 1 = 4 - 1 = 3$$</p>
+                                    </div>
+                                </div>
+
+                                <div class="bg-emerald-50 border border-emerald-300 p-3.5 rounded-xl text-emerald-900 font-semibold text-center">
+                                    Kesimpulan: Himpunan Penyelesaian $HP = \{(2, 3)\}$.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTOH SOAL 2 (SUBSTITUSI) -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="bg-emerald-600 text-white p-4 font-bold flex justify-between items-center">
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-pen-to-square"></i> Contoh Soal 2 (Mengubah Bentuk Implisit)</span>
+                    <span class="text-xs bg-emerald-800 px-2.5 py-1 rounded-full font-medium">Sedang</span>
+                </div>
+                <div class="p-6 space-y-6">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <p class="text-slate-800 font-medium mb-2">Tentukan penyelesaian dari SPLDV berikut:</p>
+                        <div class="text-center text-lg font-mono text-emerald-700 bg-white p-3 rounded-lg border border-slate-200 shadow-sm max-w-sm mx-auto">
+                            $$\begin{cases} 2x + 3y = 8 \quad \text{...(Persamaan 1)} \\ x - 2y = -3 \quad \text{...(Persamaan 2)} \end{cases}$$
+                        </div>
+                    </div>
+
+                    <div>
+                        <button onclick="toggleAccordion('acc-s2')" class="w-full flex justify-between items-center bg-slate-100 hover:bg-slate-200 text-slate-800 px-4 py-3 rounded-xl font-semibold transition">
+                            <span><i class="fa-solid fa-square-check text-emerald-600 mr-2"></i> Lihat Penjabaran Langkah Demi Langkah</span>
+                            <i id="acc-s2-icon" class="fa-solid fa-chevron-down transition-transform"></i>
+                        </button>
+
+                        <div id="acc-s2" class="accordion-content">
+                            <div class="pt-4 space-y-4 text-sm text-slate-700 border-t border-slate-200 mt-3">
+                                <div>
+                                    <h5 class="font-bold text-slate-900 mb-1">Langkah 1: Mengubah Persamaan (2) Menjadi $x = \dots$</h5>
+                                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 font-mono text-emerald-700">
+                                        $$x = 2y - 3 \quad \text{...(Persamaan 3)}$$
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h5 class="font-bold text-slate-900 mb-1">Langkah 2 & 3: Substitusi Persamaan (3) ke Persamaan (1)</h5>
+                                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 font-mono space-y-1 text-slate-800">
+                                        <p>$$2(2y - 3) + 3y = 8$$</p>
+                                        <p>$$4y - 6 + 3y = 8 \implies 7y = 14 \implies y = 2$$</p>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h5 class="font-bold text-slate-900 mb-1">Langkah 4: Substitusikan $y = 2$ ke Persamaan (3)</h5>
+                                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 font-mono space-y-1 text-slate-800">
+                                        <p>$$x = 2(2) - 3 = 4 - 3 = 1$$</p>
+                                    </div>
+                                </div>
+
+                                <div class="bg-emerald-50 border border-emerald-300 p-3.5 rounded-xl text-emerald-900 font-semibold text-center">
+                                    Kesimpulan: Himpunan Penyelesaian $HP = \{(1, 2)\}$.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTOH SOAL 3 (SUBSTITUSI KONTEKSTUAL) -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="bg-emerald-600 text-white p-4 font-bold flex justify-between items-center">
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-pen-to-square"></i> Contoh Soal 3 (Soal Cerita Keuangan Toko)</span>
+                    <span class="text-xs bg-emerald-800 px-2.5 py-1 rounded-full font-medium">Aplikasi</span>
+                </div>
+                <div class="p-6 space-y-6">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <p class="text-slate-800 font-medium leading-relaxed">
+                            Di sebuah toko buku, harga 3 buah buku dan 2 buah pensil adalah Rp13.000. Diketahui pula bahwa harga 1 buah buku adalah Rp1.000 lebih mahal daripada harga 1 buah pensil. Tentukan harga 1 buku dan 1 pensil dengan metode substitusi!
+                        </p>
+                    </div>
+
+                    <div>
+                        <button onclick="toggleAccordion('acc-s3')" class="w-full flex justify-between items-center bg-slate-100 hover:bg-slate-200 text-slate-800 px-4 py-3 rounded-xl font-semibold transition">
+                            <span><i class="fa-solid fa-square-check text-emerald-600 mr-2"></i> Lihat Penjabaran Langkah Demi Langkah</span>
+                            <i id="acc-s3-icon" class="fa-solid fa-chevron-down transition-transform"></i>
+                        </button>
+
+                        <div id="acc-s3" class="accordion-content">
+                            <div class="pt-4 space-y-4 text-sm text-slate-700 border-t border-slate-200 mt-3">
+                                <div>
+                                    <h5 class="font-bold text-slate-900 mb-1">Langkah 1: Pemisalan & Model Matematika</h5>
+                                    <p class="mb-1">Misalkan harga 1 buku = $x$ dan harga 1 pensil = $y$.</p>
+                                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 font-mono text-slate-800 space-y-1">
+                                        <p>$$3x + 2y = 13.000 \quad \text{...(Persamaan 1)}$$</p>
+                                        <p>$$x = y + 1.000 \quad \text{...(Persamaan 2)}$$</p>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h5 class="font-bold text-slate-900 mb-1">Langkah 2: Substitusikan $x$ dari Persamaan (2) ke Persamaan (1)</h5>
+                                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 font-mono space-y-1 text-slate-800">
+                                        <p>$$3(y + 1000) + 2y = 13000$$</p>
+                                        <p>$$3y + 3000 + 2y = 13000 \implies 5y = 10000 \implies y = 2000$$</p>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h5 class="font-bold text-slate-900 mb-1">Langkah 3: Substitusikan $y = 2000$ ke Persamaan (2)</h5>
+                                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 font-mono space-y-1 text-slate-800">
+                                        <p>$$x = 2000 + 1000 \implies x = 3000$$</p>
+                                    </div>
+                                </div>
+
+                                <div class="bg-emerald-50 border border-emerald-300 p-3.5 rounded-xl text-emerald-900 font-semibold text-center">
+                                    Kesimpulan: Harga 1 buah buku ($x$) = Rp3.000,00 dan harga 1 buah pensil ($y$) = Rp2.000,00.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 6: LAB INTERAKTIF & KALKULATOR SOLVER -->
+        <section id="lab-kalkulator" class="tab-content hidden space-y-8">
+            <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200">
+                <div class="border-b border-slate-200 pb-4 mb-6">
+                    <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-calculator text-blue-600"></i> Lab Interaktif Plotter & Solver SPLDV
+                    </h2>
+                    <p class="text-slate-500 text-sm">Masukkan koefisien persamaan linear untuk menghasilkan grafik Kartesius, Tabel Titik Potong, dan langkah substitusi secara otomatis!</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    <!-- Input Form -->
+                    <div class="lg:col-span-5 space-y-6">
+                        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-4">
+                            <h3 class="font-bold text-slate-800 text-base border-b border-slate-200 pb-2">Persamaan 1: $a_1 x + b_1 y = c_1$</h3>
+                            <div class="grid grid-cols-3 gap-3">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">$a_1$ ($x$)</label>
+                                    <input type="number" id="a1" value="2" class="w-full border border-slate-300 rounded-lg p-2 text-center font-bold focus:ring-2 focus:ring-blue-500">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">$b_1$ ($y$)</label>
+                                    <input type="number" id="b1" value="3" class="w-full border border-slate-300 rounded-lg p-2 text-center font-bold focus:ring-2 focus:ring-blue-500">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">$c_1$ (Konst.)</label>
+                                    <input type="number" id="c1" value="12" class="w-full border border-slate-300 rounded-lg p-2 text-center font-bold focus:ring-2 focus:ring-blue-500">
+                                </div>
+                            </div>
+
+                            <h3 class="font-bold text-slate-800 text-base border-b border-slate-200 pb-2 pt-2">Persamaan 2: $a_2 x + b_2 y = c_2$</h3>
+                            <div class="grid grid-cols-3 gap-3">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">$a_2$ ($x$)</label>
+                                    <input type="number" id="a2" value="4" class="w-full border border-slate-300 rounded-lg p-2 text-center font-bold focus:ring-2 focus:ring-blue-500">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">$b_2$ ($y$)</label>
+                                    <input type="number" id="b2" value="-2" class="w-full border border-slate-300 rounded-lg p-2 text-center font-bold focus:ring-2 focus:ring-blue-500">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">$c_2$ (Konst.)</label>
+                                    <input type="number" id="c2" value="8" class="w-full border border-slate-300 rounded-lg p-2 text-center font-bold focus:ring-2 focus:ring-blue-500">
+                                </div>
+                            </div>
+
+                            <button onclick="calculateSolver()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-md transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-play"></i> Hitung & Plot Grafik
+                            </button>
+                        </div>
+
+                        <!-- Solution Summary Box -->
+                        <div id="solutionBox" class="bg-blue-50 border border-blue-200 p-5 rounded-2xl text-center">
+                            <h4 class="text-xs font-bold text-blue-900 uppercase tracking-wider mb-2">Hasil Himpunan Penyelesaian:</h4>
+                            <div id="solutionResult" class="text-2xl font-extrabold text-blue-700">
+                                $$HP = \{(3, 2)\}$$
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Output Column -->
+                    <div class="lg:col-span-7 space-y-6">
+                        <!-- Canvas Graphic Output -->
+                        <div class="bg-slate-900 p-4 rounded-2xl shadow-inner flex flex-col items-center justify-center">
+                            <div class="flex justify-between w-full text-xs text-slate-300 mb-2 px-2">
+                                <span class="font-bold text-blue-400">Garis 1 (Biru)</span>
+                                <span class="font-bold text-emerald-400">Garis 2 (Hijau)</span>
+                                <span class="font-bold text-red-400">Titik Potong (Merah)</span>
+                            </div>
+                            <canvas id="interactiveCanvas" width="500" height="380" class="bg-slate-900 rounded-xl w-full max-w-full"></canvas>
+                        </div>
+
+                        <!-- Dynamic Titik Potong Tables -->
+                        <div id="solverTablesContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <!-- Injected dynamically by calculateSolver() -->
+                        </div>
+
+                        <!-- Step by step text explanation output -->
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-sm">
+                            <h4 class="font-bold text-slate-800 mb-2">Penjabaran Langkah Substitusi:</h4>
+                            <div id="stepByStepOutput" class="space-y-2 font-mono text-xs text-slate-700">
+                                <!-- Computed dynamic steps appear here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 7: KUIS INTERAKTIF -->
+        <section id="kuis-interaktif" class="tab-content hidden space-y-8">
+            <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200">
+                <div class="border-b border-slate-200 pb-4 mb-6 flex justify-between items-center flex-wrap gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-900">Kuis Evaluasi Pemahaman SPLDV</h2>
+                        <p class="text-slate-500 text-sm">Uji pemahaman Anda tentang Metode Grafik & Substitusi</p>
+                    </div>
+                    <div class="bg-blue-50 border border-blue-200 px-4 py-2 rounded-xl text-blue-800 font-bold">
+                        Skor: <span id="quizScore">0</span> / 100
+                    </div>
+                </div>
+
+                <div id="quizContainer" class="space-y-8">
+                    <!-- Question 1 -->
+                    <div class="p-5 border border-slate-200 rounded-2xl bg-slate-50/50 space-y-4">
+                        <span class="text-xs font-bold bg-blue-100 text-blue-700 px-3 py-1 rounded-full">Soal 1 (Grafik)</span>
+                        <h3 class="font-semibold text-slate-800">Titik potong sumbu-$Y$ dari persamaan $3x + 2y = 12$ adalah...</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <button onclick="checkQuiz(1, 'A', false, this)" class="q-btn-1 border border-slate-300 bg-white hover:bg-slate-100 p-3 rounded-xl text-left text-sm font-medium transition">$(4, 0)$</button>
+                            <button onclick="checkQuiz(1, 'B', true, this)" class="q-btn-1 border border-slate-300 bg-white hover:bg-slate-100 p-3 rounded-xl text-left text-sm font-medium transition">$(0, 6)$</button>
+                            <button onclick="checkQuiz(1, 'C', false, this)" class="q-btn-1 border border-slate-300 bg-white hover:bg-slate-100 p-3 rounded-xl text-left text-sm font-medium transition">$(0, 4)$</button>
+                            <button onclick="checkQuiz(1, 'D', false, this)" class="q-btn-1 border border-slate-300 bg-white hover:bg-slate-100 p-3 rounded-xl text-left text-sm font-medium transition">$(6, 0)$</button>
+                        </div>
+                        <div id="q1-explain" class="hidden p-3 rounded-xl text-xs font-medium"></div>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="p-5 border border-slate-200 rounded-2xl bg-slate-50/50 space-y-4">
+                        <span class="text-xs font-bold bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full">Soal 2 (Substitusi)</span>
+                        <h3 class="font-semibold text-slate-800">Jika $y = x + 3$ disubstitusikan ke dalam $2x + y = 12$, nilai $x$ yang memenuhi adalah...</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <button onclick="checkQuiz(2, 'A', false, this)" class="q-btn-2 border border-slate-300 bg-white hover:bg-slate-100 p-3 rounded-xl text-left text-sm font-medium transition">$x = 5$</button>
+                            <button onclick="checkQuiz(2, 'B', false, this)" class="q-btn-2 border border-slate-300 bg-white hover:bg-slate-100 p-3 rounded-xl text-left text-sm font-medium transition">$x = 4$</button>
+                            <button onclick="checkQuiz(2, 'C', true, this)" class="q-btn-2 border border-slate-300 bg-white hover:bg-slate-100 p-3 rounded-xl text-left text-sm font-medium transition">$x = 3$</button>
+                            <button onclick="checkQuiz(2, 'D', false, this)" class="q-btn-2 border border-slate-300 bg-white hover:bg-slate-100 p-3 rounded-xl text-left text-sm font-medium transition">$x = 2$</button>
+                        </div>
+                        <div id="q2-explain" class="hidden p-3 rounded-xl text-xs font-medium"></div>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="p-5 border border-slate-200 rounded-2xl bg-slate-50/50 space-y-4">
+                        <span class="text-xs font-bold bg-purple-100 text-purple-700 px-3 py-1 rounded-full">Soal 3 (Konsep)</span>
+                        <h3 class="font-semibold text-slate-800">Jika dua garis persamaan linear dalam grafik saling sejajar (tidak pernah berpotongan), maka SPLDV tersebut...</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <button onclick="checkQuiz(3, 'A', false, this)" class="q-btn-3 border border-slate-300 bg-white hover:bg-slate-100 p-3 rounded-xl text-left text-sm font-medium transition">Memiliki 1 penyelesaian</button>
+                            <button onclick="checkQuiz(3, 'B', true, this)" class="q-btn-3 border border-slate-300 bg-white hover:bg-slate-100 p-3 rounded-xl text-left text-sm font-medium transition">Tidak memiliki penyelesaian</button>
+                            <button onclick="checkQuiz(3, 'C', false, this)" class="q-btn-3 border border-slate-300 bg-white hover:bg-slate-100 p-3 rounded-xl text-left text-sm font-medium transition">Memiliki tak hingga penyelesaian</button>
+                            <button onclick="checkQuiz(3, 'D', false, this)" class="q-btn-3 border border-slate-300 bg-white hover:bg-slate-100 p-3 rounded-xl text-left text-sm font-medium transition">Memiliki 2 penyelesaian</button>
+                        </div>
+                        <div id="q3-explain" class="hidden p-3 rounded-xl text-xs font-medium"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-6 mt-12 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4">
+            <p>Modul Pembelajaran Interaktif SPLDV &copy; 2026 - Metode Grafik & Substitusi</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        function triggerKaTeX(container = document.body) {
+            if (window.renderMathInElement) {
+                window.renderMathInElement(container, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+        }
+
+        function switchTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            
+            // Show selected tab content
+            const target = document.getElementById(tabId);
+            if(target) target.classList.remove('hidden');
+
+            // Update tab button active status
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            const indexMap = {
+                'materi-dasar': 0,
+                'metode-grafik': 1,
+                'contoh-grafik': 2,
+                'metode-substitusi': 3,
+                'contoh-substitusi': 4,
+                'lab-kalkulator': 5,
+                'kuis-interaktif': 6
+            };
+            
+            const btns = document.querySelectorAll('.tab-btn');
+            if (btns[indexMap[tabId]]) {
+                btns[indexMap[tabId]].classList.add('active');
+            }
+
+            // Draw example canvases if switched to contoh-grafik
+            if(tabId === 'contoh-grafik') {
+                setTimeout(() => {
+                    drawExampleCanvas('canvasEx1', 1, 1, 5, 1, -1, 1, 3, 2);
+                    drawExampleCanvas('canvasEx2', 2, 1, 6, 1, -1, 0, 2, 2);
+                    drawExampleCanvas('canvasEx3', 1, 2, 8, 2, 1, 7, 2, 3);
+                }, 50);
+            }
+
+            // Draw calculator canvas if switched to lab-kalkulator
+            if(tabId === 'lab-kalkulator') {
+                setTimeout(() => {
+                    calculateSolver();
+                }, 50);
+            }
+
+            // Trigger KaTeX rendering
+            setTimeout(() => triggerKaTeX(target), 20);
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        function toggleAccordion(id) {
+            const content = document.getElementById(id);
+            const icon = document.getElementById(id + '-icon');
+            
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                if(icon) icon.style.transform = 'rotate(0deg)';
+            } else {
+                content.classList.add('open');
+                if(icon) icon.style.transform = 'rotate(180deg)';
+                setTimeout(() => triggerKaTeX(content), 50);
+            }
+        }
+
+        function drawCartesianGrid(ctx, width, height, scale, originX, originY) {
+            ctx.clearRect(0, 0, width, height);
+            
+            // Background grid lines
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 1;
+
+            for (let x = originX % scale; x < width; x += scale) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, height);
+                ctx.stroke();
+            }
+
+            for (let y = originY % scale; y < height; y += scale) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(width, y);
+                ctx.stroke();
+            }
+
+            // Main X & Y Axes
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 2;
+
+            // X Axis
+            ctx.beginPath();
+            ctx.moveTo(0, originY);
+            ctx.lineTo(width, originY);
+            ctx.stroke();
+
+            // Y Axis
+            ctx.beginPath();
+            ctx.moveTo(originX, 0);
+            ctx.lineTo(originX, height);
+            ctx.stroke();
+
+            // Axis labels & Ticks
+            ctx.fillStyle = '#cbd5e1';
+            ctx.font = '10px Inter, sans-serif';
+
+            // X Ticks
+            for (let x = originX + scale; x < width; x += scale) {
+                const val = Math.round((x - originX) / scale);
+                ctx.fillText(val, x - 3, originY + 14);
+            }
+            for (let x = originX - scale; x > 0; x -= scale) {
+                const val = Math.round((x - originX) / scale);
+                ctx.fillText(val, x - 5, originY + 14);
+            }
+
+            // Y Ticks
+            for (let y = originY - scale; y > 0; y -= scale) {
+                const val = Math.round((originY - y) / scale);
+                ctx.fillText(val, originX + 5, y + 3);
+            }
+            for (let y = originY + scale; y < height; y += scale) {
+                const val = Math.round((originY - y) / scale);
+                ctx.fillText(val, originX + 5, y + 3);
+            }
+        }
+
+        function drawLineOnGrid(ctx, a, b, c, color, width, height, scale, originX, originY) {
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2.5;
+
+            let x1, y1, x2, y2;
+
+            if (Math.abs(b) > 0.0001) {
+                x1 = -15;
+                y1 = (c - a * x1) / b;
+                x2 = 15;
+                y2 = (c - a * x2) / b;
+            } else {
+                x1 = c / a;
+                y1 = -15;
+                x2 = c / a;
+                y2 = 15;
+            }
+
+            const canvasX1 = originX + x1 * scale;
+            const canvasY1 = originY - y1 * scale;
+            const canvasX2 = originX + x2 * scale;
+            const canvasY2 = originY - y2 * scale;
+
+            ctx.beginPath();
+            ctx.moveTo(canvasX1, canvasY1);
+            ctx.lineTo(canvasX2, canvasY2);
+            ctx.stroke();
+        }
+
+        function drawPoint(ctx, xVal, yVal, color, label, scale, originX, originY) {
+            const cx = originX + xVal * scale;
+            const cy = originY - yVal * scale;
+
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            if (label) {
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 12px Inter, sans-serif';
+                ctx.fillText(label, cx + 8, cy - 8);
+            }
+        }
+
+        function drawExampleCanvas(canvasId, a1, b1, c1, a2, b2, c2, solX, solY) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+            const scale = 25;
+            const originX = w / 2 - 20;
+            const originY = h / 2 + 30;
+
+            drawCartesianGrid(ctx, w, h, scale, originX, originY);
+            drawLineOnGrid(ctx, a1, b1, c1, '#3b82f6', w, h, scale, originX, originY);
+            drawLineOnGrid(ctx, a2, b2, c2, '#10b981', w, h, scale, originX, originY);
+            drawPoint(ctx, solX, solY, '#ef4444', `(${solX}, ${solY})`, scale, originX, originY);
+        }
+
+        function calculateSolver() {
+            const a1 = parseFloat(document.getElementById('a1').value) || 0;
+            const b1 = parseFloat(document.getElementById('b1').value) || 0;
+            const c1 = parseFloat(document.getElementById('c1').value) || 0;
+
+            const a2 = parseFloat(document.getElementById('a2').value) || 0;
+            const b2 = parseFloat(document.getElementById('b2').value) || 0;
+            const c2 = parseFloat(document.getElementById('c2').value) || 0;
+
+            const canvas = document.getElementById('interactiveCanvas');
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            const det = a1 * b2 - a2 * b1;
+
+            const solBox = document.getElementById('solutionResult');
+            const stepOut = document.getElementById('stepByStepOutput');
+            const tableContainer = document.getElementById('solverTablesContainer');
+
+            const scale = 25;
+            const originX = w / 2;
+            const originY = h / 2;
+
+            drawCartesianGrid(ctx, w, h, scale, originX, originY);
+            drawLineOnGrid(ctx, a1, b1, c1, '#3b82f6', w, h, scale, originX, originY);
+            drawLineOnGrid(ctx, a2, b2, c2, '#10b981', w, h, scale, originX, originY);
+
+            // Compute TP for Persamaan 1
+            const tp1_y = Math.abs(b1) > 0.0001 ? Math.round((c1 / b1) * 100) / 100 : '-';
+            const tp1_x = Math.abs(a1) > 0.0001 ? Math.round((c1 / a1) * 100) / 100 : '-';
+
+            // Compute TP for Persamaan 2
+            const tp2_y = Math.abs(b2) > 0.0001 ? Math.round((c2 / b2) * 100) / 100 : '-';
+            const tp2_x = Math.abs(a2) > 0.0001 ? Math.round((c2 / a2) * 100) / 100 : '-';
+
+            // Render Dynamic Tables
+            tableContainer.innerHTML = `
+                <div class="bg-blue-50/70 p-3 rounded-xl border border-blue-200">
+                    <h5 class="font-bold text-xs text-blue-900 mb-2 text-center">Tabel TP Persamaan 1: $${a1}x + ${b1}y = ${c1}$</h5>
+                    <table class="tp-table w-full bg-white text-xs rounded">
+                        <tr class="bg-blue-600 text-white font-bold"><td colspan="3">$${a1}x + ${b1}y = ${c1}$</td></tr>
+                        <tr><td class="font-bold bg-slate-100">$x$</td><td>$0$</td><td class="font-bold text-blue-600">$${tp1_x}$</td></tr>
+                        <tr><td class="font-bold bg-slate-100">$y$</td><td class="font-bold text-blue-600">$${tp1_y}$</td><td>$0$</td></tr>
+                        <tr class="bg-blue-100 font-bold"><td>TP</td><td>$(0, ${tp1_y})$</td><td>$(${tp1_x}, 0)$</td></tr>
+                    </table>
+                </div>
+
+                <div class="bg-emerald-50/70 p-3 rounded-xl border border-emerald-200">
+                    <h5 class="font-bold text-xs text-emerald-900 mb-2 text-center">Tabel TP Persamaan 2: $${a2}x + ${b2}y = ${c2}$</h5>
+                    <table class="tp-table w-full bg-white text-xs rounded">
+                        <tr class="bg-emerald-600 text-white font-bold"><td colspan="3">$${a2}x + ${b2}y = ${c2}$</td></tr>
+                        <tr><td class="font-bold bg-slate-100">$x$</td><td>$0$</td><td class="font-bold text-emerald-600">$${tp2_x}$</td></tr>
+                        <tr><td class="font-bold bg-slate-100">$y$</td><td class="font-bold text-emerald-600">$${tp2_y}$</td><td>$0$</td></tr>
+                        <tr class="bg-emerald-100 font-bold"><td>TP</td><td>$(0, ${tp2_y})$</td><td>$(${tp2_x}, 0)$</td></tr>
+                    </table>
+                </div>
+            `;
+
+            if (Math.abs(det) < 0.0001) {
+                if (Math.abs(a1 * c2 - a2 * c1) < 0.0001) {
+                    solBox.innerHTML = "<span class='text-amber-600 font-bold text-lg'>Garis Berimpit (Tak Hingga Solusi)</span>";
+                    stepOut.innerHTML = "<p>Garis 1 dan Garis 2 sejatinya ekuivalen. Memiliki tak hingga banyak titik penyelesaian.</p>";
+                } else {
+                    solBox.innerHTML = "<span class='text-red-600 font-bold text-lg'>Garis Sejajar (Tidak Ada Solusi)</span>";
+                    stepOut.innerHTML = "<p>Garis 1 dan Garis 2 sejajar ($m_1 = m_2$). Tidak ada titik potong yang memenuhi.</p>";
+                }
+            } else {
+                const x = (c1 * b2 - c2 * b1) / det;
+                const y = (a1 * c2 - a2 * c1) / det;
+
+                const roundedX = Math.round(x * 100) / 100;
+                const roundedY = Math.round(y * 100) / 100;
+
+                solBox.innerHTML = `$$HP = \\{(${roundedX}, ${roundedY})\\}$$`;
+                drawPoint(ctx, x, y, '#ef4444', `(${roundedX}, ${roundedY})`, scale, originX, originY);
+
+                stepOut.innerHTML = `
+                    <p>1. Dari Persamaan 1 ($${a1}x + ${b1}y = ${c1}$):</p>
+                    <p class="pl-4 text-blue-600 font-bold">$$y = \\frac{${c1} - ${a1}x}{${b1}}$$</p>
+                    <p>2. Substitusikan $y$ ke Persamaan 2 ($${a2}x + ${b2}y = ${c2}$):</p>
+                    <p class="pl-4">$$${a2}x + ${b2}\\left(\\frac{${c1} - ${a1}x}{${b1}}\\right) = ${c2}$$</p>
+                    <p>3. Diperoleh nilai <strong class="text-blue-600">$x = ${roundedX}$</strong></p>
+                    <p>4. Substitusi balik untuk memperoleh <strong class="text-emerald-600">$y = ${roundedY}$</strong></p>
+                `;
+            }
+
+            triggerKaTeX(document.getElementById('lab-kalkulator'));
+        }
+
+        let score = 0;
+        const answered = { 1: false, 2: false, 3: false };
+
+        function checkQuiz(qNum, option, isCorrect, btnElement) {
+            if (answered[qNum]) return;
+            answered[qNum] = true;
+
+            const btns = document.querySelectorAll(`.q-btn-${qNum}`);
+            btns.forEach(b => b.classList.add('opacity-50', 'cursor-not-allowed'));
+
+            const explain = document.getElementById(`q${qNum}-explain`);
+            explain.classList.remove('hidden');
+
+            if (isCorrect) {
+                btnElement.classList.remove('bg-white', 'hover:bg-slate-100');
+                btnElement.classList.add('bg-green-500', 'text-white', 'border-green-600');
+                score += 33.33;
+                explain.classList.add('bg-green-100', 'text-green-800');
+                explain.innerHTML = "<strong>Benar!</strong> Jawaban Anda tepat.";
+            } else {
+                btnElement.classList.remove('bg-white', 'hover:bg-slate-100');
+                btnElement.classList.add('bg-red-500', 'text-white', 'border-red-600');
+                explain.classList.add('bg-red-100', 'text-red-800');
+                explain.innerHTML = "<strong>Kurang Tepat.</strong> Pelajari kembali langkah perhitungan pada materi di atas.";
+            }
+
+            document.getElementById('quizScore').innerText = Math.round(score);
+        }
+
+        // Initialize view on load
+        window.onload = function() {
+            setTimeout(() => {
+                triggerKaTeX();
+                switchTab('materi-dasar');
+            }, 100);
+        };
+    </script>
+</body>
+</html>
