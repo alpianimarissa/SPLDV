@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPLDV Substitusi Soal Cerita</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti for Reward -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+        }
+        .var-x { color: #2563eb; font-weight: 700; } /* Blue */
+        .var-y { color: #d97706; font-weight: 700; } /* Amber */
+        .bg-var-x { background-color: #dbeafe; border-color: #93c5fd; }
+        .bg-var-y { background-color: #fef3c7; border-color: #fde047; }
+        .step-active { border-color: #4f46e5; background-color: #ffffff; }
+        .tab-active { background-color: #4f46e5; color: #ffffff; }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col justify-between">
+
+    <div>
+        <!-- Top Header -->
+        <header class="bg-indigo-600 text-white shadow-lg sticky top-0 z-50">
+            <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="calculator" class="w-6 h-6"></i>
+                    <h1 class="font-extrabold text-lg sm:text-xl tracking-tight">SPLDV Substitusi</h1>
+                </div>
+                <div class="text-xs bg-indigo-500/50 px-3 py-1 rounded-full border border-indigo-300/30">
+                    Soal Cerita
+                </div>
+            </div>
+            
+            <!-- Navigation Tabs -->
+            <div class="max-w-4xl mx-auto px-2 flex overflow-x-auto gap-1 pb-2 pt-1 text-xs sm:text-sm font-semibold no-scrollbar">
+                <button onclick="switchTab('tujuan')" id="tab-tujuan" class="tab-btn tab-active px-3 py-2 rounded-lg whitespace-nowrap transition flex items-center gap-1.5">
+                    <i data-lucide="target" class="w-4 h-4"></i> 1. Tujuan
+                </button>
+                <button onclick="switchTab('warmup')" id="tab-warmup" class="tab-btn text-indigo-100 hover:bg-indigo-500/50 px-3 py-2 rounded-lg whitespace-nowrap transition flex items-center gap-1.5">
+                    <i data-lucide="zap" class="w-4 h-4"></i> 2. Warm-Up
+                </button>
+                <button onclick="switchTab('koneksi')" id="tab-koneksi" class="tab-btn text-indigo-100 hover:bg-indigo-500/50 px-3 py-2 rounded-lg whitespace-nowrap transition flex items-center gap-1.5">
+                    <i data-lucide="shopping-bag" class="w-4 h-4"></i> 3. Dunia Nyata
+                </button>
+                <button onclick="switchTab('materi')" id="tab-materi" class="tab-btn text-indigo-100 hover:bg-indigo-500/50 px-3 py-2 rounded-lg whitespace-nowrap transition flex items-center gap-1.5">
+                    <i data-lucide="book-open" class="w-4 h-4"></i> 4. Konsep & Contoh
+                </button>
+                <button onclick="switchTab('latihan')" id="tab-latihan" class="tab-btn text-indigo-100 hover:bg-indigo-500/50 px-3 py-2 rounded-lg whitespace-nowrap transition flex items-center gap-1.5">
+                    <i data-lucide="pen-tool" class="w-4 h-4"></i> 5. Latihan Terbimbing
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="max-w-4xl mx-auto p-4 sm:p-6">
+
+            <!-- SECTION 1: TUJUAN -->
+            <section id="sec-tujuan" class="tab-content space-y-6">
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                    <div class="flex items-center gap-3 mb-4 text-indigo-600">
+                        <i data-lucide="compass" class="w-8 h-8"></i>
+                        <h2 class="text-xl font-bold">Target Belajar Hari Ini</h2>
+                    </div>
+                    <p class="text-slate-600 text-sm mb-6">Selesaikan modul singkat ini dan kamu akan menguasai 3 keahlian ini:</p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="bg-indigo-50/50 border border-indigo-100 p-4 rounded-xl flex flex-col items-center text-center">
+                            <div class="w-10 h-10 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold mb-3">1</div>
+                            <h3 class="font-bold text-slate-800 text-sm mb-1">Menerjemahkan</h3>
+                            <p class="text-xs text-slate-500">Ubah kalimat cerita jadi pemisalan simbol (<span class="var-x">x</span> & <span class="var-y">y</span>).</p>
+                        </div>
+                        <div class="bg-indigo-50/50 border border-indigo-100 p-4 rounded-xl flex flex-col items-center text-center">
+                            <div class="w-10 h-10 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold mb-3">2</div>
+                            <h3 class="font-bold text-slate-800 text-sm mb-1">Substitusi</h3>
+                            <p class="text-xs text-slate-500">Mengganti (menempelkan) satu variabel ke persamaan lain.</p>
+                        </div>
+                        <div class="bg-indigo-50/50 border border-indigo-100 p-4 rounded-xl flex flex-col items-center text-center">
+                            <div class="w-10 h-10 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold mb-3">3</div>
+                            <h3 class="font-bold text-slate-800 text-sm mb-1">Menemukan Solusi</h3>
+                            <p class="text-xs text-slate-500">Mendapatkan harga atau nilai pasti dari cerita tersebut.</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 text-center">
+                        <button onclick="switchTab('warmup')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-xl shadow-md transition inline-flex items-center gap-2">
+                            Mulai Warm-Up <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2: WARM-UP (PLSV) -->
+            <section id="sec-warmup" class="tab-content hidden space-y-6">
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-2 text-indigo-600">
+                            <i data-lucide="flame" class="w-6 h-6"></i>
+                            <h2 class="text-lg font-bold">Warm-Up: Ingat Kembali PLSV!</h2>
+                        </div>
+                        <span class="text-xs bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full font-medium">4 Soal Singkat</span>
+                    </div>
+                    <p class="text-slate-600 text-sm mb-6">Substitusi butuh kemampuan dasar ini. Selesaikan dulu yuk!</p>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Q1 -->
+                        <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
+                            <label class="text-xs font-semibold text-slate-500">Soal 1</label>
+                            <div class="font-mono text-base font-bold text-slate-700">x + 5 = 12</div>
+                            <div class="flex gap-2">
+                                <input type="number" id="wu1" placeholder="x = ?" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                                <button onclick="checkWarmUp(1, 7)" class="bg-slate-800 text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-slate-700">Cek</button>
+                            </div>
+                            <p id="wu1-msg" class="text-xs hidden font-medium"></p>
+                        </div>
+
+                        <!-- Q2 -->
+                        <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
+                            <label class="text-xs font-semibold text-slate-500">Soal 2</label>
+                            <div class="font-mono text-base font-bold text-slate-700">2y = 10</div>
+                            <div class="flex gap-2">
+                                <input type="number" id="wu2" placeholder="y = ?" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                                <button onclick="checkWarmUp(2, 5)" class="bg-slate-800 text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-slate-700">Cek</button>
+                            </div>
+                            <p id="wu2-msg" class="text-xs hidden font-medium"></p>
+                        </div>
+
+                        <!-- Q3 -->
+                        <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
+                            <label class="text-xs font-semibold text-slate-500">Soal 3 (Ganti y dengan 3)</label>
+                            <div class="font-mono text-base font-bold text-slate-700">x + 2(3) = 10</div>
+                            <div class="flex gap-2">
+                                <input type="number" id="wu3" placeholder="x = ?" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                                <button onclick="checkWarmUp(3, 4)" class="bg-slate-800 text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-slate-700">Cek</button>
+                            </div>
+                            <p id="wu3-msg" class="text-xs hidden font-medium"></p>
+                        </div>
+
+                        <!-- Q4 -->
+                        <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
+                            <label class="text-xs font-semibold text-slate-500">Soal 4</label>
+                            <div class="font-mono text-base font-bold text-slate-700">3x - 4 = 11</div>
+                            <div class="flex gap-2">
+                                <input type="number" id="wu4" placeholder="x = ?" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                                <button onclick="checkWarmUp(4, 5)" class="bg-slate-800 text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-slate-700">Cek</button>
+                            </div>
+                            <p id="wu4-msg" class="text-xs hidden font-medium"></p>
+                        </div>
+                    </div>
+
+                    <!-- Progress Message -->
+                    <div id="wu-complete-msg" class="hidden bg-emerald-50 border border-emerald-200 text-emerald-800 p-4 rounded-xl text-center space-y-2">
+                        <p class="font-bold text-sm">🎉 Hebat! Kamu sudah siap masuk ke materi SPLDV!</p>
+                        <button onclick="switchTab('koneksi')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-4 py-2 rounded-lg transition inline-flex items-center gap-1">
+                            Lanjut ke Koneksi Nyata <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: KONEKSI NYATA -->
+            <section id="sec-koneksi" class="tab-content hidden space-y-6">
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                    <div class="flex items-center gap-2 text-indigo-600 mb-4">
+                        <i data-lucide="store" class="w-6 h-6"></i>
+                        <h2 class="text-lg font-bold">Studi Kasus di Kantin Sekolah</h2>
+                    </div>
+
+                    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-slate-700 text-sm space-y-3 mb-6">
+                        <p class="font-medium">
+                            Ani dan Budi membeli paket donat dan es teh di kantin, tetapi kasir hanya memberikan **total harga paket**, bukan harga satuan.
+                        </p>
+                    </div>
+
+                    <!-- Visual Comparison Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <!-- Person 1 -->
+                        <div class="border border-slate-200 rounded-xl p-4 bg-slate-50 flex flex-col justify-between">
+                            <div>
+                                <span class="bg-blue-100 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-md">Belanjaan Budi</span>
+                                <div class="my-4 flex items-center justify-center gap-3 text-2xl">
+                                    <span>🍩🍩</span>
+                                    <span>+</span>
+                                    <span>🧋</span>
+                                </div>
+                                <p class="text-center font-bold text-slate-800 text-sm">2 Donat + 1 Es Teh</p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-slate-200 text-center font-extrabold text-indigo-600">
+                                Total: Rp 11.000
+                            </div>
+                        </div>
+
+                        <!-- Person 2 -->
+                        <div class="border border-slate-200 rounded-xl p-4 bg-slate-50 flex flex-col justify-between">
+                            <div>
+                                <span class="bg-amber-100 text-amber-700 text-xs font-bold px-2.5 py-1 rounded-md">Catatan Kasir</span>
+                                <div class="my-4 flex items-center justify-center gap-2 text-lg font-bold text-amber-800">
+                                    "Harga 1 Es Teh sama dengan harga 1 Donat + Rp 2.000"
+                                </div>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-slate-200 text-center text-xs text-slate-500 font-medium">
+                                Informasi Tambahan
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-4 text-center">
+                        <p class="text-xs text-slate-600 mb-2">Bagaimana cara tahu harga 1 Donat dan 1 Es Teh?</p>
+                        <p class="text-sm font-bold text-indigo-900">👉 Kita bisa "Menempelkan/Ganti" (Substitusi) informasi Es Teh ke belanjaan Budi!</p>
+                    </div>
+
+                    <div class="mt-6 text-center">
+                        <button onclick="switchTab('materi')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2.5 rounded-xl text-sm transition inline-flex items-center gap-2">
+                            Pelajari Langkah Substitusi <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 4: MATERI & CONTOH -->
+            <section id="sec-materi" class="tab-content hidden space-y-6">
+                <!-- 4 Simple Steps Badge -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-4">
+                    <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                        <i data-lucide="layers" class="w-5 h-5 text-indigo-600"></i> 4 Langkah Emas Substitusi
+                    </h2>
+                    
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs">
+                        <div class="p-2.5 rounded-lg bg-blue-50 border border-blue-200 font-bold text-blue-800">1. Misalkan (<span class="var-x">x</span> & <span class="var-y">y</span>)</div>
+                        <div class="p-2.5 rounded-lg bg-amber-50 border border-amber-200 font-bold text-amber-800">2. Buat Persamaan</div>
+                        <div class="p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 font-bold text-emerald-800">3. Substitusi (Tempel)</div>
+                        <div class="p-2.5 rounded-lg bg-purple-50 border border-purple-200 font-bold text-purple-800">4. Hitung Hasil</div>
+                    </div>
+                </div>
+
+                <!-- Example Toggle Header -->
+                <div class="flex items-center justify-between gap-2 border-b border-slate-200 pb-2">
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Pilih Contoh Soal:</span>
+                    <div class="flex gap-2">
+                        <button id="ex-btn-1" onclick="switchExample(1)" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-indigo-600 text-white shadow-sm transition">
+                            Contoh 1: Donat & Teh
+                        </button>
+                        <button id="ex-btn-2" onclick="switchExample(2)" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition">
+                            Contoh 2: Baju & Kaos Kaki
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Worked Example Card 1 -->
+                <div id="example-1" class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-6">
+                    <div class="border-b pb-3 flex justify-between items-center">
+                        <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Contoh Soal 1</span>
+                        <span class="text-xs bg-slate-100 text-slate-500 px-2 py-1 rounded">Kasus Kantin</span>
+                    </div>
+
+                    <!-- Story Box -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-sm">
+                        <p class="font-medium text-slate-800">
+                            "Harga 2 Donat dan 1 Es Teh adalah <strong>Rp 11.000</strong>. Jika harga 1 Es Teh adalah <strong>Rp 2.000 lebih mahal</strong> dari 1 Donat, berapakah harga 1 Donat?"
+                        </p>
+                    </div>
+
+                    <!-- Step-by-Step Interactive Accordion/Cards -->
+                    <div class="space-y-4">
+                        <!-- Step 1 -->
+                        <div class="p-4 rounded-xl border border-slate-200 bg-white space-y-2">
+                            <div class="flex items-center gap-2 text-xs font-bold text-blue-600">
+                                <span class="w-5 h-5 bg-blue-100 rounded-full flex items-center justify-center">1</span>
+                                LANGKAH 1: PEMISALAN
+                            </div>
+                            <div class="flex gap-4 text-xs sm:text-sm pl-7">
+                                <span class="bg-var-x px-3 py-1 rounded-lg border">Misal Donat = <strong class="var-x">x</strong></span>
+                                <span class="bg-var-y px-3 py-1 rounded-lg border">Misal Es Teh = <strong class="var-y">y</strong></span>
+                            </div>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="p-4 rounded-xl border border-slate-200 bg-white space-y-2">
+                            <div class="flex items-center gap-2 text-xs font-bold text-amber-600">
+                                <span class="w-5 h-5 bg-amber-100 rounded-full flex items-center justify-center">2</span>
+                                LANGKAH 2: BUAT MODEL MATEMATIKA
+                            </div>
+                            <div class="pl-7 space-y-1 font-mono text-xs sm:text-sm">
+                                <p class="text-slate-700">Persamaan (1): <span class="font-bold">2<span class="var-x">x</span> + 1<span class="var-y">y</span> = 11.000</span></p>
+                                <p class="text-slate-700">Persamaan (2): <span class="font-bold"><span class="var-y">y</span> = <span class="var-x">x</span> + 2.000</span></p>
+                            </div>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="p-4 rounded-xl border-2 border-indigo-200 bg-indigo-50/30 space-y-3">
+                            <div class="flex items-center gap-2 text-xs font-bold text-indigo-700">
+                                <span class="w-5 h-5 bg-indigo-600 text-white rounded-full flex items-center justify-center">3</span>
+                                LANGKAH 3: SUBSTITUSI (Ganti nilai y ke Persamaan 1)
+                            </div>
+                            <div class="pl-7 text-xs sm:text-sm space-y-2">
+                                <p class="text-slate-600">Tulis Persamaan (1):</p>
+                                <div class="font-mono bg-white p-2 rounded border text-slate-800">
+                                    2<span class="var-x">x</span> + <span class="var-y">y</span> = 11.000
+                                </div>
+                                <p class="text-slate-600">Ganti <strong class="var-y">y</strong> dengan <span class="bg-amber-100 px-1 rounded text-amber-800 font-mono">(x + 2.000)</span>:</p>
+                                <div class="font-mono bg-white p-2 rounded border text-slate-800">
+                                    2<span class="var-x">x</span> + <span class="bg-amber-100 px-1.5 py-0.5 rounded text-amber-800 font-bold">(x + 2.000)</span> = 11.000
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 4 -->
+                        <div class="p-4 rounded-xl border border-slate-200 bg-white space-y-2">
+                            <div class="flex items-center gap-2 text-xs font-bold text-emerald-600">
+                                <span class="w-5 h-5 bg-emerald-100 rounded-full flex items-center justify-center">4</span>
+                                LANGKAH 4: HITUNG NILAI X
+                            </div>
+                            <div class="pl-7 font-mono text-xs sm:text-sm space-y-1 text-slate-700">
+                                <p>3x + 2.000 = 11.000</p>
+                                <p>3x = 11.000 - 2.000</p>
+                                <p>3x = 9.000</p>
+                                <p class="font-bold text-emerald-700 text-sm">x = 3.000</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Conclusion Box -->
+                    <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-center text-xs sm:text-sm font-bold text-emerald-800">
+                        💡 Kesimpulan: Harga 1 Donat (x) adalah Rp 3.000!
+                    </div>
+                </div>
+
+                <!-- Worked Example Card 2 -->
+                <div id="example-2" class="hidden bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-6">
+                    <div class="border-b pb-3 flex justify-between items-center">
+                        <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Contoh Soal 2</span>
+                        <span class="text-xs bg-slate-100 text-slate-500 px-2 py-1 rounded">Kasus Toko Pakaian</span>
+                    </div>
+
+                    <!-- Story Box -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-sm">
+                        <p class="font-medium text-slate-800">
+                            "Harga 1 Baju dan 2 Pasang Kaos Kaki adalah <strong>Rp 70.000</strong>. Jika harga 1 Baju adalah <strong>Rp 40.000 lebih mahal</strong> dari 1 pasang Kaos Kaki, berapakah harga 1 pasang Kaos Kaki?"
+                        </p>
+                    </div>
+
+                    <!-- Step-by-Step Interactive Accordion/Cards -->
+                    <div class="space-y-4">
+                        <!-- Step 1 -->
+                        <div class="p-4 rounded-xl border border-slate-200 bg-white space-y-2">
+                            <div class="flex items-center gap-2 text-xs font-bold text-blue-600">
+                                <span class="w-5 h-5 bg-blue-100 rounded-full flex items-center justify-center">1</span>
+                                LANGKAH 1: PEMISALAN
+                            </div>
+                            <div class="flex gap-4 text-xs sm:text-sm pl-7">
+                                <span class="bg-var-x px-3 py-1 rounded-lg border">Misal Baju = <strong class="var-x">x</strong></span>
+                                <span class="bg-var-y px-3 py-1 rounded-lg border">Misal Kaos Kaki = <strong class="var-y">y</strong></span>
+                            </div>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="p-4 rounded-xl border border-slate-200 bg-white space-y-2">
+                            <div class="flex items-center gap-2 text-xs font-bold text-amber-600">
+                                <span class="w-5 h-5 bg-amber-100 rounded-full flex items-center justify-center">2</span>
+                                LANGKAH 2: BUAT MODEL MATEMATIKA
+                            </div>
+                            <div class="pl-7 space-y-1 font-mono text-xs sm:text-sm">
+                                <p class="text-slate-700">Persamaan (1): <span class="font-bold">1<span class="var-x">x</span> + 2<span class="var-y">y</span> = 70.000</span></p>
+                                <p class="text-slate-700">Persamaan (2): <span class="font-bold"><span class="var-x">x</span> = <span class="var-y">y</span> + 40.000</span></p>
+                            </div>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="p-4 rounded-xl border-2 border-indigo-200 bg-indigo-50/30 space-y-3">
+                            <div class="flex items-center gap-2 text-xs font-bold text-indigo-700">
+                                <span class="w-5 h-5 bg-indigo-600 text-white rounded-full flex items-center justify-center">3</span>
+                                LANGKAH 3: SUBSTITUSI (Ganti nilai x ke Persamaan 1)
+                            </div>
+                            <div class="pl-7 text-xs sm:text-sm space-y-2">
+                                <p class="text-slate-600">Tulis Persamaan (1):</p>
+                                <div class="font-mono bg-white p-2 rounded border text-slate-800">
+                                    <span class="var-x">x</span> + 2<span class="var-y">y</span> = 70.000
+                                </div>
+                                <p class="text-slate-600">Ganti <strong class="var-x">x</strong> dengan <span class="bg-blue-100 px-1 rounded text-blue-800 font-mono">(y + 40.000)</span>:</p>
+                                <div class="font-mono bg-white p-2 rounded border text-slate-800">
+                                    <span class="bg-blue-100 px-1.5 py-0.5 rounded text-blue-800 font-bold">(y + 40.000)</span> + 2<span class="var-y">y</span> = 70.000
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 4 -->
+                        <div class="p-4 rounded-xl border border-slate-200 bg-white space-y-2">
+                            <div class="flex items-center gap-2 text-xs font-bold text-emerald-600">
+                                <span class="w-5 h-5 bg-emerald-100 rounded-full flex items-center justify-center">4</span>
+                                LANGKAH 4: HITUNG NILAI Y
+                            </div>
+                            <div class="pl-7 font-mono text-xs sm:text-sm space-y-1 text-slate-700">
+                                <p>3y + 40.000 = 70.000</p>
+                                <p>3y = 70.000 - 40.000</p>
+                                <p>3y = 30.000</p>
+                                <p class="font-bold text-emerald-700 text-sm">y = 10.000</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Conclusion Box -->
+                    <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-center text-xs sm:text-sm font-bold text-emerald-800">
+                        💡 Kesimpulan: Harga 1 pasang Kaos Kaki (y) adalah Rp 10.000!
+                    </div>
+                </div>
+
+                <div class="text-center pt-2">
+                    <button onclick="switchTab('latihan')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2.5 rounded-xl text-sm transition inline-flex items-center gap-2">
+                        Uji Pemahaman di Latihan <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- SECTION 5: LATIHAN TERBIMBING -->
+            <section id="sec-latihan" class="tab-content hidden space-y-6">
+                <!-- Practice Card Header -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-2 text-indigo-600">
+                            <i data-lucide="edit-3" class="w-6 h-6"></i>
+                            <h2 class="text-lg font-bold">Latihan Terbimbing (Isi Kotak Kosong)</h2>
+                        </div>
+                        <span id="practice-badge" class="text-xs bg-indigo-100 text-indigo-700 font-bold px-2.5 py-1 rounded-full">Soal 1 dari 2</span>
+                    </div>
+
+                    <!-- Problem 1 Container -->
+                    <div id="prob1-container" class="space-y-6">
+                        <!-- Problem Text -->
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-sm text-slate-800">
+                            <p class="font-semibold text-xs text-indigo-600 mb-1">SOAL CERITA 1:</p>
+                            <p>
+                                Budi membeli <strong>1 Buku</strong> dan <strong>2 Pensil</strong> seharga <strong>Rp 10.000</strong>. 
+                                Jika harga 1 Buku (<strong class="var-x">x</strong>) adalah <strong>3 kali</strong> harga 1 Pensil (<strong class="var-y">y</strong>), tentukan harga 1 Pensil!
+                            </p>
+                        </div>
+
+                        <!-- Guided Step Inputs -->
+                        <div class="space-y-4 text-xs sm:text-sm">
+                            <!-- Step A: Model -->
+                            <div class="p-4 rounded-xl border border-slate-200 space-y-3">
+                                <p class="font-bold text-slate-700">Langkah 1: Lengkapi Persamaan Matematika</p>
+                                <div class="font-mono space-y-2">
+                                    <div class="flex items-center gap-2">
+                                        <span>Persamaan (1): 1x + 2y = </span>
+                                        <input type="number" id="p1-ans1" placeholder="10000" class="w-28 px-2 py-1 border rounded text-center font-bold">
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span>Persamaan (2): x = </span>
+                                        <input type="number" id="p1-ans2" placeholder="3" class="w-16 px-2 py-1 border rounded text-center font-bold">
+                                        <span>y</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step B: Substitution -->
+                            <div class="p-4 rounded-xl border border-slate-200 space-y-3">
+                                <p class="font-bold text-slate-700">Langkah 2: Substitusi x = 3y ke Persamaan (1)</p>
+                                <div class="font-mono space-y-2">
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        <span>(</span>
+                                        <input type="text" id="p1-ans3" placeholder="3y" class="w-20 px-2 py-1 border rounded text-center font-bold">
+                                        <span>) + 2y = 10.000</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <input type="number" id="p1-ans4" placeholder="5" class="w-16 px-2 py-1 border rounded text-center font-bold">
+                                        <span>y = 10.000</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step C: Final Answer -->
+                            <div class="p-4 rounded-xl border border-slate-200 space-y-3 bg-indigo-50/30">
+                                <p class="font-bold text-indigo-900">Langkah 3: Hitung Nilai y (Harga Pensil)</p>
+                                <div class="flex items-center gap-2">
+                                    <span class="font-bold">y = Rp</span>
+                                    <input type="number" id="p1-ans5" placeholder="Hasil akhir" class="w-32 px-3 py-1.5 border border-indigo-300 rounded-lg font-bold text-indigo-700">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button P1 -->
+                        <div class="flex items-center justify-between pt-2">
+                            <p id="p1-feedback" class="text-xs font-bold"></p>
+                            <button onclick="checkProblem1()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2.5 rounded-xl text-sm transition">
+                                Periksa Jawaban
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Problem 2 Container (Hidden Initially) -->
+                    <div id="prob2-container" class="hidden space-y-6">
+                        <!-- Problem Text -->
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-sm text-slate-800">
+                            <p class="font-semibold text-xs text-indigo-600 mb-1">SOAL CERITA 2:</p>
+                            <p>
+                                Di lahan parkir terdapat <strong>Mobil (x)</strong> dan <strong>Motor (y)</strong>. Jumlah kendaraan adalah <strong>10 unit</strong>. 
+                                Jika harga parkir mobil Rp 5.000 dan motor Rp 2.000, total pendapatan Rp 35.000.
+                                Persamaan (1): <strong>y = 10 - x</strong>.
+                                Tentukan jumlah <strong>Mobil (x)</strong>!
+                            </p>
+                        </div>
+
+                        <!-- Guided Step Inputs -->
+                        <div class="space-y-4 text-xs sm:text-sm">
+                            <div class="p-4 rounded-xl border border-slate-200 space-y-3">
+                                <p class="font-bold text-slate-700">Substitusi y = (10 - x) ke Persamaan Biaya:</p>
+                                <p class="font-mono text-slate-600">5.000x + 2.000(10 - x) = 35.000</p>
+                                <p class="font-mono text-slate-600">5.000x + 20.000 - 2.000x = 35.000</p>
+                                <div class="font-mono flex items-center gap-2">
+                                    <span>3.000x = </span>
+                                    <input type="number" id="p2-ans1" placeholder="15000" class="w-32 px-2 py-1 border rounded font-bold">
+                                </div>
+                            </div>
+
+                            <div class="p-4 rounded-xl border border-slate-200 space-y-3 bg-emerald-50/40">
+                                <p class="font-bold text-emerald-900">Berapa Banyak Mobil (x)?</p>
+                                <div class="flex items-center gap-2">
+                                    <span class="font-bold">x =</span>
+                                    <input type="number" id="p2-ans2" placeholder="Jumlah mobil" class="w-32 px-3 py-1.5 border border-emerald-300 rounded-lg font-bold text-emerald-700">
+                                    <span>mobil</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button P2 -->
+                        <div class="flex items-center justify-between pt-2">
+                            <p id="p2-feedback" class="text-xs font-bold"></p>
+                            <button onclick="checkProblem2()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2.5 rounded-xl text-sm transition">
+                                Periksa Jawaban Final
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Congratulations Screen (Hidden) -->
+                    <div id="finish-container" class="hidden text-center py-8 space-y-4">
+                        <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-2xl">
+                            🏆
+                        </div>
+                        <h3 class="text-xl font-extrabold text-slate-800">Luar Biasa! Kamu Lulus SPLDV Substitusi!</h3>
+                        <p class="text-xs text-slate-500 max-w-md mx-auto">
+                            Kamu telah berhasil memahami pemisalan, membuat model matematika, hingga melakukan substitusi pada soal cerita.
+                        </p>
+                        <button onclick="resetPractice()" class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition">
+                            Ulangi Latihan
+                        </button>
+                    </div>
+
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center py-4 text-xs text-slate-400 border-t border-slate-200 bg-white mt-8">
+        Media Interaktif Pembelajaran Matematika • SPLDV Substitusi
+    </footer>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Switch between worked examples
+        function switchExample(exampleNum) {
+            document.getElementById('example-1').classList.toggle('hidden', exampleNum !== 1);
+            document.getElementById('example-2').classList.toggle('hidden', exampleNum !== 2);
+            
+            const btn1 = document.getElementById('ex-btn-1');
+            const btn2 = document.getElementById('ex-btn-2');
+
+            if (exampleNum === 1) {
+                btn1.className = "px-3 py-1.5 text-xs font-bold rounded-lg bg-indigo-600 text-white shadow-sm transition";
+                btn2.className = "px-3 py-1.5 text-xs font-bold rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition";
+            } else {
+                btn1.className = "px-3 py-1.5 text-xs font-bold rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition";
+                btn2.className = "px-3 py-1.5 text-xs font-bold rounded-lg bg-indigo-600 text-white shadow-sm transition";
+            }
+        }
+
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            
+            // Reset tab styles
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('tab-active');
+                btn.classList.add('text-indigo-100');
+            });
+
+            // Show selected tab content
+            document.getElementById(`sec-${tabId}`).classList.remove('hidden');
+
+            // Highlight selected tab button
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            if (activeBtn) {
+                activeBtn.classList.add('tab-active');
+                activeBtn.classList.remove('text-indigo-100');
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Warm-Up Validation Logic
+        let warmUpProgress = { 1: false, 2: false, 3: false, 4: false };
+
+        function checkWarmUp(qNum, expected) {
+            const input = document.getElementById(`wu${qNum}`);
+            const msg = document.getElementById(`wu${qNum}-msg`);
+            const val = parseInt(input.value);
+
+            msg.classList.remove('hidden');
+
+            if (val === expected) {
+                msg.textContent = '✓ Benar!';
+                msg.className = 'text-xs font-bold text-emerald-600';
+                input.className = 'w-full px-3 py-1.5 rounded-lg border-2 border-emerald-500 text-sm focus:outline-none';
+                warmUpProgress[qNum] = true;
+            } else {
+                msg.textContent = '✕ Coba lagi ya';
+                msg.className = 'text-xs font-bold text-rose-500';
+                input.className = 'w-full px-3 py-1.5 rounded-lg border-2 border-rose-400 text-sm focus:outline-none';
+                warmUpProgress[qNum] = false;
+            }
+
+            // Check if all warmup finished
+            if (Object.values(warmUpProgress).every(v => v === true)) {
+                document.getElementById('wu-complete-msg').classList.remove('hidden');
+                confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } });
+            }
+        }
+
+        // Guided Practice 1 Validation
+        function checkProblem1() {
+            const a1 = parseInt(document.getElementById('p1-ans1').value);
+            const a2 = parseInt(document.getElementById('p1-ans2').value);
+            const a3 = document.getElementById('p1-ans3').value.trim().toLowerCase();
+            const a4 = parseInt(document.getElementById('p1-ans4').value);
+            const a5 = parseInt(document.getElementById('p1-ans5').value);
+
+            const feedback = document.getElementById('p1-feedback');
+
+            if (a1 === 10000 && a2 === 3 && (a3 === '3y' || a3 === '3 y') && a4 === 5 && a5 === 2000) {
+                feedback.textContent = '🎉 Semua Benar! Lanjut ke Soal 2';
+                feedback.className = 'text-xs font-bold text-emerald-600';
+                confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
+
+                setTimeout(() => {
+                    document.getElementById('prob1-container').classList.add('hidden');
+                    document.getElementById('prob2-container').classList.remove('hidden');
+                    document.getElementById('practice-badge').textContent = 'Soal 2 dari 2';
+                }, 1200);
+            } else {
+                feedback.textContent = '⚠️ Ada isian yang kurang tepat. Periksa kembali angka-angkamu!';
+                feedback.className = 'text-xs font-bold text-amber-600';
+            }
+        }
+
+        // Guided Practice 2 Validation
+        function checkProblem2() {
+            const a1 = parseInt(document.getElementById('p2-ans1').value);
+            const a2 = parseInt(document.getElementById('p2-ans2').value);
+
+            const feedback = document.getElementById('p2-feedback');
+
+            if (a1 === 15000 && a2 === 5) {
+                feedback.textContent = '';
+                document.getElementById('prob2-container').classList.add('hidden');
+                document.getElementById('finish-container').classList.remove('hidden');
+                document.getElementById('practice-badge').textContent = 'Selesai! ✨';
+
+                // Big celebration
+                confetti({ particleCount: 150, spread: 100, origin: { y: 0.5 } });
+            } else {
+                feedback.textContent = '⚠️ Masih ada yang keliru. Petunjuk: 35.000 - 20.000 = 15.000';
+                feedback.className = 'text-xs font-bold text-rose-500';
+            }
+        }
+
+        // Reset Practice
+        function resetPractice() {
+            document.getElementById('finish-container').classList.add('hidden');
+            document.getElementById('prob1-container').classList.remove('hidden');
+            document.getElementById('practice-badge').textContent = 'Soal 1 dari 2';
+
+            // Clear inputs
+            ['p1-ans1', 'p1-ans2', 'p1-ans3', 'p1-ans4', 'p1-ans5', 'p2-ans1', 'p2-ans2'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.value = '';
+            });
+
+            document.getElementById('p1-feedback').textContent = '';
+            document.getElementById('p2-feedback').textContent = '';
+        }
+    </script>
+</body>
+</html>
