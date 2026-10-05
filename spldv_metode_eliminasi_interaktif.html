@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pembelajaran Interaktif SPLDV - Metode Eliminasi</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- MathJax for rendering LaTeX math equations cleanly -->
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- Google Fonts Inter & Kalam for handwritten classroom feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Kalam:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-handwriting { font-family: 'Kalam', cursive; }
+        .tab-btn.active {
+            background-color: #f59e0b;
+            color: #ffffff;
+            box-shadow: 0 4px 6px -1px rgba(245, 158, 11, 0.3);
+        }
+        .paper-card {
+            background-color: #fefce8; /* Soft light yellow/cream paper background */
+            background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+            background-size: 16px 16px;
+        }
+    </style>
+</head>
+<body class="bg-amber-50/60 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Top Navigation Header -->
+    <header class="bg-white/90 backdrop-blur-md border-b border-amber-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="p-2.5 bg-amber-500 rounded-xl shadow-md shadow-amber-500/20">
+                    <i class="fa-solid font-bold text-xl fa-calculator text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-amber-900 flex items-center gap-2">
+                        SPLDV: Metode Eliminasi
+                    </h1>
+                    <p class="text-xs text-amber-700/80">Modul Interaktif & Pembahasan Lengkap Langsung</p>
+                </div>
+            </div>
+
+            <!-- Tab Navigation Bar -->
+            <nav class="flex flex-wrap gap-2 bg-amber-100/70 p-1.5 rounded-xl border border-amber-200 text-sm font-medium">
+                <button onclick="switchTab('konsep')" id="tab-konsep" class="tab-btn active px-3.5 py-1.5 rounded-lg transition-all flex items-center gap-2 text-amber-900">
+                    <i class="fa-solid fa-lightbulb"></i> Ringkasan Konsep
+                </button>
+                <button onclick="switchTab('soal-langsung')" id="tab-soal-langsung" class="tab-btn px-3.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-square-root-variable"></i> Soal Langsung
+                </button>
+                <button onclick="switchTab('soal-cerita')" id="tab-soal-cerita" class="tab-btn px-3.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-book-open"></i> Soal Cerita
+                </button>
+                <button onclick="switchTab('solver')" id="tab-solver" class="tab-btn px-3.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-wand-magic-sparkles text-amber-600"></i> Solver Otomatis
+                </button>
+                <button onclick="switchTab('latihan')" id="tab-latihan" class="tab-btn px-3.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square"></i> Latihan Soal
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-5xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- TAB 1: RINGKASAN KONSEP -->
+        <section id="sec-konsep" class="tab-content space-y-6">
+            <div class="bg-white border border-amber-200 rounded-2xl p-6 shadow-md">
+                <h2 class="text-lg font-bold text-amber-800 mb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-bullseye text-amber-600"></i> Cara Kerja Metode Eliminasi
+                </h2>
+                <p class="text-sm text-slate-700 mb-6">
+                    Metode eliminasi dilakukan dengan <span class="text-amber-700 font-bold">menghilangkan (mengeliminasi) salah satu variabel</span> untuk mengetahui nilai variabel lainnya.
+                </p>
+
+                <!-- Grid Visual Ringkas -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-amber-50 p-4 rounded-xl border border-amber-200">
+                        <h3 class="font-bold text-amber-900 text-sm mb-2 flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-full bg-amber-500 text-white text-xs flex items-center justify-center font-bold">1</span>
+                            Samakan Koefisien
+                        </h3>
+                        <p class="text-xs text-slate-600">Kalikan persamaan dengan angka pemali agar koefisien variabel target bernilai sama.</p>
+                    </div>
+
+                    <div class="bg-amber-50 p-4 rounded-xl border border-amber-200">
+                        <h3 class="font-bold text-amber-900 text-sm mb-2 flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-full bg-amber-500 text-white text-xs flex items-center justify-center font-bold">2</span>
+                            Operasi Pengurangan / Penjumlahan
+                        </h3>
+                        <p class="text-xs text-slate-600">
+                            • Tanda <b class="text-emerald-700">SAMA</b> $\rightarrow$ <b class="text-rose-600">DIKURANGI (-)</b><br>
+                            • Tanda <b class="text-amber-700">BERBEDA</b> $\rightarrow$ <b class="text-emerald-600">DITAMBAH (+)</b>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Template Contoh Tampilan Buku Catatan -->
+                <div class="paper-card p-6 rounded-2xl border-2 border-dashed border-amber-300 shadow-inner max-w-2xl mx-auto space-y-6">
+                    <div>
+                        <h3 class="font-handwriting text-2xl text-rose-600 font-bold mb-2">
+                            METODE ELIMINASI
+                        </h3>
+                        <p class="text-sm text-slate-800 font-medium">
+                            Cara dengan metode eliminasi yaitu dengan <b>mengeliminasi salah satu variabel</b> untuk mengetahui nilai variabel lainnya.
+                        </p>
+                    </div>
+
+                    <!-- Step 1: Eliminasi x -->
+                    <div class="bg-white/90 p-5 rounded-xl border border-amber-200 space-y-3">
+                        <p class="font-sans text-xs sm:text-sm font-bold text-amber-900 border-b border-amber-100 pb-2">
+                            Pada langkah berikut mengeliminasi variabel x untuk mendapatkan nilai y:
+                        </p>
+
+                        <div class="overflow-x-auto">
+                            <div class="inline-block font-mono text-sm sm:text-base min-w-max">
+                                <div class="grid grid-cols-[auto_auto_auto] gap-x-6 gap-y-1.5 items-center">
+                                    <div class="font-semibold text-slate-800">x + y = 2</div>
+                                    <div class="text-amber-700 font-bold bg-amber-100/80 px-2 py-0.5 rounded border border-amber-200 text-xs sm:text-sm">|&times;3|</div>
+                                    <div class="font-bold text-slate-900">3x + 3y = 6</div>
+
+                                    <div class="font-semibold text-slate-800">3x + 6y = 18</div>
+                                    <div class="text-amber-700 font-bold bg-amber-100/80 px-2 py-0.5 rounded border border-amber-200 text-xs sm:text-sm">|&times;1|</div>
+                                    <div class="font-bold text-slate-900">3x + 6y = 18</div>
+                                </div>
+
+                                <div class="grid grid-cols-[auto_auto_auto] gap-x-6">
+                                    <div></div>
+                                    <div></div>
+                                    <div class="mt-1">
+                                        <div class="flex items-center justify-between border-b-2 border-slate-900 pb-0.5">
+                                            <span class="w-full"></span>
+                                            <span class="font-sans font-bold text-rose-600 text-base sm:text-lg pl-3">(-)</span>
+                                        </div>
+                                        <div class="font-bold text-emerald-700 pt-1.5 text-left space-y-1">
+                                            <div>-3y = -12</div>
+                                            <div class="text-lg sm:text-xl text-amber-900">y = 4</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Eliminasi y -->
+                    <div class="bg-white/90 p-5 rounded-xl border border-amber-200 space-y-3">
+                        <p class="font-sans text-xs sm:text-sm font-bold text-amber-900 border-b border-amber-100 pb-2">
+                            Pada langkah berikut mengeliminasi variabel y untuk mendapatkan nilai x:
+                        </p>
+
+                        <div class="overflow-x-auto">
+                            <div class="inline-block font-mono text-sm sm:text-base min-w-max">
+                                <div class="grid grid-cols-[auto_auto_auto] gap-x-6 gap-y-1.5 items-center">
+                                    <div class="font-semibold text-slate-800">x + y = 2</div>
+                                    <div class="text-amber-700 font-bold bg-amber-100/80 px-2 py-0.5 rounded border border-amber-200 text-xs sm:text-sm">|&times;6|</div>
+                                    <div class="font-bold text-slate-900">6x + 6y = 12</div>
+
+                                    <div class="font-semibold text-slate-800">3x + 6y = 18</div>
+                                    <div class="text-amber-700 font-bold bg-amber-100/80 px-2 py-0.5 rounded border border-amber-200 text-xs sm:text-sm">|&times;1|</div>
+                                    <div class="font-bold text-slate-900">3x + 6y = 18</div>
+                                </div>
+
+                                <div class="grid grid-cols-[auto_auto_auto] gap-x-6">
+                                    <div></div>
+                                    <div></div>
+                                    <div class="mt-1">
+                                        <div class="flex items-center justify-between border-b-2 border-slate-900 pb-0.5">
+                                            <span class="w-full"></span>
+                                            <span class="font-sans font-bold text-rose-600 text-base sm:text-lg pl-3">(-)</span>
+                                        </div>
+                                        <div class="font-bold text-emerald-700 pt-1.5 text-left space-y-1">
+                                            <div>3x = -6</div>
+                                            <div class="text-lg sm:text-xl text-amber-900">x = -2</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-amber-100 rounded-xl border border-amber-300 text-center font-bold text-amber-950 text-sm sm:text-base">
+                        Hasil dari metode eliminasi tersebut yaitu : <span class="underline text-rose-700">x = -2 dan y = 4</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: SOAL LANGSUNG (TAMPILAN VERTIKAL LANGSUNG) -->
+        <section id="sec-soal-langsung" class="tab-content hidden space-y-6">
+            <div class="bg-white border border-amber-200 rounded-2xl p-6 shadow-md">
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 pb-4 border-b border-amber-200">
+                    <div>
+                        <span class="bg-amber-100 text-amber-800 text-xs px-2.5 py-1 rounded-full font-semibold border border-amber-300">
+                            Pembahasan Langsung Kebawah
+                        </span>
+                        <h2 class="text-xl font-bold text-amber-900 mt-1">Contoh Soal Langsung Aljabar</h2>
+                    </div>
+
+                    <!-- Selector for problems -->
+                    <div class="flex items-center gap-2">
+                        <label class="text-xs text-slate-600 font-semibold">Pilih Soal:</label>
+                        <select id="direct-prob-select" onchange="renderDirectProblem(this.value)" class="bg-amber-50 border border-amber-300 text-amber-900 text-sm rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-amber-500 outline-none">
+                            <option value="1">Contoh 1: x + y = 2 dan 3x + 6y = 18</option>
+                            <option value="2">Contoh 2: 2x + 3y = 12 dan x - y = 1</option>
+                            <option value="3">Contoh 3: 3x + 2y = 12 dan 2x + 3y = 13</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Vertical Full Content Display Container -->
+                <div id="direct-full-container">
+                    <!-- Dynamic vertical solution will be populated here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: SOAL CERITA (TAMPILAN VERTIKAL LANGSUNG) -->
+        <section id="sec-soal-cerita" class="tab-content hidden space-y-6">
+            <div class="bg-white border border-amber-200 rounded-2xl p-6 shadow-md">
+                <div class="mb-6 pb-4 border-b border-amber-200">
+                    <span class="bg-amber-100 text-amber-800 text-xs px-2.5 py-1 rounded-full font-semibold border border-amber-300">
+                        Aplikasi Kontekstual Dunia Nyata
+                    </span>
+                    <h2 class="text-xl font-bold text-amber-900 mt-1">Pembahasan Lengkap Soal Cerita</h2>
+                </div>
+
+                <!-- Story Selector -->
+                <div class="mb-6">
+                    <label class="text-xs text-slate-600 font-semibold block mb-1">Pilih Kasus Soal Cerita:</label>
+                    <select id="story-prob-select" onchange="renderStoryProblem(this.value)" class="w-full bg-amber-50 border border-amber-300 text-amber-900 text-sm rounded-lg p-2 focus:ring-2 focus:ring-amber-500 outline-none">
+                        <option value="1">Kasus 1: Membeli Buku dan Pensil di Toko Alat Tulis</option>
+                        <option value="2">Kasus 2: Tiket Masuk Tempat Wisata (Dewasa & Anak)</option>
+                    </select>
+                </div>
+
+                <!-- Story Vertical Content Container -->
+                <div id="story-full-container">
+                    <!-- Dynamic vertical solution will be populated here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: SOLVER OTOMATIS -->
+        <section id="sec-solver" class="tab-content hidden space-y-6">
+            <div class="bg-white border border-amber-200 rounded-2xl p-6 shadow-md">
+                <div class="mb-6">
+                    <span class="bg-amber-100 text-amber-800 text-xs px-2.5 py-1 rounded-full font-semibold border border-amber-300">
+                        Kalkulator Eliminasi Otomatis
+                    </span>
+                    <h2 class="text-xl font-bold text-amber-900 mt-1">Penyelesaian Otomatis Tampilan Vertikal</h2>
+                    <p class="text-xs text-slate-600 mt-1">Masukkan koefisien dari sistem persamaan: $a_1 x + b_1 y = c_1$ dan $a_2 x + b_2 y = c_2$.</p>
+                </div>
+
+                <!-- Input Controls Box -->
+                <div class="bg-amber-50/80 p-5 rounded-xl border border-amber-200 mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Persamaan 1 Inputs -->
+                        <div class="space-y-3">
+                            <span class="text-xs font-bold text-amber-800 uppercase tracking-wide block border-b border-amber-200 pb-1">
+                                Persamaan (1)
+                            </span>
+                            <div class="flex items-center gap-2">
+                                <input type="number" id="inp-a1" value="1" class="w-full bg-white border border-amber-300 rounded-lg px-3 py-2 text-center text-slate-800 font-mono focus:ring-2 focus:ring-amber-500 outline-none">
+                                <span class="font-bold text-slate-600">x +</span>
+                                <input type="number" id="inp-b1" value="1" class="w-full bg-white border border-amber-300 rounded-lg px-3 py-2 text-center text-slate-800 font-mono focus:ring-2 focus:ring-amber-500 outline-none">
+                                <span class="font-bold text-slate-600">y =</span>
+                                <input type="number" id="inp-c1" value="2" class="w-full bg-white border border-amber-300 rounded-lg px-3 py-2 text-center text-slate-800 font-mono focus:ring-2 focus:ring-amber-500 outline-none">
+                            </div>
+                        </div>
+
+                        <!-- Persamaan 2 Inputs -->
+                        <div class="space-y-3">
+                            <span class="text-xs font-bold text-amber-800 uppercase tracking-wide block border-b border-amber-200 pb-1">
+                                Persamaan (2)
+                            </span>
+                            <div class="flex items-center gap-2">
+                                <input type="number" id="inp-a2" value="3" class="w-full bg-white border border-amber-300 rounded-lg px-3 py-2 text-center text-slate-800 font-mono focus:ring-2 focus:ring-amber-500 outline-none">
+                                <span class="font-bold text-slate-600">x +</span>
+                                <input type="number" id="inp-b2" value="6" class="w-full bg-white border border-amber-300 rounded-lg px-3 py-2 text-center text-slate-800 font-mono focus:ring-2 focus:ring-amber-500 outline-none">
+                                <span class="font-bold text-slate-600">y =</span>
+                                <input type="number" id="inp-c2" value="18" class="w-full bg-white border border-amber-300 rounded-lg px-3 py-2 text-center text-slate-800 font-mono focus:ring-2 focus:ring-amber-500 outline-none">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="calculateCustomSPLDV()" class="w-full mt-5 py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl shadow-md shadow-amber-500/20 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-gears"></i> Selesaikan & Tampilkan Pembahasan Vertikal
+                    </button>
+                </div>
+
+                <!-- Custom Solution Output Section -->
+                <div id="solver-output">
+                    <!-- Dynamic vertical solution will render here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: LATIHAN SOAL INTERAKTIF -->
+        <section id="sec-latihan" class="tab-content hidden space-y-6">
+            <div class="bg-white border border-amber-200 rounded-2xl p-6 shadow-md">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-amber-200">
+                    <div>
+                        <span class="bg-emerald-100 text-emerald-800 text-xs px-2.5 py-1 rounded-full font-semibold border border-emerald-300">
+                            Uji Pemahaman Mandiri
+                        </span>
+                        <h2 class="text-xl font-bold text-amber-900 mt-1">Latihan Soal Eliminasi</h2>
+                    </div>
+                    <div class="flex items-center gap-2 bg-amber-50 px-4 py-2 rounded-xl border border-amber-200">
+                        <i class="fa-solid fa-trophy text-amber-500"></i>
+                        <span class="text-xs text-slate-600">Skor Anda:</span>
+                        <span id="quiz-score" class="font-bold text-emerald-700 font-mono">0 / 3</span>
+                    </div>
+                </div>
+
+                <!-- Quiz Questions Container -->
+                <div id="quiz-container" class="space-y-6">
+                    <!-- Questions built dynamically -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Tab switching function
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('active');
+                el.classList.add('text-slate-600');
+            });
+
+            document.getElementById(`sec-${tabId}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            activeBtn.classList.add('active');
+            activeBtn.classList.remove('text-slate-600');
+
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        // Helper to generate perfectly aligned vertical elimination block
+        function renderEliminationBlock(eq1, eq2, m1, m2, eq1_mul, eq2_mul, op, res1, res2) {
+            return `
+                <div class="overflow-x-auto">
+                    <div class="inline-block font-mono text-sm sm:text-base min-w-max">
+                        <!-- Upper System & Multipliers -->
+                        <div class="grid grid-cols-[auto_auto_auto] gap-x-6 gap-y-1.5 items-center">
+                            <div class="font-semibold text-slate-800">${eq1}</div>
+                            <div class="text-amber-700 font-bold bg-amber-100/80 px-2 py-0.5 rounded border border-amber-200 text-xs sm:text-sm">|&times;${m1}|</div>
+                            <div class="font-bold text-slate-900">${eq1_mul}</div>
+
+                            <div class="font-semibold text-slate-800">${eq2}</div>
+                            <div class="text-amber-700 font-bold bg-amber-100/80 px-2 py-0.5 rounded border border-amber-200 text-xs sm:text-sm">|&times;${m2}|</div>
+                            <div class="font-bold text-slate-900">${eq2_mul}</div>
+                        </div>
+
+                        <!-- Underline & Operation & Result specifically aligned under Col 3 (Multiplied Equations) -->
+                        <div class="grid grid-cols-[auto_auto_auto] gap-x-6">
+                            <div></div>
+                            <div></div>
+                            <div class="mt-1">
+                                <div class="flex items-center justify-between border-b-2 border-slate-900 pb-0.5">
+                                    <span class="w-full"></span>
+                                    <span class="font-sans font-bold text-rose-600 text-base sm:text-lg pl-3">(${op})</span>
+                                </div>
+                                <div class="font-bold text-emerald-700 pt-1.5 text-left space-y-1">
+                                    <div>${res1}</div>
+                                    <div class="text-lg sm:text-xl text-amber-900">${res2}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Direct Problem Data
+        const directData = {
+            "1": {
+                title: "Pembahasan Metode Eliminasi",
+                desc: "Cara dengan metode eliminasi yaitu dengan mengeliminasi salah satu variabel untuk mengetahui nilai variabel lainnya.",
+                step1_title: "Pada langkah berikut mengeliminasi variabel x untuk mendapatkan nilai y:",
+                step1_eq1: "x + y = 2",
+                step1_eq2: "3x + 6y = 18",
+                step1_m1: "3",
+                step1_m2: "1",
+                step1_eq1_mul: "3x + 3y = 6",
+                step1_eq2_mul: "3x + 6y = 18",
+                step1_op: "-",
+                step1_res1: "-3y = -12",
+                step1_res2: "y = 4",
+
+                step2_title: "Pada langkah berikut mengeliminasi variabel y untuk mendapatkan nilai x:",
+                step2_eq1: "x + y = 2",
+                step2_eq2: "3x + 6y = 18",
+                step2_m1: "6",
+                step2_m2: "1",
+                step2_eq1_mul: "6x + 6y = 12",
+                step2_eq2_mul: "3x + 6y = 18",
+                step2_op: "-",
+                step2_res1: "3x = -6",
+                step2_res2: "x = -2",
+
+                final_res: "x = -2 dan y = 4"
+            },
+            "2": {
+                title: "Pembahasan Metode Eliminasi",
+                desc: "Mengeliminasi salah satu variabel secara bergantian untuk mendapatkan nilai x dan y.",
+                step1_title: "Pada langkah berikut mengeliminasi variabel y untuk mendapatkan nilai x:",
+                step1_eq1: "2x + 3y = 12",
+                step1_eq2: "x - y = 1",
+                step1_m1: "1",
+                step1_m2: "3",
+                step1_eq1_mul: "2x + 3y = 12",
+                step1_eq2_mul: "3x - 3y = 3",
+                step1_op: "+",
+                step1_res1: "5x = 15",
+                step1_res2: "x = 3",
+
+                step2_title: "Pada langkah berikut mengeliminasi variabel x untuk mendapatkan nilai y:",
+                step2_eq1: "2x + 3y = 12",
+                step2_eq2: "x - y = 1",
+                step2_m1: "1",
+                step2_m2: "2",
+                step2_eq1_mul: "2x + 3y = 12",
+                step2_eq2_mul: "2x - 2y = 2",
+                step2_op: "-",
+                step2_res1: "5y = 10",
+                step2_res2: "y = 2",
+
+                final_res: "x = 3 dan y = 2"
+            },
+            "3": {
+                title: "Pembahasan Metode Eliminasi",
+                desc: "Samakan koefisien variabel terlebih dahulu dengan perkalian silang koefisien.",
+                step1_title: "Pada langkah berikut mengeliminasi variabel y untuk mendapatkan nilai x:",
+                step1_eq1: "3x + 2y = 12",
+                step1_eq2: "2x + 3y = 13",
+                step1_m1: "3",
+                step1_m2: "2",
+                step1_eq1_mul: "9x + 6y = 36",
+                step1_eq2_mul: "4x + 6y = 26",
+                step1_op: "-",
+                step1_res1: "5x = 10",
+                step1_res2: "x = 2",
+
+                step2_title: "Pada langkah berikut mengeliminasi variabel x untuk mendapatkan nilai y:",
+                step2_eq1: "3x + 2y = 12",
+                step2_eq2: "2x + 3y = 13",
+                step2_m1: "2",
+                step2_m2: "3",
+                step2_eq1_mul: "6x + 4y = 24",
+                step2_eq2_mul: "6x + 9y = 39",
+                step2_op: "-",
+                step2_res1: "-5y = -15",
+                step2_res2: "y = 3",
+
+                final_res: "x = 2 dan y = 3"
+            }
+        };
+
+        function renderDirectProblem(key) {
+            const d = directData[key];
+            const container = document.getElementById('direct-full-container');
+
+            container.innerHTML = `
+                <div class="paper-card p-6 sm:p-8 rounded-2xl border-2 border-dashed border-amber-300 shadow-sm max-w-3xl mx-auto space-y-6">
+                    <div>
+                        <h3 class="font-handwriting text-2xl sm:text-3xl text-rose-600 font-bold mb-2">
+                            ${d.title}
+                        </h3>
+                        <p class="text-sm text-slate-700 font-medium">
+                            ${d.desc}
+                        </p>
+                    </div>
+
+                    <!-- Step 1: Eliminasi Pertama -->
+                    <div class="bg-white/90 p-5 rounded-xl border border-amber-200 space-y-3">
+                        <p class="font-sans text-xs sm:text-sm font-bold text-amber-900 border-b border-amber-100 pb-2">
+                            ${d.step1_title}
+                        </p>
+                        ${renderEliminationBlock(d.step1_eq1, d.step1_eq2, d.step1_m1, d.step1_m2, d.step1_eq1_mul, d.step1_eq2_mul, d.step1_op, d.step1_res1, d.step1_res2)}
+                    </div>
+
+                    <!-- Step 2: Eliminasi Kedua -->
+                    <div class="bg-white/90 p-5 rounded-xl border border-amber-200 space-y-3">
+                        <p class="font-sans text-xs sm:text-sm font-bold text-amber-900 border-b border-amber-100 pb-2">
+                            ${d.step2_title}
+                        </p>
+                        ${renderEliminationBlock(d.step2_eq1, d.step2_eq2, d.step2_m1, d.step2_m2, d.step2_eq1_mul, d.step2_eq2_mul, d.step2_op, d.step2_res1, d.step2_res2)}
+                    </div>
+
+                    <!-- Kesimpulan Akhir -->
+                    <div class="p-4 bg-amber-100 rounded-xl border border-amber-300 text-center font-bold text-amber-950 text-base sm:text-lg">
+                        Hasil dari metode eliminasi tersebut yaitu : <span class="underline text-rose-700">${d.final_res}</span>
+                    </div>
+                </div>
+            `;
+
+            if (window.MathJax) MathJax.typesetPromise();
+        }
+
+        const storyData = {
+            "1": {
+                story: `"Budi membeli 3 buku dan 2 pensil seharga Rp 16.500,00. Ani membeli 2 buku dan 4 pensil seharga Rp 17.000,00. Berapakah harga 1 buku dan 1 pensil?"`,
+                pemisalan: "Misal harga 1 buku = x (Rupiah), dan harga 1 pensil = y (Rupiah)",
+                eq1: "3x + 2y = 16.500",
+                eq2: "2x + 4y = 17.000",
+
+                step1_title: "Langkah 1: Eliminasi variabel y untuk mendapat nilai x (Harga 1 Buku):",
+                step1_m1: "2",
+                step1_m2: "1",
+                step1_eq1_mul: "6x + 4y = 33.000",
+                step1_eq2_mul: "2x + 4y = 17.000",
+                step1_op: "-",
+                step1_res1: "4x = 16.000",
+                step1_res2: "x = 4.000",
+
+                step2_title: "Langkah 2: Eliminasi variabel x untuk mendapat nilai y (Harga 1 Pensil):",
+                step2_m1: "2",
+                step2_m2: "3",
+                step2_eq1_mul: "6x + 4y = 33.000",
+                step2_eq2_mul: "6x + 12y = 51.000",
+                step2_op: "-",
+                step2_res1: "-8y = -18.000",
+                step2_res2: "y = 2.250",
+
+                final_res: "Harga 1 Buku (x) = Rp 4.000,00 dan Harga 1 Pensil (y) = Rp 2.250,00"
+            },
+            "2": {
+                story: `"Harga 2 tiket dewasa dan 3 tiket anak-anak adalah Rp 140.000,00. Sedangkan harga 1 tiket dewasa dan 2 tiket anak-anak adalah Rp 80.000,00. Tentukan masing-masing harga tiket!"`,
+                pemisalan: "Misal harga tiket dewasa = x (Rupiah), dan tiket anak-anak = y (Rupiah)",
+                eq1: "2x + 3y = 140.000",
+                eq2: "x + 2y = 80.000",
+
+                step1_title: "Langkah 1: Eliminasi variabel x untuk mendapat nilai y (Harga Tiket Anak):",
+                step1_m1: "1",
+                step1_m2: "2",
+                step1_eq1_mul: "2x + 3y = 140.000",
+                step1_eq2_mul: "2x + 4y = 160.000",
+                step1_op: "-",
+                step1_res1: "-1y = -20.000",
+                step1_res2: "y = 20.000",
+
+                step2_title: "Langkah 2: Eliminasi variabel y untuk mendapat nilai x (Harga Tiket Dewasa):",
+                step2_m1: "2",
+                step2_m2: "3",
+                step2_eq1_mul: "4x + 6y = 280.000",
+                step2_eq2_mul: "3x + 6y = 240.000",
+                step2_op: "-",
+                step2_res1: "1x = 40.000",
+                step2_res2: "x = 40.000",
+
+                final_res: "Harga 1 Tiket Dewasa (x) = Rp 40.000,00 dan Harga 1 Tiket Anak (y) = Rp 20.000,00"
+            }
+        };
+
+        function renderStoryProblem(key) {
+            const d = storyData[key];
+            const container = document.getElementById('story-full-container');
+
+            container.innerHTML = `
+                <div class="paper-card p-6 sm:p-8 rounded-2xl border-2 border-dashed border-amber-300 shadow-sm max-w-3xl mx-auto space-y-6">
+                    <!-- Soal Cerita Banner -->
+                    <div class="bg-amber-100/80 p-4 rounded-xl border border-amber-300">
+                        <h3 class="font-bold text-amber-900 text-sm uppercase mb-1">
+                            <i class="fa-solid fa-quote-left mr-1"></i> Teks Soal Cerita
+                        </h3>
+                        <p class="text-sm italic text-slate-800 font-medium">
+                            ${d.story}
+                        </p>
+                    </div>
+
+                    <!-- Model Matematika -->
+                    <div class="bg-white/90 p-4 rounded-xl border border-amber-200">
+                        <h4 class="font-bold text-xs uppercase text-amber-800 mb-1">Model Matematika:</h4>
+                        <p class="text-xs text-slate-600 mb-2">${d.pemisalan}</p>
+                        <div class="font-mono text-sm font-bold text-slate-800 space-y-1">
+                            <div>Persamaan (1) : ${d.eq1}</div>
+                            <div>Persamaan (2) : ${d.eq2}</div>
+                        </div>
+                    </div>
+
+                    <!-- Step 1 Eliminasi -->
+                    <div class="bg-white/90 p-5 rounded-xl border border-amber-200 space-y-3">
+                        <p class="font-sans text-xs sm:text-sm font-bold text-amber-900 border-b border-amber-100 pb-2">
+                            ${d.step1_title}
+                        </p>
+                        ${renderEliminationBlock(d.eq1, d.eq2, d.step1_m1, d.step1_m2, d.step1_eq1_mul, d.step1_eq2_mul, d.step1_op, d.step1_res1, d.step1_res2)}
+                    </div>
+
+                    <!-- Step 2 Eliminasi -->
+                    <div class="bg-white/90 p-5 rounded-xl border border-amber-200 space-y-3">
+                        <p class="font-sans text-xs sm:text-sm font-bold text-amber-900 border-b border-amber-100 pb-2">
+                            ${d.step2_title}
+                        </p>
+                        ${renderEliminationBlock(d.eq1, d.eq2, d.step2_m1, d.step2_m2, d.step2_eq1_mul, d.step2_eq2_mul, d.step2_op, d.step2_res1, d.step2_res2)}
+                    </div>
+
+                    <!-- Kesimpulan Soal Cerita -->
+                    <div class="p-4 bg-emerald-100 rounded-xl border border-emerald-300 text-center font-bold text-emerald-950 text-sm sm:text-base">
+                        <i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> Kesimpulan Soal Cerita:<br>
+                        <span class="underline text-emerald-800 font-extrabold mt-1 inline-block">${d.final_res}</span>
+                    </div>
+                </div>
+            `;
+
+            if (window.MathJax) MathJax.typesetPromise();
+        }
+
+        function gcd(a, b) {
+            a = Math.abs(a);
+            b = Math.abs(b);
+            while (b) {
+                let t = b;
+                b = a % b;
+                a = t;
+            }
+            return a;
+        }
+
+        function lcm(a, b) {
+            if (a === 0 || b === 0) return 0;
+            return Math.abs((a * b) / gcd(a, b));
+        }
+
+        function formatEqStr(a, b, c) {
+            let strA = a === 1 ? 'x' : (a === -1 ? '-x' : `${a}x`);
+            let strB = '';
+            if (b > 0) {
+                strB = ` + ${b === 1 ? 'y' : b + 'y'}`;
+            } else if (b < 0) {
+                strB = ` - ${Math.abs(b) === 1 ? 'y' : Math.abs(b) + 'y'}`;
+            }
+            return `${strA}${strB} = ${c}`;
+        }
+
+        function calculateCustomSPLDV() {
+            const a1 = parseFloat(document.getElementById('inp-a1').value) || 0;
+            const b1 = parseFloat(document.getElementById('inp-b1').value) || 0;
+            const c1 = parseFloat(document.getElementById('inp-c1').value) || 0;
+
+            const a2 = parseFloat(document.getElementById('inp-a2').value) || 0;
+            const b2 = parseFloat(document.getElementById('inp-b2').value) || 0;
+            const c2 = parseFloat(document.getElementById('inp-c2').value) || 0;
+
+            const out = document.getElementById('solver-output');
+
+            const det = a1 * b2 - a2 * b1;
+            if (det === 0) {
+                out.innerHTML = `
+                    <div class="bg-rose-100 border border-rose-300 p-4 rounded-xl text-rose-800 text-sm flex items-center gap-3">
+                        <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
+                        <div>
+                            <b>Sistem Persamaan Tidak Memiliki Solusi Tunggal!</b><br>
+                            Nilai determinan $a_1 b_2 - a_2 b_1 = 0$. Garis-garis ini sejajar atau berhimpit.
+                        </div>
+                    </div>
+                `;
+                if (window.MathJax) MathJax.typesetPromise();
+                return;
+            }
+
+            // Step 1: Eliminate y to find x
+            const lcmB = lcm(b1, b2) || 1;
+            const m1_y = Math.abs(lcmB / b1);
+            const m2_y = Math.abs(lcmB / b2);
+
+            const a1_m1 = a1 * m1_y;
+            const b1_m1 = b1 * m1_y;
+            const c1_m1 = c1 * m1_y;
+
+            const a2_m2 = a2 * m2_y;
+            const b2_m2 = b2 * m2_y;
+            const c2_m2 = c2 * m2_y;
+
+            const sameSignY = (b1_m1 * b2_m2 > 0);
+            const opY = sameSignY ? '-' : '+';
+
+            const resA = sameSignY ? (a1_m1 - a2_m2) : (a1_m1 + a2_m2);
+            const resC_x = sameSignY ? (c1_m1 - c2_m2) : (c1_m1 + c2_m2);
+            const valX = resC_x / resA;
+
+            // Step 2: Eliminate x to find y
+            const lcmA = lcm(a1, a2) || 1;
+            const m1_x = Math.abs(lcmA / a1);
+            const m2_x = Math.abs(lcmA / a2);
+
+            const a1_m1_x = a1 * m1_x;
+            const b1_m1_x = b1 * m1_x;
+            const c1_m1_x = c1 * m1_x;
+
+            const a2_m2_x = a2 * m2_x;
+            const b2_m2_x = b2 * m2_x;
+            const c2_m2_x = c2 * m2_x;
+
+            const sameSignX = (a1_m1_x * a2_m2_x > 0);
+            const opX = sameSignX ? '-' : '+';
+
+            const resB = sameSignX ? (b1_m1_x - b2_m2_x) : (b1_m1_x + b2_m2_x);
+            const resC_y = sameSignX ? (c1_m1_x - c2_m2_x) : (c1_m1_x + c2_m2_x);
+            const valY = resC_y / resB;
+
+            const formatNum = (num) => Number.isInteger(num) ? num : num.toFixed(2);
+
+            const strEq1 = formatEqStr(a1, b1, c1);
+            const strEq2 = formatEqStr(a2, b2, c2);
+
+            const strEq1_mul_y = formatEqStr(a1_m1, b1_m1, c1_m1);
+            const strEq2_mul_y = formatEqStr(a2_m2, b2_m2, c2_m2);
+
+            const strEq1_mul_x = formatEqStr(a1_m1_x, b1_m1_x, c1_m1_x);
+            const strEq2_mul_x = formatEqStr(a2_m2_x, b2_m2_x, c2_m2_x);
+
+            out.innerHTML = `
+                <div class="paper-card p-6 sm:p-8 rounded-2xl border-2 border-dashed border-amber-300 shadow-sm max-w-3xl mx-auto space-y-6">
+                    <h3 class="font-handwriting text-2xl text-rose-600 font-bold">
+                        Hasil Pembahasan Langkah Otomatis
+                    </h3>
+
+                    <!-- Step 1 Eliminasi y -->
+                    <div class="bg-white/90 p-5 rounded-xl border border-amber-200 space-y-3">
+                        <p class="font-sans text-xs sm:text-sm font-bold text-amber-900 border-b border-amber-100 pb-2">
+                            Langkah 1: Mengeliminasi variabel y untuk mendapatkan nilai x:
+                        </p>
+                        ${renderEliminationBlock(strEq1, strEq2, m1_y, m2_y, strEq1_mul_y, strEq2_mul_y, opY, `${resA}x = ${resC_x}`, `x = ${formatNum(valX)}`)}
+                    </div>
+
+                    <!-- Step 2 Eliminasi x -->
+                    <div class="bg-white/90 p-5 rounded-xl border border-amber-200 space-y-3">
+                        <p class="font-sans text-xs sm:text-sm font-bold text-amber-900 border-b border-amber-100 pb-2">
+                            Langkah 2: Mengeliminasi variabel x untuk mendapatkan nilai y:
+                        </p>
+                        ${renderEliminationBlock(strEq1, strEq2, m1_x, m2_x, strEq1_mul_x, strEq2_mul_x, opX, `${resB}y = ${resC_y}`, `y = ${formatNum(valY)}`)}
+                    </div>
+
+                    <!-- Hasil Akhir -->
+                    <div class="p-4 bg-amber-100 rounded-xl border border-amber-300 text-center font-bold text-amber-950 text-base sm:text-lg">
+                        Hasil akhir penyelesaian : <span class="underline text-rose-700">x = ${formatNum(valX)} dan y = ${formatNum(valY)}</span>
+                    </div>
+                </div>
+            `;
+
+            if (window.MathJax) MathJax.typesetPromise();
+        }
+
+        const quizQuestions = [
+            {
+                q: "1. Diketahui sistem persamaan $x + y = 5$ dan $x - y = 1$. Hasil pengeliminasian variabel y untuk mencari nilai x adalah...",
+                options: ["A. x = 2", "B. x = 3", "C. x = 4", "D. x = 6"],
+                correct: 1,
+                explanation: "Dijumlahkan (+): $(x+y) + (x-y) = 5+1 \\Rightarrow 2x = 6 \\Rightarrow x = 3$."
+            },
+            {
+                q: "2. Pada persamaan $2x + y = 7$ dan $x - y = 2$, operasi yang digunakan untuk mengeliminasi variabel y adalah...",
+                options: ["A. Dikurangi (-)", "B. Ditambah (+)", "C. Dikali 2", "D. Dibagi 2"],
+                correct: 1,
+                explanation: "Karena tanda koefisien y berbeda (+1 dan -1), maka kedua persamaan <b>ditambahkan (+)</b>."
+            },
+            {
+                q: "3. Budi membeli 2 kemeja dan 1 celana seharga Rp 250.000,00. Ani membeli 1 kemeja dan 1 celana seharga Rp 180.000,00. Berapakah harga 1 kemeja?",
+                options: ["A. Rp 60.000,00", "B. Rp 70.000,00", "C. Rp 80.000,00", "D. Rp 110.000,00"],
+                correct: 1,
+                explanation: "Model: $2x + y = 250.000$ dan $x + y = 180.000$. Dikurangi (-): $x = 70.000$."
+            }
+        ];
+
+        let quizUserAnswers = {};
+
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = quizQuestions.map((q, qIdx) => `
+                <div class="bg-amber-50/70 p-5 rounded-xl border border-amber-200 space-y-3">
+                    <p class="font-medium text-slate-800 text-sm sm:text-base">${q.q}</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        ${q.options.map((opt, oIdx) => `
+                            <button onclick="selectQuizAnswer(${qIdx}, ${oIdx})" id="q-btn-${qIdx}-${oIdx}" class="p-3 bg-white hover:bg-amber-100/80 rounded-lg text-left text-xs sm:text-sm text-slate-700 transition border border-amber-300 font-medium">
+                                ${opt}
+                            </button>
+                        `).join('')}
+                    </div>
+                    <div id="q-exp-${qIdx}" class="hidden mt-3 p-3 rounded-lg text-xs sm:text-sm"></div>
+                </div>
+            `).join('');
+
+            if (window.MathJax) MathJax.typesetPromise();
+        }
+
+        function selectQuizAnswer(qIdx, oIdx) {
+            if (quizUserAnswers[qIdx] !== undefined) return;
+
+            quizUserAnswers[qIdx] = oIdx;
+            const q = quizQuestions[qIdx];
+            const expEl = document.getElementById(`q-exp-${qIdx}`);
+
+            q.options.forEach((_, idx) => {
+                const btn = document.getElementById(`q-btn-${qIdx}-${idx}`);
+                if (idx === q.correct) {
+                    btn.classList.add('bg-emerald-100', 'border-emerald-500', 'text-emerald-900', 'font-bold');
+                } else if (idx === oIdx && oIdx !== q.correct) {
+                    btn.classList.add('bg-rose-100', 'border-rose-500', 'text-rose-900');
+                }
+            });
+
+            expEl.classList.remove('hidden');
+            if (oIdx === q.correct) {
+                expEl.classList.add('bg-emerald-100', 'border', 'border-emerald-300', 'text-emerald-900');
+                expEl.innerHTML = `<i class="fa-solid fa-circle-check mr-1 text-emerald-600"></i> <b>Benar!</b> ${q.explanation}`;
+            } else {
+                expEl.classList.add('bg-rose-100', 'border', 'border-rose-300', 'text-rose-900');
+                expEl.innerHTML = `<i class="fa-solid fa-circle-xmark mr-1 text-rose-600"></i> <b>Kurang Tepat.</b> ${q.explanation}`;
+            }
+
+            updateQuizScore();
+            if (window.MathJax) MathJax.typesetPromise();
+        }
+
+        function updateQuizScore() {
+            let score = 0;
+            Object.keys(quizUserAnswers).forEach(qIdx => {
+                if (quizUserAnswers[qIdx] === quizQuestions[qIdx].correct) score++;
+            });
+            document.getElementById('quiz-score').textContent = `${score} / ${quizQuestions.length}`;
+        }
+
+        // On window load initialization
+        window.onload = function() {
+            renderDirectProblem("1");
+            renderStoryProblem("1");
+            calculateCustomSPLDV();
+            renderQuiz();
+        };
+    </script>
+</body>
+</html>
