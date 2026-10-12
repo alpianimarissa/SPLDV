@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Belajar Seru SPLDV</title>
+    <!-- Tailwind CSS for modern responsive styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+        body { font-family: 'Poppins', sans-serif; }
+        .step-card { transition: all 0.3s ease; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <header class="bg-indigo-600 text-white p-4 shadow-md text-center">
+        <h1 class="text-2xl font-bold">✨ Belajar Mudah SPLDV ✨</h1>
+        <p class="text-sm text-indigo-100 mt-1">Metode Campuran: Eliminasi + Substitusi</p>
+    </header>
+
+    <main class="flex-grow container mx-auto p-4 max-w-3xl">
+        <div class="flex justify-center gap-2 mb-6">
+            <button onclick="switchTab('konsep')" id="btn-konsep" class="px-4 py-2 bg-indigo-600 text-white font-semibold rounded-full shadow transition text-sm">1. Konsep Dasar</button>
+            <button onclick="switchTab('langsung')" id="btn-langsung" class="px-4 py-2 bg-white text-indigo-600 border border-indigo-300 font-semibold rounded-full shadow transition text-sm">2. Soal Langsung</button>
+            <button onclick="switchTab('cerita')" id="btn-cerita" class="px-4 py-2 bg-white text-indigo-600 border border-indigo-300 font-semibold rounded-full shadow transition text-sm">3. Soal Cerita</button>
+        </div>
+
+        <!-- TAB 1: KONSEP DASAR -->
+        <section id="tab-konsep" class="space-y-4">
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-indigo-100 step-card">
+                <h2 class="text-lg font-bold text-indigo-700 mb-2">🎯 Apa itu SPLDV?</h2>
+                <p class="text-sm text-slate-600 mb-3">Mencari nilai huruf misterius (<span class="text-indigo-600 font-bold">x</span> dan <span class="text-pink-600 font-bold">y</span>).</p>
+                <div class="grid grid-cols-2 gap-3 text-center">
+                    <div class="bg-indigo-50 p-3 rounded-xl border border-indigo-200">
+                        <span class="text-2xl">🧹</span>
+                        <h3 class="font-bold text-sm mt-1 text-indigo-800">Langkah 1</h3>
+                        <p class="text-xs text-slate-600 mt-1"><b>Eliminasi</b><br>Hilangkan salah satu huruf.</p>
+                    </div>
+                    <div class="bg-pink-50 p-3 rounded-xl border border-pink-200">
+                        <span class="text-2xl">🔍</span>
+                        <h3 class="font-bold text-sm mt-1 text-pink-800">Langkah 2</h3>
+                        <p class="text-xs text-slate-600 mt-1"><b>Substitusi</b><br>Masukkan nilai yang ketemu.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Mini Demo -->
+            <div class="bg-indigo-900 text-white p-5 rounded-2xl shadow">
+                <h3 class="font-bold text-base mb-2">💡 Tips Cepat Ingat:</h3>
+                <ul class="text-xs space-y-2 text-indigo-200 list-disc list-inside">
+                    <li>Sama tanda <b class="text-white">(+) dengan (+)</b> atau <b class="text-white">(-) dengan (-)</b> 👉 <b>DIKURANGI (-)</b></li>
+                    <li>Beda tanda <b class="text-white">(+) dengan (-)</b> 👉 <b>DITAMBAH (+)</b></li>
+                </ul>
+            </div>
+            
+            <div class="text-center pt-2">
+                <button onclick="switchTab('langsung')" class="bg-indigo-600 text-white px-6 py-2 rounded-xl text-sm font-semibold shadow hover:bg-indigo-700">Lanjut Latihan Soal 👉</button>
+            </div>
+        </section>
+
+        <!-- TAB 2: SOAL LANGSUNG -->
+        <section id="tab-langsung" class="hidden space-y-4">
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                <div class="flex justify-between items-center mb-3">
+                    <span class="bg-amber-100 text-amber-800 text-xs px-2.5 py-1 rounded-full font-semibold">Soal Langsung (Gaya Papan Tulis)</span>
+                    <span class="text-xs text-slate-400">Metode Campuran</span>
+                </div>
+                
+                <!-- Blackboard Style Container matching user reference -->
+                <div class="bg-emerald-950 text-emerald-100 p-5 sm:p-6 rounded-2xl font-mono text-sm leading-relaxed mb-4 shadow-inner border-4 border-amber-900 overflow-x-auto">
+                    <div class="mb-4 text-center sm:text-left">
+                        <div class="text-amber-300 text-base font-bold mb-1">2x + 3y = 19 &nbsp;... (1)</div>
+                        <div class="text-amber-300 text-base font-bold">&nbsp;x - y = 2 &nbsp;&nbsp;&nbsp;... (2)</div>
+                    </div>
+
+                    <div class="mb-4 text-xs sm:text-sm text-emerald-200 italic font-sans font-semibold">
+                        Eliminasi Variabel x pada persamaan (1) dan (2)
+                    </div>
+
+                    <!-- Blackboard alignment layout matching reference image -->
+                    <div class="bg-emerald-900/60 p-4 rounded-xl border border-emerald-800 flex flex-col sm:flex-row items-center gap-4 justify-between">
+                        <div class="space-y-1 text-xs sm:text-sm whitespace-nowrap">
+                            <div>2x + 3y = 19</div>
+                            <div>&nbsp;x - y = 2</div>
+                        </div>
+
+                        <!-- Multiplier box -->
+                        <div class="flex items-center px-3 py-1 border-y sm:border-y-0 sm:border-x border-emerald-700 text-xs sm:text-sm text-amber-300 font-bold">
+                            <div class="space-y-1">
+                                <div>| × 1</div>
+                                <div>| × 2</div>
+                            </div>
+                        </div>
+
+                        <!-- Result computation with vertical line -->
+                        <div class="border-l-2 border-emerald-400 pl-4 space-y-1 text-xs sm:text-sm w-full sm:w-auto">
+                            <div>2x + 3y = 19</div>
+                            <div class="border-b border-emerald-400 pb-1">2x - 2y = 4 &nbsp;&nbsp;<span class="text-amber-300 font-bold">(-)</span></div>
+                            <div class="pt-1 text-amber-200 font-bold">5y = 15</div>
+                            <div class="text-amber-300 text-base font-bold pt-1">
+                                y = <span class="inline-flex flex-col text-center align-middle mx-1"><span class="border-b border-amber-300 px-1">15</span><span>5</span></span> = 3
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 mb-2 text-xs sm:text-sm text-emerald-200 italic font-sans font-semibold">
+                        Substitusi nilai y = 3 ke persamaan (2)
+                    </div>
+
+                    <div class="bg-emerald-900/60 p-4 rounded-xl border border-emerald-800 space-y-2 text-xs sm:text-sm">
+                        <div>x - y = 2</div>
+                        <div>x - 3 = 2</div>
+                        <div>&nbsp;&nbsp;&nbsp;x = 2 + 3</div>
+                        <div class="text-amber-300 text-base font-bold">&nbsp;&nbsp;&nbsp;x = 5</div>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <!-- Interactive step explanation for slow learners -->
+                    <div id="langsung-step-1" class="border border-indigo-200 p-3 rounded-xl bg-indigo-50/50">
+                        <p class="text-xs font-semibold text-indigo-900 mb-1">💡 Kenapa dikali 1 dan 2?</p>
+                        <p class="text-xs text-slate-600 mb-2">Supaya angka di depan huruf <b class="text-indigo-600">x</b> sama-sama angka 2, jadi bisa dikurangi dan hilang!</p>
+                        <button onclick="revealStep('langsung-ans-1', this)" class="bg-indigo-600 text-white text-xs px-3 py-1.5 rounded-lg font-medium">Lihat Penjelasan Singkat</button>
+                        <div id="langsung-ans-1" class="hidden mt-2 text-xs bg-white p-2.5 rounded border border-indigo-100 text-indigo-900">
+                            • Persamaan atas dikali 1 tetap.<br>
+                            • Persamaan bawah dikali 2 (x jadi 2x, y jadi 2y, 2 jadi 4).<br>
+                            • Hasilnya: <b>x = 5</b> dan <b>y = 3</b>.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-center">
+                    <p class="text-xs font-bold text-emerald-800">Himpunan Penyelesaian Akhir:</p>
+                    <p class="text-sm font-bold text-emerald-900">x = 5 dan y = 3</p>
+                </div>
+            </div>
+
+            <div class="flex justify-between">
+                <button onclick="switchTab('konsep')" class="text-xs text-indigo-600 font-semibold px-4 py-2">&larr; Kembali</button>
+                <button onclick="switchTab('cerita')" class="bg-indigo-600 text-white text-xs px-4 py-2 rounded-xl font-semibold">Ke Soal Cerita 👉</button>
+            </div>
+        </section>
+
+        <!-- TAB 3: SOAL CERITA -->
+        <section id="tab-cerita" class="hidden space-y-4">
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                <div class="flex justify-between items-center mb-3">
+                    <span class="bg-purple-100 text-purple-800 text-xs px-2.5 py-1 rounded-full font-semibold">Soal Cerita</span>
+                    <span class="text-xs text-slate-400">Kehidupan Sehari-hari</span>
+                </div>
+
+                <!-- Blackboard Style Container for Story Problem -->
+                <div class="bg-emerald-950 text-emerald-100 p-5 sm:p-6 rounded-2xl font-mono text-sm leading-relaxed mb-4 shadow-inner border-4 border-amber-900 overflow-x-auto">
+                    <!-- Story Statement -->
+                    <div class="mb-4 bg-emerald-900/60 p-4 rounded-xl border border-emerald-800 text-xs sm:text-sm">
+                        <div class="text-amber-300 font-bold mb-2">🛒 Cerita:</div>
+                        <div class="space-y-1 text-emerald-200">
+                            <div>Beli <b class="text-white">2 Buku (x)</b> + <b class="text-white">1 Pensil (y)</b> = Rp7.000 ... (1)</div>
+                            <div>Beli <b class="text-white">1 Buku (x)</b> + <b class="text-white">1 Pensil (y)</b> = Rp5.000 ... (2)</div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 text-xs sm:text-sm text-emerald-200 italic font-sans font-semibold">
+                        Langkah 1: Eliminasi Variabel y
+                    </div>
+
+                    <!-- Blackboard alignment layout -->
+                    <div class="bg-emerald-900/60 p-4 rounded-xl border border-emerald-800 flex flex-col sm:flex-row items-center gap-4 justify-between">
+                        <div class="space-y-1 text-xs sm:text-sm whitespace-nowrap">
+                            <div>2x + y = 7000</div>
+                            <div>&nbsp;x + y = 5000</div>
+                        </div>
+
+                        <!-- Multiplier box -->
+                        <div class="flex items-center px-3 py-1 border-y sm:border-y-0 sm:border-x border-emerald-700 text-xs sm:text-sm text-amber-300 font-bold">
+                            <div class="space-y-1">
+                                <div>| × 1</div>
+                                <div>| × 1</div>
+                            </div>
+                        </div>
+
+                        <!-- Result computation with vertical line -->
+                        <div class="border-l-2 border-emerald-400 pl-4 space-y-1 text-xs sm:text-sm w-full sm:w-auto">
+                            <div>2x + y = 7000</div>
+                            <div class="border-b border-emerald-400 pb-1">&nbsp;x + y = 5000 &nbsp;&nbsp;<span class="text-amber-300 font-bold">(-)</span></div>
+                            <div class="pt-1 text-amber-300 text-base font-bold">x = 2000</div>
+                            <div class="text-xs text-emerald-300 mt-1">(Harga 1 Buku = Rp2.000)</div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 mb-2 text-xs sm:text-sm text-emerald-200 italic font-sans font-semibold">
+                        Langkah 2: Substitusi nilai x = 2000 ke persamaan (2)
+                    </div>
+
+                    <div class="bg-emerald-900/60 p-4 rounded-xl border border-emerald-800 space-y-2 text-xs sm:text-sm">
+                        <div>x + y = 5000</div>
+                        <div>2000 + y = 5000</div>
+                        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;y = 5000 - 2000</div>
+                        <div class="text-amber-300 text-base font-bold">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;y = 3000</div>
+                        <div class="text-xs text-emerald-300 mt-1">(Harga 1 Pensil = Rp3.000)</div>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <div class="border border-purple-200 p-3 rounded-xl bg-purple-50/50">
+                        <p class="text-xs font-semibold text-purple-900 mb-1">💡 Kenapa y langsung hilang?</p>
+                        <p class="text-xs text-slate-600 mb-2">Karena angka di depan huruf <b class="text-purple-600">y</b> sama-sama angka 1. Langsung kurangi (-) jadi habis!</p>
+                    </div>
+                </div>
+
+                <div class="mt-4 p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-center">
+                    <p class="text-xs font-bold text-emerald-800">Kesimpulan Akhir:</p>
+                    <p class="text-xs font-bold text-emerald-900 mt-1">Harga 1 Buku = Rp2.000 &nbsp;|&nbsp; Harga 1 Pensil = Rp3.000</p>
+                </div>
+            </div>
+
+            <div class="flex justify-between">
+                <button onclick="switchTab('langsung')" class="text-xs text-indigo-600 font-semibold px-4 py-2">&larr; Kembali</button>
+                <button onclick="switchTab('konsep')" class="bg-slate-600 text-white text-xs px-4 py-2 rounded-xl font-semibold">Ulang dari Awal 🔄</button>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-white border-t border-slate-200 py-3 text-center text-xs text-slate-400 mt-auto">
+        Modul Interaktif Ramah Anak Slow Learning &bull; SPLDV
+    </footer>
+
+    <script>
+        // Function to switch active tabs smoothly
+        function switchTab(tabId) {
+            const tabs = ['konsep', 'langsung', 'cerita'];
+            tabs.forEach(t => {
+                document.getElementById('tab-' + t).classList.add('hidden');
+                const btn = document.getElementById('btn-' + t);
+                if(btn) {
+                    btn.classList.remove('bg-indigo-600', 'text-white');
+                    btn.classList.add('bg-white', 'text-indigo-600', 'border', 'border-indigo-300');
+                }
+            });
+            
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            const activeBtn = document.getElementById('btn-' + tabId);
+            if(activeBtn) {
+                activeBtn.classList.remove('bg-white', 'text-indigo-600', 'border', 'border-indigo-300');
+                activeBtn.classList.add('bg-indigo-600', 'text-white');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Function to reveal step-by-step answers incrementally
+        function revealStep(elementId, btn) {
+            const el = document.getElementById(elementId);
+            el.classList.toggle('hidden');
+            if (!el.classList.contains('hidden')) {
+                btn.textContent = 'Tutup Jawaban';
+                btn.classList.remove('bg-indigo-600', 'bg-pink-600');
+                btn.classList.add('bg-slate-500');
+            } else {
+                btn.textContent = btn.getAttribute('data-original-text') || 'Buka Jawaban';
+                btn.classList.remove('bg-slate-500');
+                if(elementId.includes('langsung-ans-1') || elementId.includes('cerita-ans-1')) {
+                    btn.classList.add('bg-indigo-600');
+                } else {
+                    btn.classList.add('bg-pink-600');
+                }
+            }
+        }
+        
+        // Save initial button text for toggle state
+        window.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('button[onclick^="revealStep"]').forEach(btn => {
+                btn.setAttribute('data-original-text', btn.textContent);
+            });
+        });
+    </script>
+</body>
+</html>
